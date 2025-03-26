@@ -38,6 +38,7 @@ C:\Users\teche\source\repos\tarungonNaNako\tarungonNaNako\obj\Debug\net8.0-windo
 C:\Users\teche\source\repos\tarungonNaNako\tarungonNaNako\obj\Debug\net8.0-windows\tarungonNaNako.subform.addRole.resources
 C:\Users\teche\source\repos\tarungonNaNako\tarungonNaNako\obj\Debug\net8.0-windows\tarungonNaNako.subform.addSubCategory.resources
 C:\Users\teche\source\repos\tarungonNaNako\tarungonNaNako\obj\Debug\net8.0-windows\tarungonNaNako.subform.addUser.resources
+C:\Users\teche\source\repos\tarungonNaNako\tarungonNaNako\obj\Debug\net8.0-windows\tarungonNaNako.subform.homepage.resources
 C:\Users\teche\source\repos\tarungonNaNako\tarungonNaNako\obj\Debug\net8.0-windows\tarungonNaNako.subform.subCategories.resources
 C:\Users\teche\source\repos\tarungonNaNako\tarungonNaNako\obj\Debug\net8.0-windows\tarungonNaNako.teacherDashboard.resources
 C:\Users\teche\source\repos\tarungonNaNako\tarungonNaNako\obj\Debug\net8.0-windows\tarungonNaNako.csproj.GenerateResource.cache
