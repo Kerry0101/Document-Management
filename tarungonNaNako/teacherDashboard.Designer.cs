@@ -97,6 +97,7 @@
             button9.TabIndex = 9;
             button9.Text = "ARCHIVED";
             button9.UseVisualStyleBackColor = false;
+            button9.Click += button9_Click;
             // 
             // button8
             // 
@@ -119,7 +120,7 @@
             button3.Name = "button3";
             button3.Size = new Size(184, 42);
             button3.TabIndex = 6;
-            button3.Text = "CATEGORIES";
+            button3.Text = "FOLDERS";
             button3.UseVisualStyleBackColor = false;
             button3.Click += button3_Click;
             // 

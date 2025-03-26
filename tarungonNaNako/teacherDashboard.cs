@@ -53,5 +53,10 @@ namespace tarungonNaNako
         {
             LoadFormInPanel(new manageDocs());
         }
+
+        private void button9_Click(object sender, EventArgs e)
+        {
+            LoadFormInPanel(new archived());
+        }
     }
 }

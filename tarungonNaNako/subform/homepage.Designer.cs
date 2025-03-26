@@ -112,13 +112,15 @@
             // flowLayoutPanel1
             // 
             flowLayoutPanel1.AutoScroll = true;
+            flowLayoutPanel1.AutoScrollMargin = new Size(30, 0);
+            flowLayoutPanel1.AutoScrollMinSize = new Size(30, 0);
             flowLayoutPanel1.Controls.Add(guna2Button1);
             flowLayoutPanel1.Controls.Add(guna2Button2);
             flowLayoutPanel1.Controls.Add(guna2Button3);
             flowLayoutPanel1.Controls.Add(guna2Button4);
             flowLayoutPanel1.Location = new Point(16, 39);
             flowLayoutPanel1.Name = "flowLayoutPanel1";
-            flowLayoutPanel1.Padding = new Padding(10, 0, 10, 0);
+            flowLayoutPanel1.Padding = new Padding(10, 0, 30, 0);
             flowLayoutPanel1.Size = new Size(711, 97);
             flowLayoutPanel1.TabIndex = 14;
             flowLayoutPanel1.WrapContents = false;
@@ -134,7 +136,7 @@
             guna2Button1.DisabledState.FillColor = Color.FromArgb(169, 169, 169);
             guna2Button1.DisabledState.ForeColor = Color.FromArgb(141, 141, 141);
             guna2Button1.FillColor = Color.LightGray;
-            guna2Button1.Font = new Font("Arial Rounded MT Bold", 9F);
+            guna2Button1.Font = new Font("Arial Rounded MT Bold", 10.2F);
             guna2Button1.ForeColor = Color.Black;
             guna2Button1.Image = (Image)resources.GetObject("guna2Button1.Image");
             guna2Button1.ImageAlign = HorizontalAlignment.Left;
@@ -144,11 +146,12 @@
             guna2Button1.Name = "guna2Button1";
             guna2Button1.Padding = new Padding(20, 0, 0, 0);
             guna2Button1.ShadowDecoration.CustomizableEdges = customizableEdges2;
-            guna2Button1.Size = new Size(158, 90);
+            guna2Button1.Size = new Size(177, 60);
             guna2Button1.TabIndex = 0;
             guna2Button1.Text = "Folder name";
+            guna2Button1.TextAlign = HorizontalAlignment.Left;
             guna2Button1.TextFormatNoPrefix = true;
-            guna2Button1.TextOffset = new Point(-5, 0);
+            guna2Button1.TextOffset = new Point(-25, 0);
             // 
             // guna2Button2
             // 
@@ -161,21 +164,22 @@
             guna2Button2.DisabledState.FillColor = Color.FromArgb(169, 169, 169);
             guna2Button2.DisabledState.ForeColor = Color.FromArgb(141, 141, 141);
             guna2Button2.FillColor = Color.LightGray;
-            guna2Button2.Font = new Font("Arial Rounded MT Bold", 9F);
+            guna2Button2.Font = new Font("Arial Rounded MT Bold", 10.2F);
             guna2Button2.ForeColor = Color.Black;
             guna2Button2.Image = (Image)resources.GetObject("guna2Button2.Image");
             guna2Button2.ImageAlign = HorizontalAlignment.Left;
             guna2Button2.ImageOffset = new Point(-2, 0);
-            guna2Button2.Location = new Point(183, 3);
+            guna2Button2.Location = new Point(202, 3);
             guna2Button2.Margin = new Padding(10, 3, 5, 3);
             guna2Button2.Name = "guna2Button2";
             guna2Button2.Padding = new Padding(20, 0, 0, 0);
             guna2Button2.ShadowDecoration.CustomizableEdges = customizableEdges4;
-            guna2Button2.Size = new Size(158, 90);
+            guna2Button2.Size = new Size(177, 60);
             guna2Button2.TabIndex = 1;
             guna2Button2.Text = "Folder name";
+            guna2Button2.TextAlign = HorizontalAlignment.Left;
             guna2Button2.TextFormatNoPrefix = true;
-            guna2Button2.TextOffset = new Point(-5, 0);
+            guna2Button2.TextOffset = new Point(-25, 0);
             // 
             // guna2Button3
             // 
@@ -188,21 +192,22 @@
             guna2Button3.DisabledState.FillColor = Color.FromArgb(169, 169, 169);
             guna2Button3.DisabledState.ForeColor = Color.FromArgb(141, 141, 141);
             guna2Button3.FillColor = Color.LightGray;
-            guna2Button3.Font = new Font("Arial Rounded MT Bold", 9F);
+            guna2Button3.Font = new Font("Arial Rounded MT Bold", 10.2F);
             guna2Button3.ForeColor = Color.Black;
             guna2Button3.Image = (Image)resources.GetObject("guna2Button3.Image");
             guna2Button3.ImageAlign = HorizontalAlignment.Left;
             guna2Button3.ImageOffset = new Point(-2, 0);
-            guna2Button3.Location = new Point(356, 3);
+            guna2Button3.Location = new Point(394, 3);
             guna2Button3.Margin = new Padding(10, 3, 5, 3);
             guna2Button3.Name = "guna2Button3";
             guna2Button3.Padding = new Padding(20, 0, 0, 0);
             guna2Button3.ShadowDecoration.CustomizableEdges = customizableEdges6;
-            guna2Button3.Size = new Size(158, 90);
+            guna2Button3.Size = new Size(177, 60);
             guna2Button3.TabIndex = 2;
             guna2Button3.Text = "Folder name";
+            guna2Button3.TextAlign = HorizontalAlignment.Left;
             guna2Button3.TextFormatNoPrefix = true;
-            guna2Button3.TextOffset = new Point(-5, 0);
+            guna2Button3.TextOffset = new Point(-25, 0);
             // 
             // guna2Button4
             // 
@@ -215,21 +220,22 @@
             guna2Button4.DisabledState.FillColor = Color.FromArgb(169, 169, 169);
             guna2Button4.DisabledState.ForeColor = Color.FromArgb(141, 141, 141);
             guna2Button4.FillColor = Color.LightGray;
-            guna2Button4.Font = new Font("Arial Rounded MT Bold", 9F);
+            guna2Button4.Font = new Font("Arial Rounded MT Bold", 10.2F);
             guna2Button4.ForeColor = Color.Black;
             guna2Button4.Image = (Image)resources.GetObject("guna2Button4.Image");
             guna2Button4.ImageAlign = HorizontalAlignment.Left;
             guna2Button4.ImageOffset = new Point(-2, 0);
-            guna2Button4.Location = new Point(529, 3);
-            guna2Button4.Margin = new Padding(10, 3, 0, 3);
+            guna2Button4.Location = new Point(586, 3);
+            guna2Button4.Margin = new Padding(10, 3, 10, 3);
             guna2Button4.Name = "guna2Button4";
             guna2Button4.Padding = new Padding(20, 0, 0, 0);
             guna2Button4.ShadowDecoration.CustomizableEdges = customizableEdges8;
-            guna2Button4.Size = new Size(158, 90);
+            guna2Button4.Size = new Size(177, 60);
             guna2Button4.TabIndex = 3;
             guna2Button4.Text = "Folder name";
+            guna2Button4.TextAlign = HorizontalAlignment.Left;
             guna2Button4.TextFormatNoPrefix = true;
-            guna2Button4.TextOffset = new Point(-5, 0);
+            guna2Button4.TextOffset = new Point(-25, 0);
             // 
             // pictureBox3
             // 
@@ -286,6 +292,7 @@
             FormBorderStyle = FormBorderStyle.None;
             Name = "homepage";
             Text = "homepage";
+            Load += homepage_Load;
             panel5.ResumeLayout(false);
             panel5.PerformLayout();
             flowLayoutPanel1.ResumeLayout(false);
