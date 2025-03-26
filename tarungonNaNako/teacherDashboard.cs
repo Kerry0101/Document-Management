@@ -46,6 +46,9 @@ namespace tarungonNaNako
 
         private void pictureBox2_Click(object sender, EventArgs e)
         {
+            // Toggle visibility of flowLayoutPanel1
+            flowLayoutPanel1.Visible = !flowLayoutPanel1.Visible;
+
             isArrowDown = !isArrowDown; // Toggle between arrow down and arrow right
             float rotationAngle = isArrowDown ? 0 : -90;
             pictureBox2.Image = RotateImage(originalImage, rotationAngle);
@@ -81,6 +84,14 @@ namespace tarungonNaNako
             return bmp;
         }
 
+        private void guna2Button1_Click(object sender, EventArgs e)
+        {
 
+        }
+
+        private void label4_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }
