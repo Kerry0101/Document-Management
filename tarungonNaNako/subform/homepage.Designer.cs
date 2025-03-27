@@ -38,10 +38,10 @@
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges7 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges8 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             panel5 = new Panel();
+            tableLayoutPanel1 = new TableLayoutPanel();
             label6 = new Label();
             label5 = new Label();
             label4 = new Label();
-            flowLayoutPanel2 = new FlowLayoutPanel();
             flowLayoutPanel1 = new FlowLayoutPanel();
             guna2Button1 = new Guna.UI2.WinForms.Guna2Button();
             guna2Button2 = new Guna.UI2.WinForms.Guna2Button();
@@ -59,20 +59,36 @@
             // 
             // panel5
             // 
+            panel5.AutoScroll = true;
+            panel5.Controls.Add(tableLayoutPanel1);
             panel5.Controls.Add(label6);
             panel5.Controls.Add(label5);
             panel5.Controls.Add(label4);
-            panel5.Controls.Add(flowLayoutPanel2);
             panel5.Location = new Point(16, 175);
             panel5.Name = "panel5";
             panel5.Size = new Size(730, 335);
             panel5.TabIndex = 15;
+            panel5.Paint += panel5_Paint;
+            // 
+            // tableLayoutPanel1
+            // 
+            tableLayoutPanel1.AutoSize = true;
+            tableLayoutPanel1.ColumnCount = 1;
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 56.7615662F));
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 20F));
+            tableLayoutPanel1.Cursor = Cursors.Hand;
+            tableLayoutPanel1.Location = new Point(10, 33);
+            tableLayoutPanel1.Name = "tableLayoutPanel1";
+            tableLayoutPanel1.RowCount = 1;
+            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            tableLayoutPanel1.Size = new Size(711, 51);
+            tableLayoutPanel1.TabIndex = 9;
             // 
             // label6
             // 
             label6.AutoSize = true;
             label6.Font = new Font("Microsoft Sans Serif", 10.2F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            label6.Location = new Point(570, 10);
+            label6.Location = new Point(575, 9);
             label6.Name = "label6";
             label6.Size = new Size(81, 20);
             label6.TabIndex = 8;
@@ -82,7 +98,7 @@
             // 
             label5.AutoSize = true;
             label5.Font = new Font("Microsoft Sans Serif", 10.2F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            label5.Location = new Point(325, 9);
+            label5.Location = new Point(332, 9);
             label5.Name = "label5";
             label5.Size = new Size(158, 20);
             label5.TabIndex = 7;
@@ -97,17 +113,6 @@
             label4.Size = new Size(57, 20);
             label4.TabIndex = 6;
             label4.Text = "Name";
-            // 
-            // flowLayoutPanel2
-            // 
-            flowLayoutPanel2.AutoScroll = true;
-            flowLayoutPanel2.BackColor = Color.Gainsboro;
-            flowLayoutPanel2.Location = new Point(10, 33);
-            flowLayoutPanel2.Name = "flowLayoutPanel2";
-            flowLayoutPanel2.Padding = new Padding(10, 0, 10, 0);
-            flowLayoutPanel2.Size = new Size(711, 51);
-            flowLayoutPanel2.TabIndex = 5;
-            flowLayoutPanel2.WrapContents = false;
             // 
             // flowLayoutPanel1
             // 
@@ -226,7 +231,7 @@
             guna2Button4.ImageAlign = HorizontalAlignment.Left;
             guna2Button4.ImageOffset = new Point(-2, 0);
             guna2Button4.Location = new Point(586, 3);
-            guna2Button4.Margin = new Padding(10, 3, 10, 3);
+            guna2Button4.Margin = new Padding(10, 3, 20, 3);
             guna2Button4.Name = "guna2Button4";
             guna2Button4.Padding = new Padding(20, 0, 0, 0);
             guna2Button4.ShadowDecoration.CustomizableEdges = customizableEdges8;
@@ -308,7 +313,6 @@
         private Label label6;
         private Label label5;
         private Label label4;
-        private FlowLayoutPanel flowLayoutPanel2;
         private FlowLayoutPanel flowLayoutPanel1;
         private Guna.UI2.WinForms.Guna2Button guna2Button1;
         private Guna.UI2.WinForms.Guna2Button guna2Button2;
@@ -318,5 +322,6 @@
         private Label label3;
         private PictureBox pictureBox2;
         private Label label1;
+        private TableLayoutPanel tableLayoutPanel1;
     }
 }
