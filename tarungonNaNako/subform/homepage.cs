@@ -36,85 +36,8 @@ namespace tarungonNaNako.subform
             pictureBox3.Image = RotateImage(originalImage, rotationAngle3);
 
             LoadCategoriesIntoButtons();  // Load categories dynamically
-            //LoadRecentFiles();
+
         }
-
-        //private void LoadRecentFiles()
-        //{
-        //    string connectionString = "server=localhost;database=docsmanagement;uid=root;pwd=;";
-        //    using (MySqlConnection conn = new MySqlConnection(connectionString))
-        //    {
-        //        try
-        //        {
-        //            conn.Open();
-        //            string query = @"
-        //        SELECT f.fileName, f.updated_at, c.categoryName
-        //        FROM files f
-        //        LEFT JOIN category c ON f.categoryId = c.categoryId
-        //        ORDER BY f.updated_at DESC
-        //        LIMIT 5";  // Adjust the limit as needed
-
-        //            MySqlCommand cmd = new MySqlCommand(query, conn);
-        //            MySqlDataReader reader = cmd.ExecuteReader();
-
-        //            // Clear the table before adding new rows
-        //            tableLayoutPanel1.Controls.Clear();
-        //            tableLayoutPanel1.RowCount = 0; // Reset row count
-        //            tableLayoutPanel1.ColumnCount = 3; // Ensure 3 columns exist
-
-        //            while (reader.Read())
-        //            {
-        //                string fileName = reader["fileName"].ToString();
-        //                string modificationTime = Convert.ToDateTime(reader["updated_at"]).ToString("yyyy-MM-dd HH:mm:ss");
-        //                string categoryName = reader["categoryName"].ToString();
-
-        //                int newRowIndex = tableLayoutPanel1.RowCount;
-        //                tableLayoutPanel1.RowCount++; // Add a new row
-
-        //                // Create labels for each column
-        //                Label fileLabel = new Label
-        //                {
-        //                    Text = fileName,
-        //                    AutoSize = true,
-        //                    Font = new Font("Arial", 10, FontStyle.Regular),
-        //                    TextAlign = ContentAlignment.MiddleLeft,
-        //                    Dock = DockStyle.Fill
-        //                };
-
-        //                Label dateLabel = new Label
-        //                {
-        //                    Text = modificationTime,
-        //                    AutoSize = true,
-        //                    Font = new Font("Arial", 10, FontStyle.Regular),
-        //                    TextAlign = ContentAlignment.MiddleLeft,
-        //                    Dock = DockStyle.Fill
-        //                };
-
-        //                Label categoryLabel = new Label
-        //                {
-        //                    Text = categoryName,
-        //                    AutoSize = true,
-        //                    Font = new Font("Arial", 10, FontStyle.Regular),
-        //                    TextAlign = ContentAlignment.MiddleLeft,
-        //                    Dock = DockStyle.Fill
-        //                };
-
-        //                // Add controls to the TableLayoutPanel
-        //                tableLayoutPanel1.Controls.Add(fileLabel, 0, newRowIndex);
-        //                tableLayoutPanel1.Controls.Add(dateLabel, 1, newRowIndex);
-        //                tableLayoutPanel1.Controls.Add(categoryLabel, 2, newRowIndex);
-        //            }
-        //        }
-        //        catch (Exception ex)
-        //        {
-        //            MessageBox.Show("Error loading files: " + ex.Message);
-        //        }
-        //        finally
-        //        {
-        //            conn.Close();
-        //        }
-        //    }
-        //}
 
 
         private void LoadFilesIntoTablePanel()
@@ -137,67 +60,87 @@ namespace tarungonNaNako.subform
                             tableLayoutPanel1.RowCount = 0;
                             tableLayoutPanel1.RowStyles.Clear();
 
-                            int fixedRowHeight = 60; // Adjust row height as needed
                             int rowIndex = 0;
 
                             while (reader.Read())
                             {
                                 string fileName = reader["fileName"].ToString();
-                                string modificationTime = Convert.ToDateTime(reader["updated_at"]).ToString("yyyy-MM-dd HH:mm:ss");
+                                string modificationTime = Convert.ToDateTime(reader["updated_at"]).ToString("yyyy-MM-dd hh:mm tt");
                                 string categoryName = reader["categoryName"].ToString();
 
-                                // 🔵 Create a Panel for each row
-                                Panel rowPanel = new Panel
+                                // ✅ Create TableLayoutPanel for Row
+                                TableLayoutPanel rowTable = new TableLayoutPanel
                                 {
+                                    ColumnCount = 3,
                                     Dock = DockStyle.Fill,
-                                    BackColor = Color.White,
-                                    Height = fixedRowHeight
+                                    Height = 50, // Adjust row height
+                                    BackColor = ColorTranslator.FromHtml("#ffe261")
                                 };
 
-                                // Add hover effect
-                                rowPanel.MouseEnter += (s, e) => rowPanel.BackColor = Color.LightGray;
-                                rowPanel.MouseLeave += (s, e) => rowPanel.BackColor = Color.White;
+                                // Set column sizes
+                                rowTable.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 200)); // File Name
+                                rowTable.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 180)); // Modification Time
+                                rowTable.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 150)); // Category
 
-                                // 🔴 Create labels for File Name, Date, and Category
+                                // 🔴 Create Labels (aligned properly)
                                 Label fileLabel = new Label
                                 {
                                     Text = fileName,
-                                    Dock = DockStyle.Left,
+                                    Dock = DockStyle.Fill,
                                     AutoSize = false,
-                                    Width = 200,
                                     TextAlign = ContentAlignment.MiddleLeft,
-                                    Padding = new Padding(10, 0, 0, 0)
+                                    Padding = new Padding(10, 0, 0, 0),
+                                    Font = new Font("Microsoft Sans Serif", 10),
+                                    BackColor = Color.Transparent // Ensure background remains transparent
                                 };
 
                                 Label dateLabel = new Label
                                 {
                                     Text = modificationTime,
-                                    Dock = DockStyle.Left,
+                                    Dock = DockStyle.Fill,
                                     AutoSize = false,
-                                    Width = 180,
                                     TextAlign = ContentAlignment.MiddleLeft,
-                                    Padding = new Padding(10, 0, 0, 0)
+                                    Padding = new Padding(10, 0, 0, 0),
+                                    Font = new Font("Microsoft Sans Serif", 10),
+                                    BackColor = Color.Transparent
                                 };
 
                                 Label categoryLabel = new Label
                                 {
                                     Text = categoryName,
-                                    Dock = DockStyle.Left,
+                                    Dock = DockStyle.Fill,
                                     AutoSize = false,
-                                    Width = 150,
                                     TextAlign = ContentAlignment.MiddleLeft,
-                                    Padding = new Padding(10, 0, 0, 0)
+                                    Padding = new Padding(10, 0, 0, 0),
+                                    Font = new Font("Microsoft Sans Serif", 10),
+                                    BackColor = Color.Transparent
                                 };
 
-                                // 🔵 Add labels to the row panel
-                                rowPanel.Controls.Add(fileLabel);
-                                rowPanel.Controls.Add(dateLabel);
-                                rowPanel.Controls.Add(categoryLabel);
+                                // ✅ Add hover effect to row and its labels 255, 255, 192
+                                void RowHover(object sender, EventArgs e) => rowTable.BackColor = Color.FromArgb(255, 206, 0);
+                                void RowLeave(object sender, EventArgs e) => rowTable.BackColor = ColorTranslator.FromHtml("#ffe261");
 
-                                // 🔴 Add rowPanel to TableLayoutPanel
+                                rowTable.MouseEnter += RowHover;
+                                rowTable.MouseLeave += RowLeave;
+
+                                fileLabel.MouseEnter += RowHover;
+                                fileLabel.MouseLeave += RowLeave;
+
+                                dateLabel.MouseEnter += RowHover;
+                                dateLabel.MouseLeave += RowLeave;
+
+                                categoryLabel.MouseEnter += RowHover;
+                                categoryLabel.MouseLeave += RowLeave;
+
+                                // ✅ Add Labels to rowTable
+                                rowTable.Controls.Add(fileLabel, 0, 0);
+                                rowTable.Controls.Add(dateLabel, 1, 0);
+                                rowTable.Controls.Add(categoryLabel, 2, 0);
+
+                                // 🔴 Add rowTable to TableLayoutPanel
                                 tableLayoutPanel1.RowCount = rowIndex + 1;
-                                tableLayoutPanel1.Controls.Add(rowPanel, 0, rowIndex);
-                                tableLayoutPanel1.SetColumnSpan(rowPanel, 3); // Span all columns
+                                tableLayoutPanel1.Controls.Add(rowTable, 0, rowIndex);
+                                tableLayoutPanel1.SetColumnSpan(rowTable, 3); // Span all columns
 
                                 rowIndex++;
                             }
@@ -210,6 +153,8 @@ namespace tarungonNaNako.subform
                 MessageBox.Show($"Error loading files: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
+
 
 
 
@@ -316,6 +261,11 @@ namespace tarungonNaNako.subform
         }
 
         private void panel5_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void label6_Click(object sender, EventArgs e)
         {
 
         }

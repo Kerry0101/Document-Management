@@ -60,6 +60,7 @@
             // panel5
             // 
             panel5.AutoScroll = true;
+            panel5.BackColor = Color.FromArgb(255, 226, 97);
             panel5.Controls.Add(tableLayoutPanel1);
             panel5.Controls.Add(label6);
             panel5.Controls.Add(label5);
@@ -88,17 +89,18 @@
             // 
             label6.AutoSize = true;
             label6.Font = new Font("Microsoft Sans Serif", 10.2F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            label6.Location = new Point(575, 9);
+            label6.Location = new Point(405, 9);
             label6.Name = "label6";
             label6.Size = new Size(81, 20);
             label6.TabIndex = 8;
             label6.Text = "Location";
+            label6.Click += label6_Click;
             // 
             // label5
             // 
             label5.AutoSize = true;
             label5.Font = new Font("Microsoft Sans Serif", 10.2F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            label5.Location = new Point(332, 9);
+            label5.Location = new Point(226, 9);
             label5.Name = "label5";
             label5.Size = new Size(158, 20);
             label5.TabIndex = 7;
@@ -140,7 +142,7 @@
             guna2Button1.DisabledState.CustomBorderColor = Color.DarkGray;
             guna2Button1.DisabledState.FillColor = Color.FromArgb(169, 169, 169);
             guna2Button1.DisabledState.ForeColor = Color.FromArgb(141, 141, 141);
-            guna2Button1.FillColor = Color.LightGray;
+            guna2Button1.FillColor = Color.FromArgb(255, 226, 97);
             guna2Button1.Font = new Font("Arial Rounded MT Bold", 10.2F);
             guna2Button1.ForeColor = Color.Black;
             guna2Button1.Image = (Image)resources.GetObject("guna2Button1.Image");
@@ -168,7 +170,7 @@
             guna2Button2.DisabledState.CustomBorderColor = Color.DarkGray;
             guna2Button2.DisabledState.FillColor = Color.FromArgb(169, 169, 169);
             guna2Button2.DisabledState.ForeColor = Color.FromArgb(141, 141, 141);
-            guna2Button2.FillColor = Color.LightGray;
+            guna2Button2.FillColor = Color.FromArgb(255, 226, 97);
             guna2Button2.Font = new Font("Arial Rounded MT Bold", 10.2F);
             guna2Button2.ForeColor = Color.Black;
             guna2Button2.Image = (Image)resources.GetObject("guna2Button2.Image");
@@ -196,7 +198,7 @@
             guna2Button3.DisabledState.CustomBorderColor = Color.DarkGray;
             guna2Button3.DisabledState.FillColor = Color.FromArgb(169, 169, 169);
             guna2Button3.DisabledState.ForeColor = Color.FromArgb(141, 141, 141);
-            guna2Button3.FillColor = Color.LightGray;
+            guna2Button3.FillColor = Color.FromArgb(255, 226, 97);
             guna2Button3.Font = new Font("Arial Rounded MT Bold", 10.2F);
             guna2Button3.ForeColor = Color.Black;
             guna2Button3.Image = (Image)resources.GetObject("guna2Button3.Image");
@@ -224,7 +226,7 @@
             guna2Button4.DisabledState.CustomBorderColor = Color.DarkGray;
             guna2Button4.DisabledState.FillColor = Color.FromArgb(169, 169, 169);
             guna2Button4.DisabledState.ForeColor = Color.FromArgb(141, 141, 141);
-            guna2Button4.FillColor = Color.LightGray;
+            guna2Button4.FillColor = Color.FromArgb(255, 226, 97);
             guna2Button4.Font = new Font("Arial Rounded MT Bold", 10.2F);
             guna2Button4.ForeColor = Color.Black;
             guna2Button4.Image = (Image)resources.GetObject("guna2Button4.Image");
@@ -234,6 +236,7 @@
             guna2Button4.Margin = new Padding(10, 3, 20, 3);
             guna2Button4.Name = "guna2Button4";
             guna2Button4.Padding = new Padding(20, 0, 0, 0);
+            guna2Button4.PressedColor = Color.FromArgb(255, 226, 97);
             guna2Button4.ShadowDecoration.CustomizableEdges = customizableEdges8;
             guna2Button4.Size = new Size(177, 60);
             guna2Button4.TabIndex = 3;
@@ -286,7 +289,7 @@
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            BackColor = Color.FromArgb(224, 224, 224);
+            BackColor = Color.FromArgb(255, 255, 192);
             ClientSize = new Size(763, 520);
             Controls.Add(panel5);
             Controls.Add(flowLayoutPanel1);
@@ -311,7 +314,6 @@
 
         private Panel panel5;
         private Label label6;
-        private Label label5;
         private Label label4;
         private FlowLayoutPanel flowLayoutPanel1;
         private Guna.UI2.WinForms.Guna2Button guna2Button1;
@@ -323,5 +325,6 @@
         private PictureBox pictureBox2;
         private Label label1;
         private TableLayoutPanel tableLayoutPanel1;
+        private Label label5;
     }
 }
