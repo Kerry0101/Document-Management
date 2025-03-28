@@ -152,6 +152,7 @@
             guna2Button1.Margin = new Padding(0, 3, 5, 3);
             guna2Button1.Name = "guna2Button1";
             guna2Button1.Padding = new Padding(20, 0, 0, 0);
+            guna2Button1.PressedDepth = 10;
             guna2Button1.ShadowDecoration.CustomizableEdges = customizableEdges2;
             guna2Button1.Size = new Size(177, 60);
             guna2Button1.TabIndex = 0;
@@ -180,6 +181,7 @@
             guna2Button2.Margin = new Padding(10, 3, 5, 3);
             guna2Button2.Name = "guna2Button2";
             guna2Button2.Padding = new Padding(20, 0, 0, 0);
+            guna2Button2.PressedDepth = 10;
             guna2Button2.ShadowDecoration.CustomizableEdges = customizableEdges4;
             guna2Button2.Size = new Size(177, 60);
             guna2Button2.TabIndex = 1;
@@ -208,6 +210,7 @@
             guna2Button3.Margin = new Padding(10, 3, 5, 3);
             guna2Button3.Name = "guna2Button3";
             guna2Button3.Padding = new Padding(20, 0, 0, 0);
+            guna2Button3.PressedDepth = 10;
             guna2Button3.ShadowDecoration.CustomizableEdges = customizableEdges6;
             guna2Button3.Size = new Size(177, 60);
             guna2Button3.TabIndex = 2;
@@ -236,7 +239,7 @@
             guna2Button4.Margin = new Padding(10, 3, 20, 3);
             guna2Button4.Name = "guna2Button4";
             guna2Button4.Padding = new Padding(20, 0, 0, 0);
-            guna2Button4.PressedColor = Color.FromArgb(255, 226, 97);
+            guna2Button4.PressedDepth = 10;
             guna2Button4.ShadowDecoration.CustomizableEdges = customizableEdges8;
             guna2Button4.Size = new Size(177, 60);
             guna2Button4.TabIndex = 3;

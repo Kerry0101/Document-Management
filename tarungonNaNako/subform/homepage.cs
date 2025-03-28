@@ -117,7 +117,7 @@ namespace tarungonNaNako.subform
                                 };
 
                                 // ✅ Add hover effect to row and its labels 255, 255, 192
-                                void RowHover(object sender, EventArgs e) => rowTable.BackColor = Color.FromArgb(255, 206, 0);
+                                void RowHover(object sender, EventArgs e) => rowTable.BackColor = Color.FromArgb(219, 195, 0);
                                 void RowLeave(object sender, EventArgs e) => rowTable.BackColor = ColorTranslator.FromHtml("#ffe261");
 
                                 rowTable.MouseEnter += RowHover;

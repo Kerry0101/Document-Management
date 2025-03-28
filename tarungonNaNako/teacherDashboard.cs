@@ -9,12 +9,22 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using tarungonNaNako.sidebar;
 using tarungonNaNako.subform;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
+using System;
+using System.Runtime.InteropServices;
+using System.Windows.Forms;
 
 namespace tarungonNaNako
 {
     public partial class teacherDashboard : Form
     {
+        [DllImport("user32.dll")]
+        private static extern int SendMessage(IntPtr hWnd, int Msg, int wParam, int lParam);
+        [DllImport("user32.dll")]
+        private static extern bool ReleaseCapture();
 
+        private const int WM_NCLBUTTONDOWN = 0xA1;
+        private const int HTCAPTION = 0x2;
         public teacherDashboard()
         {
             InitializeComponent();
@@ -58,5 +68,30 @@ namespace tarungonNaNako
         {
             LoadFormInPanel(new archived());
         }
+
+        private void panel3_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void CloseBtn_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
+        }
+
+        private void guna2Panel1_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left) // Detect left mouse button press
+            {
+                ReleaseCapture();
+                SendMessage(this.Handle, WM_NCLBUTTONDOWN, HTCAPTION, 0);
+            }
+        }
+
+        private void MinimizeBtn_Click(object sender, EventArgs e)
+        {
+            this.WindowState = FormWindowState.Minimized;
+        }
+
     }
 }
