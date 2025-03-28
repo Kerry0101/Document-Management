@@ -36,9 +36,7 @@ namespace tarungonNaNako.subform
             pictureBox3.Image = RotateImage(originalImage, rotationAngle3);
 
             LoadCategoriesIntoButtons();  // Load categories dynamically
-
         }
-
 
         private void LoadFilesIntoTablePanel()
         {
@@ -268,6 +266,51 @@ namespace tarungonNaNako.subform
         private void label6_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void guna2hScrollBar1_Scroll(object sender, ScrollEventArgs e)
+        {
+
+        }
+
+        private void guna2Button1_MouseEnter(object sender, EventArgs e)
+        {
+            guna2CircleButton3.BackColor = Color.FromArgb(219, 195, 0);
+        }
+
+        private void guna2Button1_MouseLeave(object sender, EventArgs e)
+        {
+            guna2CircleButton3.BackColor = ColorTranslator.FromHtml("#ffe261");
+        }
+
+        private void guna2Button2_MouseEnter(object sender, EventArgs e)
+        {
+            guna2CircleButton2.BackColor = Color.FromArgb(219, 195, 0);
+        }
+
+        private void guna2Button2_MouseLeave(object sender, EventArgs e)
+        {
+            guna2CircleButton2.BackColor = ColorTranslator.FromHtml("#ffe261");
+        }
+
+        private void guna2Button4_MouseEnter(object sender, EventArgs e)
+        {
+            guna2CircleButton4.BackColor = Color.FromArgb(219, 195, 0);
+        }
+
+        private void guna2Button4_MouseLeave(object sender, EventArgs e)
+        {
+            guna2CircleButton4.BackColor = ColorTranslator.FromHtml("#ffe261");
+        }
+
+        private void guna2Button3_MouseEnter(object sender, EventArgs e)
+        {
+            guna2CircleButton1.BackColor = Color.FromArgb(219, 195, 0);
+        }
+
+        private void guna2Button3_MouseLeave(object sender, EventArgs e)
+        {
+            guna2CircleButton1.BackColor = ColorTranslator.FromHtml("#ffe261");
         }
     }
 }

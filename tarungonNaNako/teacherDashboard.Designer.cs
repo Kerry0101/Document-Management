@@ -43,10 +43,10 @@
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges12 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges17 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges18 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges15 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges16 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges13 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges14 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges15 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges16 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             panel1 = new Panel();
             label2 = new Label();
             pictureBox1 = new PictureBox();
@@ -60,8 +60,8 @@
             button1 = new Guna.UI2.WinForms.Guna2Button();
             panel2 = new Panel();
             guna2Panel1 = new Guna.UI2.WinForms.Guna2Panel();
-            CloseBtn = new Guna.UI2.WinForms.Guna2Button();
             MinimizeBtn = new Guna.UI2.WinForms.Guna2Button();
+            CloseBtn = new Guna.UI2.WinForms.Guna2Button();
             panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             panel4.SuspendLayout();
@@ -94,7 +94,7 @@
             // pictureBox1
             // 
             pictureBox1.Image = (Image)resources.GetObject("pictureBox1.Image");
-            pictureBox1.Location = new Point(22, 0);
+            pictureBox1.Location = new Point(22, 2);
             pictureBox1.Margin = new Padding(2);
             pictureBox1.Name = "pictureBox1";
             pictureBox1.Size = new Size(48, 50);
@@ -291,6 +291,31 @@
             guna2Panel1.TabIndex = 6;
             guna2Panel1.MouseDown += guna2Panel1_MouseDown;
             // 
+            // MinimizeBtn
+            // 
+            MinimizeBtn.BackColor = Color.FromArgb(219, 195, 0);
+            MinimizeBtn.BorderRadius = 1;
+            MinimizeBtn.CustomizableEdges = customizableEdges13;
+            MinimizeBtn.DisabledState.BorderColor = Color.DarkGray;
+            MinimizeBtn.DisabledState.CustomBorderColor = Color.DarkGray;
+            MinimizeBtn.DisabledState.FillColor = Color.FromArgb(169, 169, 169);
+            MinimizeBtn.DisabledState.ForeColor = Color.FromArgb(141, 141, 141);
+            MinimizeBtn.FillColor = Color.Empty;
+            MinimizeBtn.Font = new Font("Microsoft Sans Serif", 8F, FontStyle.Bold);
+            MinimizeBtn.ForeColor = Color.Black;
+            MinimizeBtn.Image = (Image)resources.GetObject("MinimizeBtn.Image");
+            MinimizeBtn.ImageAlign = HorizontalAlignment.Left;
+            MinimizeBtn.ImageOffset = new Point(-2, -5);
+            MinimizeBtn.ImageSize = new Size(13, 15);
+            MinimizeBtn.Location = new Point(901, 4);
+            MinimizeBtn.Name = "MinimizeBtn";
+            MinimizeBtn.PressedDepth = 10;
+            MinimizeBtn.ShadowDecoration.CustomizableEdges = customizableEdges14;
+            MinimizeBtn.Size = new Size(31, 28);
+            MinimizeBtn.TabIndex = 16;
+            MinimizeBtn.TextOffset = new Point(-30, 0);
+            MinimizeBtn.Click += MinimizeBtn_Click;
+            // 
             // CloseBtn
             // 
             CloseBtn.BackColor = Color.FromArgb(219, 195, 0);
@@ -314,31 +339,6 @@
             CloseBtn.TabIndex = 15;
             CloseBtn.TextOffset = new Point(-30, 0);
             CloseBtn.Click += CloseBtn_Click;
-            // 
-            // MinimizeBtn
-            // 
-            MinimizeBtn.BackColor = Color.FromArgb(219, 195, 0);
-            MinimizeBtn.BorderRadius = 1;
-            MinimizeBtn.CustomizableEdges = customizableEdges13;
-            MinimizeBtn.DisabledState.BorderColor = Color.DarkGray;
-            MinimizeBtn.DisabledState.CustomBorderColor = Color.DarkGray;
-            MinimizeBtn.DisabledState.FillColor = Color.FromArgb(169, 169, 169);
-            MinimizeBtn.DisabledState.ForeColor = Color.FromArgb(141, 141, 141);
-            MinimizeBtn.FillColor = Color.Empty;
-            MinimizeBtn.Font = new Font("Microsoft Sans Serif", 8F, FontStyle.Bold);
-            MinimizeBtn.ForeColor = Color.Black;
-            MinimizeBtn.Image = (Image)resources.GetObject("MinimizeBtn.Image");
-            MinimizeBtn.ImageAlign = HorizontalAlignment.Left;
-            MinimizeBtn.ImageOffset = new Point(-2, -5);
-            MinimizeBtn.ImageSize = new Size(15, 15);
-            MinimizeBtn.Location = new Point(901, 4);
-            MinimizeBtn.Name = "MinimizeBtn";
-            MinimizeBtn.PressedDepth = 10;
-            MinimizeBtn.ShadowDecoration.CustomizableEdges = customizableEdges14;
-            MinimizeBtn.Size = new Size(31, 28);
-            MinimizeBtn.TabIndex = 16;
-            MinimizeBtn.TextOffset = new Point(-30, 0);
-            MinimizeBtn.Click += MinimizeBtn_Click;
             // 
             // teacherDashboard
             // 
