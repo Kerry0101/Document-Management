@@ -155,6 +155,8 @@ namespace tarungonNaNako.subform
                                     PressedDepth = 10
                                 };
 
+                                actionButton.Click += (s, e) => ShowContextMenu(fileName, actionButton);
+
                                 // ✅ Add hover effect to row and its labels 255, 255, 192
                                 void RowHover(object sender, EventArgs e)
                                 {
