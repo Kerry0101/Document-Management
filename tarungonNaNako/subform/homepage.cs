@@ -197,6 +197,7 @@ namespace tarungonNaNako.subform
                         categoryButton.ImageAlign = HorizontalAlignment.Left;
                         categoryButton.TextAlign = HorizontalAlignment.Left;
                         categoryButton.Location = new Point(xPosition, 0);
+                        categoryButton.Cursor = Cursors.Hand;
 
                         // Create Three-Dot Menu Button
                         Guna.UI2.WinForms.Guna2CircleButton menuButton = new Guna.UI2.WinForms.Guna2CircleButton();
@@ -210,6 +211,7 @@ namespace tarungonNaNako.subform
                         menuButton.Text = "⋮";
                         menuButton.Location = new Point(xPosition + buttonWidth - 25, 15);
                         menuButton.Click += (s, e) => ShowContextMenu(categoryName, menuButton);
+                        menuButton.PressedDepth = 10;
 
                         // Attach MouseEnter and MouseLeave event handlers
                         categoryButton.MouseEnter += (s, e) => menuButton.BackColor = Color.FromArgb(219, 195, 0);
@@ -235,6 +237,13 @@ namespace tarungonNaNako.subform
         // Example function for showing the menu when clicking the three-dot button
         private void ShowContextMenu(string categoryName, Control btn)
         {
+            // Toggle visibility of guna2Panel2
+            if (guna2Panel2.Visible)
+            {
+                guna2Panel2.Visible = false;
+                return;
+            }
+
             string download = Path.Combine(Application.StartupPath, "Assets (images)", "down-to-line.png");
             string rename = Path.Combine(Application.StartupPath, "Assets (images)", "pencil.png");
             string remove = Path.Combine(Application.StartupPath, "Assets (images)", "trash.png");
@@ -372,6 +381,7 @@ namespace tarungonNaNako.subform
             pictureBox2.Image = RotateImage(originalImage, rotationAngle);
 
             Properties.Settings.Default.Save(); // Save changes
+            guna2Panel2.Hide();
         }
 
         private void pictureBox3_Click(object sender, EventArgs e)
@@ -465,6 +475,7 @@ namespace tarungonNaNako.subform
                         if (rowsAffected > 0)
                         {
                             MessageBox.Show($"Category renamed to '{newCategoryName}' successfully.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            RefreshHomepage();
                         }
                         else
                         {
@@ -553,6 +564,7 @@ namespace tarungonNaNako.subform
                         if (rowsAffected > 0)
                         {
                             MessageBox.Show($"Category '{categoryName}' removed successfully.");
+                            RefreshHomepage();
                         }
                         else
                         {
@@ -567,6 +579,15 @@ namespace tarungonNaNako.subform
             }
         }
 
+        private void RefreshHomepage()
+        {
+            this.Controls.Clear();
+            this.InitializeComponent();
+            this.LoadPngImage();
+            this.LoadFilesIntoTablePanel();
+            this.LoadCategoriesIntoButtons();
+        }
+
         private void tableLayoutPanel1_Paint(object sender, PaintEventArgs e)
         {
 
@@ -574,7 +595,12 @@ namespace tarungonNaNako.subform
 
         private void Guna2Panel1_Scroll(object sender, ScrollEventArgs e)
         {
-            guna2Panel2.Visible = false;    
+            guna2Panel2.Visible = false;
+        }
+
+        private void homepage_Click(object sender, EventArgs e)
+        {
+            guna2Panel2.Hide();
         }
     }
 }

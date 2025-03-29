@@ -499,6 +499,7 @@
             Name = "homepage";
             Text = "homepage";
             Load += homepage_Load;
+            Click += homepage_Click;
             panel5.ResumeLayout(false);
             panel5.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox3).EndInit();
