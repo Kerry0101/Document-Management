@@ -1,6 +1,6 @@
 ﻿using MySql.Data.MySqlClient;
-
-using MySql.Data.MySqlClient;
+using System.IO;
+using System.IO.Compression;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -18,6 +18,7 @@ namespace tarungonNaNako.subform
 {
     public partial class homepage : Form
     {
+        private string storagePath = @"C:\\DocSpace\\DocsManagement\\";
         private string selectedType = ""; // "file" or "category"
         private string selectedName = ""; // Holds fileName or categoryName
         private string connectionString = "server=localhost;database=docsmanagement;uid=root;pwd=;";
@@ -429,36 +430,65 @@ namespace tarungonNaNako.subform
 
         private void DownloadFile(string fileName)
         {
-            MessageBox.Show($"Downloading file: {fileName}", "Download", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            // Add your file download logic here...
+            string storagePath = @"C:\\DocsManagement\\"; // Ensure this path is correct
+            string sourceFilePath = Path.Combine(storagePath, fileName);
+
+            // Debugging: Show the path to confirm it's correct
+            MessageBox.Show($"Checking file path: {sourceFilePath}", "Debug Info");
+
+            if (!File.Exists(sourceFilePath))
+            {
+                MessageBox.Show("File not found!\nPath: " + sourceFilePath, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            using (SaveFileDialog saveFileDialog = new SaveFileDialog())
+            {
+                saveFileDialog.FileName = fileName;
+                saveFileDialog.Filter = "All Files|*.*";
+
+                if (saveFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    string destinationPath = saveFileDialog.FileName;
+                    File.Copy(sourceFilePath, destinationPath, true);
+                    MessageBox.Show("File downloaded successfully!", "Download Complete", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+            }
         }
+
 
         private void DownloadCategory(string categoryName)
         {
-            MessageBox.Show($"Downloading category: {categoryName}", "Download", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            // Add your category download logic here...
+            string storagePath = @"C:\DocSpace\UploadedFiles\"; // Ensure this is correct
+            string categoryPath = Path.Combine(storagePath, categoryName);
+
+            // Debugging: Show the path to confirm it's correct
+            MessageBox.Show($"Checking category path: {categoryPath}", "Debug Info");
+
+            if (!Directory.Exists(categoryPath))
+            {
+                MessageBox.Show("Category folder not found!\nPath: " + categoryPath, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            using (SaveFileDialog saveFileDialog = new SaveFileDialog())
+            {
+                saveFileDialog.FileName = $"{categoryName}.zip";
+                saveFileDialog.Filter = "ZIP files|*.zip";
+
+                if (saveFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    string zipPath = saveFileDialog.FileName;
+
+                    if (File.Exists(zipPath))
+                        File.Delete(zipPath); // Ensure no conflict
+
+                    ZipFile.CreateFromDirectory(categoryPath, zipPath);
+                    MessageBox.Show("Category downloaded successfully as ZIP!", "Download Complete", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+            }
         }
 
-
-        // Example function for showing the menu when clicking the three-dot button
-        //private void ShowContextMenu(string categoryName, Control btn)
-        //{
-
-
-        //    //// Clear previous controls in guna2Panel2 (if any)
-        //    //guna2Panel2.Controls.Clear();
-
-
-
-
-
-
-
-
-
-
-
-        //}
 
 
         private int GetCategoryIdByName(string categoryName)
@@ -513,6 +543,7 @@ namespace tarungonNaNako.subform
             pictureBox3.Image = RotateImage(originalImage, rotationAngle);
 
             Properties.Settings.Default.Save(); // Save changes
+            guna2Panel2.Hide();
         }
 
 
