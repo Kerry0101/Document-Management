@@ -243,19 +243,15 @@ namespace tarungonNaNako.subform
             guna2Panel2.Controls.Clear();
 
             // Set panel properties
-            guna2Panel2.Anchor = AnchorStyles.Top | AnchorStyles.Left;
-            guna2Panel2.AutoSizeMode = AutoSizeMode.GrowOnly;
             guna2Panel2.Size = new Size(181, 132); // Adjust size
             guna2Panel2.BorderRadius = 5;
-            guna2Panel2.BackColor = Color.FromArgb(255, 255, 192);// Match the screenshot
+            guna2Panel2.BackColor = Color.FromArgb(255, 255, 192);
             guna2Panel2.BringToFront();
             guna2Panel2.Font = new Font("Segoe UI", 9);
             guna2Panel2.ForeColor = Color.Black;
 
-
             // Create buttons
             Guna.UI2.WinForms.Guna2Button btnDownload = new Guna.UI2.WinForms.Guna2Button();
-            btnDownload.Anchor = AnchorStyles.Top | AnchorStyles.Left;
             btnDownload.Size = new Size(181, 42);
             btnDownload.Text = "Download";
             btnDownload.TextAlign = HorizontalAlignment.Center;
@@ -266,15 +262,12 @@ namespace tarungonNaNako.subform
             btnDownload.ForeColor = Color.Black;
             btnDownload.Image = Image.FromFile(download);
             btnDownload.ImageAlign = HorizontalAlignment.Left;
-            btnDownload.ImageOffset = new Point(0, 0);
             btnDownload.ImageSize = new Size(15, 15);
             btnDownload.Location = new Point(0, 1);
             btnDownload.PressedColor = Color.Black;
             btnDownload.PressedDepth = 10;
-            //btnDownload.Click += (s, e) => DownloadCategory(categoryName);
 
             Guna.UI2.WinForms.Guna2Button btnRename = new Guna.UI2.WinForms.Guna2Button();
-            btnRename.Anchor = AnchorStyles.Top | AnchorStyles.Left;
             btnRename.Size = new Size(181, 42);
             btnRename.Text = "Rename";
             btnRename.TextAlign = HorizontalAlignment.Center;
@@ -285,56 +278,60 @@ namespace tarungonNaNako.subform
             btnRename.ForeColor = Color.Black;
             btnRename.Image = Image.FromFile(rename);
             btnRename.ImageAlign = HorizontalAlignment.Left;
-            btnRename.ImageOffset = new Point(0, 0);
             btnRename.ImageSize = new Size(15, 15);
             btnRename.Location = new Point(0, 44);
             btnRename.PressedColor = Color.Black;
             btnRename.PressedDepth = 10;
-
             btnRename.Click += (s, e) => EditCategory(GetCategoryIdByName(categoryName), categoryName);
 
             Guna.UI2.WinForms.Guna2Button btnDelete = new Guna.UI2.WinForms.Guna2Button();
-            btnDelete.Anchor = AnchorStyles.Top | AnchorStyles.Left;
+            btnDelete.Size = new Size(181, 42);
+            btnDelete.Text = "Move to trash";
+            btnDelete.TextAlign = HorizontalAlignment.Right;
+            btnDelete.TextOffset = new Point(-12, 0);
             btnDelete.BackColor = Color.FromArgb(255, 255, 192);
             btnDelete.FillColor = Color.FromArgb(255, 236, 130);
             btnDelete.Font = new Font("Microsoft Sans Serif", 10);
             btnDelete.ForeColor = Color.Black;
+            btnDelete.Image = Image.FromFile(remove);
             btnDelete.ImageAlign = HorizontalAlignment.Left;
             btnDelete.ImageSize = new Size(15, 15);
             btnDelete.Location = new Point(0, 87);
             btnDelete.PressedColor = Color.Black;
             btnDelete.PressedDepth = 10;
-            btnDelete.Size = new Size(181, 42);
-            btnDelete.Text = "Move to trash";
-            btnDelete.TextAlign = HorizontalAlignment.Right;
-            btnDelete.TextOffset = new Point(-12, 0);
-            btnDelete.Image = Image.FromFile(remove);
-            btnDelete.ImageAlign = HorizontalAlignment.Left;
             btnDelete.Click += (s, e) => RemoveCategory(categoryName);
 
-            //// Button styling
-            //foreach (var btnItem in new[] { btnDownload, btnRename, btnDelete })
-            //{
-            //    btnItem.Size = new Size(140, 35);
-            //    btnItem.FillColor = Color.LightYellow;
-            //    btnItem.ForeColor = Color.Black;
-            //    btnItem.Font = new Font("Segoe UI", 10);
-            //    btnItem.TextAlign = HorizontalAlignment.Left;
-            //    btnItem.Cursor = Cursors.Hand;
-            //    btnItem.BorderRadius = 5;
-            //    btnItem.Dock = DockStyle.Top;
-            //    guna2Panel2.Controls.Add(btnItem);
-            //}
-
-            // Position panel below the clicked button
-            guna2Panel2.Location = new Point(btn.Left, btn.Bottom + 5);
-            guna2Panel2.Visible = true;
-
+            // Add buttons to panel
             guna2Panel2.Controls.Add(btnDownload);
             guna2Panel2.Controls.Add(btnRename);
             guna2Panel2.Controls.Add(btnDelete);
 
+            // ===== Adjust Panel Position to Keep it Inside the Form =====
+            Point btnScreenLocation = btn.Parent.PointToScreen(btn.Location);
+            Point panelLocation = this.PointToClient(new Point(btnScreenLocation.X, btnScreenLocation.Y + btn.Height + 5));
+
+            int panelX = panelLocation.X;
+            int panelY = panelLocation.Y;
+            int panelWidth = guna2Panel2.Width;
+            int panelHeight = guna2Panel2.Height;
+
+            // Ensure panel doesn't go beyond the right boundary
+            if (panelX + panelWidth > this.ClientSize.Width)
+            {
+                panelX = this.ClientSize.Width - panelWidth - 10;
+            }
+
+            // Ensure panel doesn't go beyond the bottom boundary
+            if (panelY + panelHeight > this.ClientSize.Height)
+            {
+                panelY = btnScreenLocation.Y - panelHeight - 5;
+            }
+
+            // Apply final position
+            guna2Panel2.Location = new Point(panelX, panelY);
+            guna2Panel2.Visible = true;
         }
+
 
         private int GetCategoryIdByName(string categoryName)
         {
