@@ -1,20 +1,24 @@
+C:\Users\teche\source\repos\tarungonNaNako\tarungonNaNako\bin\Debug\net8.0-windows\Assets (images)\dropdown-select (1).png
+C:\Users\teche\source\repos\tarungonNaNako\tarungonNaNako\bin\Debug\net8.0-windows\Assets (images)\dropdown-select.png
 C:\Users\teche\source\repos\tarungonNaNako\tarungonNaNako\bin\Debug\net8.0-windows\Assets (images)\folder.png
+C:\Users\teche\source\repos\tarungonNaNako\tarungonNaNako\bin\Debug\net8.0-windows\Assets (images)\house-chimney.png
 C:\Users\teche\source\repos\tarungonNaNako\tarungonNaNako\bin\Debug\net8.0-windows\Assets (images)\menu-dots-vertical.png
 C:\Users\teche\source\repos\tarungonNaNako\tarungonNaNako\bin\Debug\net8.0-windows\tarungonNaNako.exe
 C:\Users\teche\source\repos\tarungonNaNako\tarungonNaNako\bin\Debug\net8.0-windows\Assets (images)\down-to-line.png
 C:\Users\teche\source\repos\tarungonNaNako\tarungonNaNako\bin\Debug\net8.0-windows\Assets (images)\pencil.png
 C:\Users\teche\source\repos\tarungonNaNako\tarungonNaNako\bin\Debug\net8.0-windows\Assets (images)\trash.png
-C:\Users\teche\source\repos\tarungonNaNako\tarungonNaNako\bin\Debug\net8.0-windows\Guna.UI2.dll
-C:\Users\teche\source\repos\tarungonNaNako\tarungonNaNako\bin\Debug\net8.0-windows\MySql.Data.dll
-C:\Users\teche\source\repos\tarungonNaNako\tarungonNaNako\bin\Debug\net8.0-windows\Assets (images)\dropdown-select (1).png
-C:\Users\teche\source\repos\tarungonNaNako\tarungonNaNako\bin\Debug\net8.0-windows\Assets (images)\dropdown-select.png
-C:\Users\teche\source\repos\tarungonNaNako\tarungonNaNako\bin\Debug\net8.0-windows\Assets (images)\house-chimney.png
+C:\Users\teche\source\repos\tarungonNaNako\tarungonNaNako\bin\Debug\net8.0-windows\tarungonNaNako.deps.json
+C:\Users\teche\source\repos\tarungonNaNako\tarungonNaNako\bin\Debug\net8.0-windows\tarungonNaNako.runtimeconfig.json
+C:\Users\teche\source\repos\tarungonNaNako\tarungonNaNako\bin\Debug\net8.0-windows\tarungonNaNako.dll
+C:\Users\teche\source\repos\tarungonNaNako\tarungonNaNako\bin\Debug\net8.0-windows\tarungonNaNako.pdb
 C:\Users\teche\source\repos\tarungonNaNako\tarungonNaNako\bin\Debug\net8.0-windows\BCrypt.Net-Next.dll
 C:\Users\teche\source\repos\tarungonNaNako\tarungonNaNako\bin\Debug\net8.0-windows\BouncyCastle.Cryptography.dll
 C:\Users\teche\source\repos\tarungonNaNako\tarungonNaNako\bin\Debug\net8.0-windows\Google.Protobuf.dll
+C:\Users\teche\source\repos\tarungonNaNako\tarungonNaNako\bin\Debug\net8.0-windows\Guna.UI2.dll
 C:\Users\teche\source\repos\tarungonNaNako\tarungonNaNako\bin\Debug\net8.0-windows\K4os.Compression.LZ4.dll
 C:\Users\teche\source\repos\tarungonNaNako\tarungonNaNako\bin\Debug\net8.0-windows\K4os.Compression.LZ4.Streams.dll
 C:\Users\teche\source\repos\tarungonNaNako\tarungonNaNako\bin\Debug\net8.0-windows\K4os.Hash.xxHash.dll
+C:\Users\teche\source\repos\tarungonNaNako\tarungonNaNako\bin\Debug\net8.0-windows\MySql.Data.dll
 C:\Users\teche\source\repos\tarungonNaNako\tarungonNaNako\bin\Debug\net8.0-windows\NuGet.Frameworks.dll
 C:\Users\teche\source\repos\tarungonNaNako\tarungonNaNako\bin\Debug\net8.0-windows\System.IO.Pipelines.dll
 C:\Users\teche\source\repos\tarungonNaNako\tarungonNaNako\bin\Debug\net8.0-windows\System.Management.dll
@@ -42,6 +46,7 @@ C:\Users\teche\source\repos\tarungonNaNako\tarungonNaNako\obj\Debug\net8.0-windo
 C:\Users\teche\source\repos\tarungonNaNako\tarungonNaNako\obj\Debug\net8.0-windows\tarungonNaNako.subform.addRole.resources
 C:\Users\teche\source\repos\tarungonNaNako\tarungonNaNako\obj\Debug\net8.0-windows\tarungonNaNako.subform.addSubCategory.resources
 C:\Users\teche\source\repos\tarungonNaNako\tarungonNaNako\obj\Debug\net8.0-windows\tarungonNaNako.subform.addUser.resources
+C:\Users\teche\source\repos\tarungonNaNako\tarungonNaNako\obj\Debug\net8.0-windows\tarungonNaNako.subform.fetchDocuments.resources
 C:\Users\teche\source\repos\tarungonNaNako\tarungonNaNako\obj\Debug\net8.0-windows\tarungonNaNako.subform.homepage.resources
 C:\Users\teche\source\repos\tarungonNaNako\tarungonNaNako\obj\Debug\net8.0-windows\tarungonNaNako.subform.subCategories.resources
 C:\Users\teche\source\repos\tarungonNaNako\tarungonNaNako\obj\Debug\net8.0-windows\tarungonNaNako.teacherDashboard.resources
@@ -54,9 +59,5 @@ C:\Users\teche\source\repos\tarungonNaNako\tarungonNaNako\obj\Debug\net8.0-windo
 C:\Users\teche\source\repos\tarungonNaNako\tarungonNaNako\obj\Debug\net8.0-windows\tarungonNaNako.dll
 C:\Users\teche\source\repos\tarungonNaNako\tarungonNaNako\obj\Debug\net8.0-windows\refint\tarungonNaNako.dll
 C:\Users\teche\source\repos\tarungonNaNako\tarungonNaNako\obj\Debug\net8.0-windows\tarungonNaNako.pdb
-C:\Users\teche\source\repos\tarungonNaNako\tarungonNaNako\bin\Debug\net8.0-windows\tarungonNaNako.deps.json
-C:\Users\teche\source\repos\tarungonNaNako\tarungonNaNako\bin\Debug\net8.0-windows\tarungonNaNako.runtimeconfig.json
-C:\Users\teche\source\repos\tarungonNaNako\tarungonNaNako\bin\Debug\net8.0-windows\tarungonNaNako.dll
-C:\Users\teche\source\repos\tarungonNaNako\tarungonNaNako\bin\Debug\net8.0-windows\tarungonNaNako.pdb
 C:\Users\teche\source\repos\tarungonNaNako\tarungonNaNako\obj\Debug\net8.0-windows\tarungonNaNako.genruntimeconfig.cache
 C:\Users\teche\source\repos\tarungonNaNako\tarungonNaNako\obj\Debug\net8.0-windows\ref\tarungonNaNako.dll

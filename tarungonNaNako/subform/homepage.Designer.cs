@@ -73,11 +73,13 @@
             guna2Button6 = new Guna.UI2.WinForms.Guna2Button();
             guna2Button5 = new Guna.UI2.WinForms.Guna2Button();
             button1 = new Guna.UI2.WinForms.Guna2Button();
+            panel3 = new Panel();
             panel5.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox3).BeginInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox2).BeginInit();
             Guna2Panel1.SuspendLayout();
             guna2Panel2.SuspendLayout();
+            panel3.SuspendLayout();
             SuspendLayout();
             // 
             // panel5
@@ -88,7 +90,7 @@
             panel5.Controls.Add(label6);
             panel5.Controls.Add(label5);
             panel5.Controls.Add(label4);
-            panel5.Location = new Point(16, 175);
+            panel5.Location = new Point(16, 171);
             panel5.Name = "panel5";
             panel5.Size = new Size(730, 335);
             panel5.TabIndex = 15;
@@ -258,7 +260,7 @@
             // pictureBox3
             // 
             pictureBox3.BackgroundImageLayout = ImageLayout.Stretch;
-            pictureBox3.Location = new Point(277, 142);
+            pictureBox3.Location = new Point(277, 138);
             pictureBox3.Name = "pictureBox3";
             pictureBox3.Size = new Size(25, 22);
             pictureBox3.TabIndex = 13;
@@ -269,7 +271,7 @@
             // 
             label3.AutoSize = true;
             label3.Font = new Font("Microsoft Sans Serif", 10.2F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            label3.Location = new Point(16, 142);
+            label3.Location = new Point(16, 138);
             label3.Name = "label3";
             label3.Size = new Size(260, 20);
             label3.TabIndex = 12;
@@ -278,7 +280,7 @@
             // pictureBox2
             // 
             pictureBox2.BackgroundImageLayout = ImageLayout.Stretch;
-            pictureBox2.Location = new Point(153, 11);
+            pictureBox2.Location = new Point(153, 7);
             pictureBox2.Name = "pictureBox2";
             pictureBox2.Size = new Size(25, 22);
             pictureBox2.TabIndex = 11;
@@ -289,7 +291,7 @@
             // 
             label1.AutoSize = true;
             label1.Font = new Font("Microsoft Sans Serif", 10.2F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            label1.Location = new Point(16, 10);
+            label1.Location = new Point(16, 6);
             label1.Name = "label1";
             label1.Size = new Size(137, 20);
             label1.TabIndex = 10;
@@ -307,10 +309,10 @@
             Guna2Panel1.Controls.Add(guna2Button2);
             Guna2Panel1.Controls.Add(guna2Button3);
             Guna2Panel1.CustomizableEdges = customizableEdges13;
-            Guna2Panel1.Location = new Point(16, 39);
+            Guna2Panel1.Location = new Point(16, 35);
             Guna2Panel1.Name = "Guna2Panel1";
             Guna2Panel1.ShadowDecoration.CustomizableEdges = customizableEdges14;
-            Guna2Panel1.Size = new Size(711, 90);
+            Guna2Panel1.Size = new Size(730, 90);
             Guna2Panel1.TabIndex = 16;
             Guna2Panel1.Scroll += Guna2Panel1_Scroll;
             // 
@@ -408,7 +410,7 @@
             guna2Panel2.Controls.Add(guna2Button5);
             guna2Panel2.Controls.Add(button1);
             guna2Panel2.CustomizableEdges = customizableEdges21;
-            guna2Panel2.Location = new Point(333, 127);
+            guna2Panel2.Location = new Point(333, 123);
             guna2Panel2.Name = "guna2Panel2";
             guna2Panel2.ShadowDecoration.CustomizableEdges = customizableEdges22;
             guna2Panel2.Size = new Size(181, 132);
@@ -482,19 +484,28 @@
             button1.Text = "Download";
             button1.TextOffset = new Point(-18, 0);
             // 
+            // panel3
+            // 
+            panel3.Controls.Add(guna2Panel2);
+            panel3.Controls.Add(Guna2Panel1);
+            panel3.Controls.Add(panel5);
+            panel3.Controls.Add(pictureBox3);
+            panel3.Controls.Add(label3);
+            panel3.Controls.Add(pictureBox2);
+            panel3.Controls.Add(label1);
+            panel3.Location = new Point(0, 0);
+            panel3.Name = "panel3";
+            panel3.Size = new Size(763, 520);
+            panel3.TabIndex = 18;
+            panel3.Click += panel3_Click;
+            // 
             // homepage
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(255, 255, 192);
             ClientSize = new Size(763, 520);
-            Controls.Add(guna2Panel2);
-            Controls.Add(Guna2Panel1);
-            Controls.Add(panel5);
-            Controls.Add(pictureBox3);
-            Controls.Add(label3);
-            Controls.Add(pictureBox2);
-            Controls.Add(label1);
+            Controls.Add(panel3);
             FormBorderStyle = FormBorderStyle.None;
             Name = "homepage";
             Text = "homepage";
@@ -506,8 +517,9 @@
             ((System.ComponentModel.ISupportInitialize)pictureBox2).EndInit();
             Guna2Panel1.ResumeLayout(false);
             guna2Panel2.ResumeLayout(false);
+            panel3.ResumeLayout(false);
+            panel3.PerformLayout();
             ResumeLayout(false);
-            PerformLayout();
         }
 
         #endregion
@@ -534,5 +546,6 @@
         private Guna.UI2.WinForms.Guna2Button button1;
         private Guna.UI2.WinForms.Guna2Button guna2Button5;
         private Guna.UI2.WinForms.Guna2Button guna2Button6;
+        private Panel panel3;
     }
 }

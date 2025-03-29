@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Guna.UI2.WinForms;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
+using tarungonNaNako.sidebar;
 
 namespace tarungonNaNako.subform
 {
@@ -32,6 +33,18 @@ namespace tarungonNaNako.subform
         }
 
 
+        public void LoadFormInPanel(Form form)
+        {
+            // Clear previous controls in the panel (replace "panel5" with your content panel name)
+            panel3.Controls.Clear();
+
+            // Set properties for the form to display it in the panel
+            form.TopLevel = false;
+            form.Dock = DockStyle.Fill;
+            panel3.Controls.Add(form);
+            form.Show();
+        }
+
         private void homepage_Load(object sender, EventArgs e)
         {
             Guna2Panel1.Visible = Properties.Settings.Default.isPanel1Visible;
@@ -48,14 +61,18 @@ namespace tarungonNaNako.subform
 
         private void LoadFilesIntoTablePanel()
         {
+            int buttonWidth = 177; // Adjust as needed
+            int buttonHeight = 60; // Adjust as needed
+            int spacing = 10;
+            int xPosition = 0;
             try
             {
                 using (MySqlConnection conn = new MySqlConnection(connectionString))
                 {
                     conn.Open();
                     string query = @"SELECT f.fileName, f.updated_at, c.categoryName
-                             FROM files f
-                             JOIN category c ON f.categoryId = c.categoryId";
+                                     FROM files f
+                                     JOIN category c ON f.categoryId = c.categoryId";
 
                     using (MySqlCommand cmd = new MySqlCommand(query, conn))
                     {
@@ -77,7 +94,7 @@ namespace tarungonNaNako.subform
                                 // ✅ Create TableLayoutPanel for Row
                                 TableLayoutPanel rowTable = new TableLayoutPanel
                                 {
-                                    ColumnCount = 3,
+                                    ColumnCount = 4,
                                     Dock = DockStyle.Fill,
                                     Height = 50, // Adjust row height
                                     BackColor = ColorTranslator.FromHtml("#ffe261")
@@ -87,6 +104,7 @@ namespace tarungonNaNako.subform
                                 rowTable.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 200)); // File Name
                                 rowTable.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 180)); // Modification Time
                                 rowTable.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 150)); // Category
+                                rowTable.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 150)); // Action
 
                                 // 🔴 Create Labels (aligned properly)
                                 Label fileLabel = new Label
@@ -122,9 +140,32 @@ namespace tarungonNaNako.subform
                                     BackColor = Color.Transparent
                                 };
 
+                                Guna.UI2.WinForms.Guna2CircleButton actionButton = new Guna.UI2.WinForms.Guna2CircleButton
+                                {
+                                    Image = Image.FromFile(ThreeDotMenu),
+                                    ImageSize = new Size(15, 15),
+                                    ImageAlign = HorizontalAlignment.Center,
+                                    ImageOffset = new Point(0, 12),
+                                    BackColor = Color.FromArgb(255, 226, 97),
+                                    FillColor = Color.Transparent,
+                                    Size = new Size(30, 26),
+                                    Text = "⋮",
+                                    Anchor = AnchorStyles.Right, // This will align the button to the right
+                                    Margin = new Padding(0, 5, 30, 0), // Adjust the right margin if needed
+                                    PressedDepth = 10
+                                };
+
                                 // ✅ Add hover effect to row and its labels 255, 255, 192
-                                void RowHover(object sender, EventArgs e) => rowTable.BackColor = Color.FromArgb(219, 195, 0);
-                                void RowLeave(object sender, EventArgs e) => rowTable.BackColor = ColorTranslator.FromHtml("#ffe261");
+                                void RowHover(object sender, EventArgs e)
+                                {
+                                    rowTable.BackColor = Color.FromArgb(219, 195, 0);
+                                    actionButton.BackColor = Color.FromArgb(219, 195, 0);
+                                }
+                                void RowLeave(object sender, EventArgs e)
+                                {
+                                    rowTable.BackColor = ColorTranslator.FromHtml("#ffe261");
+                                    actionButton.BackColor = ColorTranslator.FromHtml("#ffe261");
+                                }
 
                                 rowTable.MouseEnter += RowHover;
                                 rowTable.MouseLeave += RowLeave;
@@ -138,10 +179,11 @@ namespace tarungonNaNako.subform
                                 categoryLabel.MouseEnter += RowHover;
                                 categoryLabel.MouseLeave += RowLeave;
 
-                                // ✅ Add Labels to rowTable
+                                // ✅ Add Labels and Button to rowTable
                                 rowTable.Controls.Add(fileLabel, 0, 0);
                                 rowTable.Controls.Add(dateLabel, 1, 0);
                                 rowTable.Controls.Add(categoryLabel, 2, 0);
+                                rowTable.Controls.Add(actionButton, 3, 0);
 
                                 // 🔴 Add rowTable to TableLayoutPanel
                                 tableLayoutPanel1.RowCount = rowIndex + 1;
@@ -174,7 +216,7 @@ namespace tarungonNaNako.subform
                 try
                 {
                     conn.Open();
-                    string query = "SELECT categoryName FROM category LIMIT 5";
+                    string query = "SELECT categoryName FROM category WHERE is_archived = 0 LIMIT 5";
                     MySqlCommand cmd = new MySqlCommand(query, conn);
                     MySqlDataReader reader = cmd.ExecuteReader();
 
@@ -198,6 +240,10 @@ namespace tarungonNaNako.subform
                         categoryButton.TextAlign = HorizontalAlignment.Left;
                         categoryButton.Location = new Point(xPosition, 0);
                         categoryButton.Cursor = Cursors.Hand;
+                        categoryButton.Click += (s, e) =>
+                        {
+                            LoadFormInPanel(new fetchDocuments());
+                        };
 
                         // Create Three-Dot Menu Button
                         Guna.UI2.WinForms.Guna2CircleButton menuButton = new Guna.UI2.WinForms.Guna2CircleButton();
@@ -207,9 +253,9 @@ namespace tarungonNaNako.subform
                         menuButton.ImageOffset = new Point(0, 12);
                         menuButton.BackColor = Color.FromArgb(255, 226, 97);
                         menuButton.FillColor = Color.Transparent;
-                        menuButton.Size = new Size(21, 26);
+                        menuButton.Size = new Size(28, 26);
                         menuButton.Text = "⋮";
-                        menuButton.Location = new Point(xPosition + buttonWidth - 25, 15);
+                        menuButton.Location = new Point(xPosition + buttonWidth - 35, 15);
                         menuButton.Click += (s, e) => ShowContextMenu(categoryName, menuButton);
                         menuButton.PressedDepth = 10;
 
@@ -474,8 +520,9 @@ namespace tarungonNaNako.subform
                         int rowsAffected = cmd.ExecuteNonQuery();
                         if (rowsAffected > 0)
                         {
+                            guna2Panel2.Visible = false;
                             MessageBox.Show($"Category renamed to '{newCategoryName}' successfully.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                            RefreshHomepage();
+                            RefreshCategoriesPanel();
                         }
                         else
                         {
@@ -563,8 +610,9 @@ namespace tarungonNaNako.subform
                         int rowsAffected = cmd.ExecuteNonQuery();
                         if (rowsAffected > 0)
                         {
+                            guna2Panel2.Visible = false;
                             MessageBox.Show($"Category '{categoryName}' removed successfully.");
-                            RefreshHomepage();
+                            RefreshCategoriesPanel(); // Refresh the panel after removing the category
                         }
                         else
                         {
@@ -579,14 +627,12 @@ namespace tarungonNaNako.subform
             }
         }
 
-        private void RefreshHomepage()
+        private void RefreshCategoriesPanel()
         {
-            this.Controls.Clear();
-            this.InitializeComponent();
-            this.LoadPngImage();
-            this.LoadFilesIntoTablePanel();
-            this.LoadCategoriesIntoButtons();
+            LoadCategoriesIntoButtons();
         }
+
+
 
         private void tableLayoutPanel1_Paint(object sender, PaintEventArgs e)
         {
@@ -599,6 +645,11 @@ namespace tarungonNaNako.subform
         }
 
         private void homepage_Click(object sender, EventArgs e)
+        {
+            guna2Panel2.Hide();
+        }
+
+        private void panel3_Click(object sender, EventArgs e)
         {
             guna2Panel2.Hide();
         }
