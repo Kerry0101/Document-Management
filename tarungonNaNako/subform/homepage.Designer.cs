@@ -43,6 +43,14 @@
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges10 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges11 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges12 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges21 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges22 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges17 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges18 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges19 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges20 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges15 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges16 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             panel5 = new Panel();
             tableLayoutPanel1 = new TableLayoutPanel();
             label6 = new Label();
@@ -61,10 +69,15 @@
             guna2CircleButton4 = new Guna.UI2.WinForms.Guna2CircleButton();
             guna2CircleButton2 = new Guna.UI2.WinForms.Guna2CircleButton();
             guna2CircleButton1 = new Guna.UI2.WinForms.Guna2CircleButton();
+            guna2Panel2 = new Guna.UI2.WinForms.Guna2Panel();
+            guna2Button5 = new Guna.UI2.WinForms.Guna2Button();
+            button1 = new Guna.UI2.WinForms.Guna2Button();
+            guna2Button6 = new Guna.UI2.WinForms.Guna2Button();
             panel5.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox3).BeginInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox2).BeginInit();
             Guna2Panel1.SuspendLayout();
+            guna2Panel2.SuspendLayout();
             SuspendLayout();
             // 
             // panel5
@@ -388,12 +401,92 @@
             guna2CircleButton1.TabIndex = 10;
             guna2CircleButton1.Text = "guna2CircleButton1";
             // 
+            // guna2Panel2
+            // 
+            guna2Panel2.Controls.Add(guna2Button6);
+            guna2Panel2.Controls.Add(guna2Button5);
+            guna2Panel2.Controls.Add(button1);
+            guna2Panel2.CustomizableEdges = customizableEdges21;
+            guna2Panel2.Location = new Point(333, 127);
+            guna2Panel2.Name = "guna2Panel2";
+            guna2Panel2.ShadowDecoration.CustomizableEdges = customizableEdges22;
+            guna2Panel2.Size = new Size(181, 132);
+            guna2Panel2.TabIndex = 17;
+            // 
+            // guna2Button5
+            // 
+            guna2Button5.CustomizableEdges = customizableEdges17;
+            guna2Button5.DisabledState.BorderColor = Color.DarkGray;
+            guna2Button5.DisabledState.CustomBorderColor = Color.DarkGray;
+            guna2Button5.DisabledState.FillColor = Color.FromArgb(169, 169, 169);
+            guna2Button5.DisabledState.ForeColor = Color.FromArgb(141, 141, 141);
+            guna2Button5.FillColor = Color.FromArgb(255, 236, 130);
+            guna2Button5.Font = new Font("Microsoft Sans Serif", 10.2F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            guna2Button5.ForeColor = Color.Black;
+            guna2Button5.Image = (Image)resources.GetObject("guna2Button5.Image");
+            guna2Button5.ImageAlign = HorizontalAlignment.Left;
+            guna2Button5.ImageSize = new Size(15, 15);
+            guna2Button5.Location = new Point(0, 44);
+            guna2Button5.Name = "guna2Button5";
+            guna2Button5.PressedDepth = 10;
+            guna2Button5.ShadowDecoration.CustomizableEdges = customizableEdges18;
+            guna2Button5.Size = new Size(181, 42);
+            guna2Button5.TabIndex = 2;
+            guna2Button5.Text = "Rename";
+            guna2Button5.TextOffset = new Point(-18, 0);
+            // 
+            // button1
+            // 
+            button1.CustomizableEdges = customizableEdges19;
+            button1.DisabledState.BorderColor = Color.DarkGray;
+            button1.DisabledState.CustomBorderColor = Color.DarkGray;
+            button1.DisabledState.FillColor = Color.FromArgb(169, 169, 169);
+            button1.DisabledState.ForeColor = Color.FromArgb(141, 141, 141);
+            button1.FillColor = Color.FromArgb(255, 236, 130);
+            button1.Font = new Font("Microsoft Sans Serif", 10.2F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            button1.ForeColor = Color.Black;
+            button1.Image = (Image)resources.GetObject("button1.Image");
+            button1.ImageAlign = HorizontalAlignment.Left;
+            button1.ImageSize = new Size(15, 15);
+            button1.Location = new Point(0, 1);
+            button1.Name = "button1";
+            button1.PressedDepth = 10;
+            button1.ShadowDecoration.CustomizableEdges = customizableEdges20;
+            button1.Size = new Size(181, 42);
+            button1.TabIndex = 1;
+            button1.Text = "Download";
+            button1.TextOffset = new Point(-18, 0);
+            // 
+            // guna2Button6
+            // 
+            guna2Button6.CustomizableEdges = customizableEdges15;
+            guna2Button6.DisabledState.BorderColor = Color.DarkGray;
+            guna2Button6.DisabledState.CustomBorderColor = Color.DarkGray;
+            guna2Button6.DisabledState.FillColor = Color.FromArgb(169, 169, 169);
+            guna2Button6.DisabledState.ForeColor = Color.FromArgb(141, 141, 141);
+            guna2Button6.FillColor = Color.FromArgb(255, 236, 130);
+            guna2Button6.Font = new Font("Microsoft Sans Serif", 10.2F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            guna2Button6.ForeColor = Color.Black;
+            guna2Button6.Image = (Image)resources.GetObject("guna2Button6.Image");
+            guna2Button6.ImageAlign = HorizontalAlignment.Left;
+            guna2Button6.ImageSize = new Size(15, 15);
+            guna2Button6.Location = new Point(0, 87);
+            guna2Button6.Name = "guna2Button6";
+            guna2Button6.PressedDepth = 10;
+            guna2Button6.ShadowDecoration.CustomizableEdges = customizableEdges16;
+            guna2Button6.Size = new Size(181, 42);
+            guna2Button6.TabIndex = 3;
+            guna2Button6.Text = "Move to trash";
+            guna2Button6.TextAlign = HorizontalAlignment.Right;
+            guna2Button6.TextOffset = new Point(-12, 0);
+            // 
             // homepage
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(255, 255, 192);
             ClientSize = new Size(763, 520);
+            Controls.Add(guna2Panel2);
             Controls.Add(Guna2Panel1);
             Controls.Add(panel5);
             Controls.Add(pictureBox3);
@@ -409,6 +502,7 @@
             ((System.ComponentModel.ISupportInitialize)pictureBox3).EndInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox2).EndInit();
             Guna2Panel1.ResumeLayout(false);
+            guna2Panel2.ResumeLayout(false);
             ResumeLayout(false);
             PerformLayout();
         }
@@ -433,5 +527,9 @@
         private Guna.UI2.WinForms.Guna2CircleButton guna2CircleButton2;
         private Guna.UI2.WinForms.Guna2CircleButton guna2CircleButton4;
         private Guna.UI2.WinForms.Guna2CircleButton guna2CircleButton3;
+        private Guna.UI2.WinForms.Guna2Panel guna2Panel2;
+        private Guna.UI2.WinForms.Guna2Button button1;
+        private Guna.UI2.WinForms.Guna2Button guna2Button5;
+        private Guna.UI2.WinForms.Guna2Button guna2Button6;
     }
 }

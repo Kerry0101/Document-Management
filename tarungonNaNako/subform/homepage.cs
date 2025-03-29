@@ -234,11 +234,72 @@ namespace tarungonNaNako.subform
         // Example function for showing the menu when clicking the three-dot button
         private void ShowContextMenu(string categoryName, Control btn)
         {
-            ContextMenuStrip menu = new ContextMenuStrip();
-            menu.Items.Add("Edit").Click += (s, e) => EditCategory(categoryName);
-            menu.Items.Add("Delete").Click += (s, e) => DeleteCategory(categoryName);
-            menu.Show(btn, new Point(0, btn.Height));
+            string download = Path.Combine(Application.StartupPath, "Assets (images)", "down-to-line.png");
+            string rename = Path.Combine(Application.StartupPath, "Assets (images)", "pencil.png");
+            string remove = Path.Combine(Application.StartupPath, "Assets (images)", "trash.png");
+            // Clear previous controls in guna2Panel2 (if any)
+            guna2Panel2.Controls.Clear();
+            guna2Panel2.Visible = false;
+
+            // Set panel properties
+            guna2Panel2.Size = new Size(150, 120); // Adjust size
+            guna2Panel2.BorderRadius = 5;
+            guna2Panel2.BackColor = Color.LightYellow; // Match the screenshot
+            guna2Panel2.BringToFront();
+
+            // Create buttons
+            Guna.UI2.WinForms.Guna2Button btnDownload = new Guna.UI2.WinForms.Guna2Button();
+            btnDownload.Text = "Download";
+            btnDownload.Image = Image.FromFile(download);
+            btnDownload.ImageAlign = HorizontalAlignment.Left;
+            //btnDownload.Click += (s, e) => DownloadCategory(categoryName);
+
+            Guna.UI2.WinForms.Guna2Button btnRename = new Guna.UI2.WinForms.Guna2Button();
+            btnRename.Text = "Rename";
+            btnRename.Image = Image.FromFile(rename);
+            btnRename.ImageAlign = HorizontalAlignment.Left;
+            btnRename.Click += (s, e) => EditCategory(GetCategoryIdByName(categoryName), categoryName);
+
+            Guna.UI2.WinForms.Guna2Button btnDelete = new Guna.UI2.WinForms.Guna2Button();
+            btnDelete.Text = "Move to trash";
+            btnDelete.Image = Image.FromFile(remove);
+            btnDelete.ImageAlign = HorizontalAlignment.Left;
+            btnDelete.Click += (s, e) => RemoveCategory(categoryName);
+
+            // Button styling
+            foreach (var btnItem in new[] { btnDownload, btnRename, btnDelete })
+            {
+                btnItem.Size = new Size(140, 35);
+                btnItem.FillColor = Color.LightYellow;
+                btnItem.ForeColor = Color.Black;
+                btnItem.Font = new Font("Segoe UI", 10);
+                btnItem.TextAlign = HorizontalAlignment.Left;
+                btnItem.Cursor = Cursors.Hand;
+                btnItem.BorderRadius = 5;
+                btnItem.Dock = DockStyle.Top;
+                guna2Panel2.Controls.Add(btnItem);
+            }
+
+            // Position panel below the clicked button
+            guna2Panel2.Location = new Point(btn.Left, btn.Bottom + 5);
+            guna2Panel2.Visible = true;
         }
+
+        private int GetCategoryIdByName(string categoryName)
+        {
+            using (MySqlConnection conn = new MySqlConnection(connectionString))
+            {
+                conn.Open();
+                string query = "SELECT categoryId FROM category WHERE categoryName = @categoryName";
+                using (MySqlCommand cmd = new MySqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@categoryName", categoryName);
+                    return Convert.ToInt32(cmd.ExecuteScalar());
+                }
+            }
+        }
+
+
 
 
 
@@ -323,18 +384,144 @@ namespace tarungonNaNako.subform
         }
 
 
-
-
-        private void EditCategory(string categoryName)
+        private void EditCategory(int categoryId, string categoryName)
         {
-            // Implement the logic to edit the category here
-            MessageBox.Show($"Edit category: {categoryName}");
+            // Prompt user for new category name
+            string newCategoryName = Microsoft.VisualBasic.Interaction.InputBox(
+                "Enter new category name:",
+                "Edit Category",
+                categoryName
+            ).Trim();
+
+            if (string.IsNullOrWhiteSpace(newCategoryName))
+            {
+                MessageBox.Show("Category name cannot be empty.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            // Prevent duplicate category names
+            if (IsCategoryNameExists(newCategoryName))
+            {
+                MessageBox.Show("A category with this name already exists. Please choose a different name.",
+                                "Duplicate Category", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            try
+            {
+                using (MySqlConnection conn = new MySqlConnection(connectionString))
+                {
+                    conn.Open();
+                    string query = "UPDATE category SET categoryName = @newCategoryName WHERE categoryid = @categoryId";
+                    using (MySqlCommand cmd = new MySqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@newCategoryName", newCategoryName);
+                        cmd.Parameters.AddWithValue("@categoryId", categoryId);
+
+                        int rowsAffected = cmd.ExecuteNonQuery();
+                        if (rowsAffected > 0)
+                        {
+                            MessageBox.Show($"Category renamed to '{newCategoryName}' successfully.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        }
+                        else
+                        {
+                            MessageBox.Show("Category not found.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error renaming category: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
-        private void DeleteCategory(string categoryName)
+        // Helper method to check for duplicate category names
+        private bool IsCategoryNameExists(string categoryName)
         {
-            // Implement the logic to delete the category here
-            MessageBox.Show($"Delete category: {categoryName}");
+            using (MySqlConnection conn = new MySqlConnection(connectionString))
+            {
+                conn.Open();
+                string query = "SELECT COUNT(*) FROM category WHERE categoryName = @categoryName";
+                using (MySqlCommand cmd = new MySqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@categoryName", categoryName);
+                    return Convert.ToInt32(cmd.ExecuteScalar()) > 0;
+                }
+            }
+        }
+
+
+        //private void EditCategory(string categoryName)
+        //{
+        //    // Prompt user for new category name
+        //    string newCategoryName = Microsoft.VisualBasic.Interaction.InputBox(
+        //        "Enter new category name:",
+        //        "Edit Category",
+        //        categoryName
+        //    );
+
+        //    if (string.IsNullOrWhiteSpace(newCategoryName))
+        //    {
+        //        MessageBox.Show("Category name cannot be empty.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        //        return;
+        //    }
+
+        //    try
+        //    {
+        //        using (MySqlConnection conn = new MySqlConnection(connectionString))
+        //        {
+        //            conn.Open();
+        //            string query = "UPDATE category SET categoryName = @newCategoryName WHERE categoryName = @categoryName";
+        //            using (MySqlCommand cmd = new MySqlCommand(query, conn))
+        //            {
+        //                cmd.Parameters.AddWithValue("@newCategoryName", newCategoryName);
+        //                cmd.Parameters.AddWithValue("@categoryName", categoryName);
+        //                int rowsAffected = cmd.ExecuteNonQuery();
+        //                if (rowsAffected > 0)
+        //                {
+        //                    MessageBox.Show($"Category '{categoryName}' renamed to '{newCategoryName}' successfully.");
+        //                }
+        //                else
+        //                {
+        //                    MessageBox.Show($"Category '{categoryName}' not found.");
+        //                }
+        //            }
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        MessageBox.Show($"Error renaming category: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        //    }
+        //}
+
+        private void RemoveCategory(string categoryName)
+        {
+            try
+            {
+                using (MySqlConnection conn = new MySqlConnection(connectionString))
+                {
+                    conn.Open();
+                    string query = "UPDATE category SET is_archived = 1 WHERE categoryName = @categoryName";
+                    using (MySqlCommand cmd = new MySqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@categoryName", categoryName);
+                        int rowsAffected = cmd.ExecuteNonQuery();
+                        if (rowsAffected > 0)
+                        {
+                            MessageBox.Show($"Category '{categoryName}' removed successfully.");
+                        }
+                        else
+                        {
+                            MessageBox.Show($"Category '{categoryName}' not found.");
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error archiving category: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void tableLayoutPanel1_Paint(object sender, PaintEventArgs e)
