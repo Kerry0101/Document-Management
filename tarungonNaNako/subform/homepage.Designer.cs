@@ -45,12 +45,12 @@
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges12 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges21 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges22 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges15 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges16 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges17 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges18 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges19 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges20 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges15 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges16 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             panel5 = new Panel();
             tableLayoutPanel1 = new TableLayoutPanel();
             label6 = new Label();
@@ -70,9 +70,9 @@
             guna2CircleButton2 = new Guna.UI2.WinForms.Guna2CircleButton();
             guna2CircleButton1 = new Guna.UI2.WinForms.Guna2CircleButton();
             guna2Panel2 = new Guna.UI2.WinForms.Guna2Panel();
+            guna2Button6 = new Guna.UI2.WinForms.Guna2Button();
             guna2Button5 = new Guna.UI2.WinForms.Guna2Button();
             button1 = new Guna.UI2.WinForms.Guna2Button();
-            guna2Button6 = new Guna.UI2.WinForms.Guna2Button();
             panel5.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox3).BeginInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox2).BeginInit();
@@ -312,6 +312,7 @@
             Guna2Panel1.ShadowDecoration.CustomizableEdges = customizableEdges14;
             Guna2Panel1.Size = new Size(711, 90);
             Guna2Panel1.TabIndex = 16;
+            Guna2Panel1.Scroll += Guna2Panel1_Scroll;
             // 
             // guna2CircleButton3
             // 
@@ -412,6 +413,30 @@
             guna2Panel2.ShadowDecoration.CustomizableEdges = customizableEdges22;
             guna2Panel2.Size = new Size(181, 132);
             guna2Panel2.TabIndex = 17;
+            guna2Panel2.Visible = false;
+            // 
+            // guna2Button6
+            // 
+            guna2Button6.CustomizableEdges = customizableEdges15;
+            guna2Button6.DisabledState.BorderColor = Color.DarkGray;
+            guna2Button6.DisabledState.CustomBorderColor = Color.DarkGray;
+            guna2Button6.DisabledState.FillColor = Color.FromArgb(169, 169, 169);
+            guna2Button6.DisabledState.ForeColor = Color.FromArgb(141, 141, 141);
+            guna2Button6.FillColor = Color.FromArgb(255, 236, 130);
+            guna2Button6.Font = new Font("Microsoft Sans Serif", 10.2F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            guna2Button6.ForeColor = Color.Black;
+            guna2Button6.Image = (Image)resources.GetObject("guna2Button6.Image");
+            guna2Button6.ImageAlign = HorizontalAlignment.Left;
+            guna2Button6.ImageSize = new Size(15, 15);
+            guna2Button6.Location = new Point(0, 87);
+            guna2Button6.Name = "guna2Button6";
+            guna2Button6.PressedDepth = 10;
+            guna2Button6.ShadowDecoration.CustomizableEdges = customizableEdges16;
+            guna2Button6.Size = new Size(181, 42);
+            guna2Button6.TabIndex = 3;
+            guna2Button6.Text = "Move to trash";
+            guna2Button6.TextAlign = HorizontalAlignment.Right;
+            guna2Button6.TextOffset = new Point(-12, 0);
             // 
             // guna2Button5
             // 
@@ -456,29 +481,6 @@
             button1.TabIndex = 1;
             button1.Text = "Download";
             button1.TextOffset = new Point(-18, 0);
-            // 
-            // guna2Button6
-            // 
-            guna2Button6.CustomizableEdges = customizableEdges15;
-            guna2Button6.DisabledState.BorderColor = Color.DarkGray;
-            guna2Button6.DisabledState.CustomBorderColor = Color.DarkGray;
-            guna2Button6.DisabledState.FillColor = Color.FromArgb(169, 169, 169);
-            guna2Button6.DisabledState.ForeColor = Color.FromArgb(141, 141, 141);
-            guna2Button6.FillColor = Color.FromArgb(255, 236, 130);
-            guna2Button6.Font = new Font("Microsoft Sans Serif", 10.2F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            guna2Button6.ForeColor = Color.Black;
-            guna2Button6.Image = (Image)resources.GetObject("guna2Button6.Image");
-            guna2Button6.ImageAlign = HorizontalAlignment.Left;
-            guna2Button6.ImageSize = new Size(15, 15);
-            guna2Button6.Location = new Point(0, 87);
-            guna2Button6.Name = "guna2Button6";
-            guna2Button6.PressedDepth = 10;
-            guna2Button6.ShadowDecoration.CustomizableEdges = customizableEdges16;
-            guna2Button6.Size = new Size(181, 42);
-            guna2Button6.TabIndex = 3;
-            guna2Button6.Text = "Move to trash";
-            guna2Button6.TextAlign = HorizontalAlignment.Right;
-            guna2Button6.TextOffset = new Point(-12, 0);
             // 
             // homepage
             // 

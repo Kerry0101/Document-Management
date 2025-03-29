@@ -1,4 +1,12 @@
+C:\Users\teche\source\repos\tarungonNaNako\tarungonNaNako\bin\Debug\net8.0-windows\Assets (images)\dropdown-select (1).png
+C:\Users\teche\source\repos\tarungonNaNako\tarungonNaNako\bin\Debug\net8.0-windows\Assets (images)\dropdown-select.png
+C:\Users\teche\source\repos\tarungonNaNako\tarungonNaNako\bin\Debug\net8.0-windows\Assets (images)\folder.png
+C:\Users\teche\source\repos\tarungonNaNako\tarungonNaNako\bin\Debug\net8.0-windows\Assets (images)\house-chimney.png
+C:\Users\teche\source\repos\tarungonNaNako\tarungonNaNako\bin\Debug\net8.0-windows\Assets (images)\menu-dots-vertical.png
 C:\Users\teche\source\repos\tarungonNaNako\tarungonNaNako\bin\Debug\net8.0-windows\tarungonNaNako.exe
+C:\Users\teche\source\repos\tarungonNaNako\tarungonNaNako\bin\Debug\net8.0-windows\Assets (images)\down-to-line.png
+C:\Users\teche\source\repos\tarungonNaNako\tarungonNaNako\bin\Debug\net8.0-windows\Assets (images)\pencil.png
+C:\Users\teche\source\repos\tarungonNaNako\tarungonNaNako\bin\Debug\net8.0-windows\Assets (images)\trash.png
 C:\Users\teche\source\repos\tarungonNaNako\tarungonNaNako\bin\Debug\net8.0-windows\tarungonNaNako.deps.json
 C:\Users\teche\source\repos\tarungonNaNako\tarungonNaNako\bin\Debug\net8.0-windows\tarungonNaNako.runtimeconfig.json
 C:\Users\teche\source\repos\tarungonNaNako\tarungonNaNako\bin\Debug\net8.0-windows\tarungonNaNako.dll
@@ -52,11 +60,3 @@ C:\Users\teche\source\repos\tarungonNaNako\tarungonNaNako\obj\Debug\net8.0-windo
 C:\Users\teche\source\repos\tarungonNaNako\tarungonNaNako\obj\Debug\net8.0-windows\tarungonNaNako.pdb
 C:\Users\teche\source\repos\tarungonNaNako\tarungonNaNako\obj\Debug\net8.0-windows\tarungonNaNako.genruntimeconfig.cache
 C:\Users\teche\source\repos\tarungonNaNako\tarungonNaNako\obj\Debug\net8.0-windows\ref\tarungonNaNako.dll
-C:\Users\teche\source\repos\tarungonNaNako\tarungonNaNako\bin\Debug\net8.0-windows\Assets (images)\dropdown-select (1).png
-C:\Users\teche\source\repos\tarungonNaNako\tarungonNaNako\bin\Debug\net8.0-windows\Assets (images)\dropdown-select.png
-C:\Users\teche\source\repos\tarungonNaNako\tarungonNaNako\bin\Debug\net8.0-windows\Assets (images)\house-chimney.png
-C:\Users\teche\source\repos\tarungonNaNako\tarungonNaNako\bin\Debug\net8.0-windows\Assets (images)\menu-dots-vertical.png
-C:\Users\teche\source\repos\tarungonNaNako\tarungonNaNako\bin\Debug\net8.0-windows\Assets (images)\folder.png
-C:\Users\teche\source\repos\tarungonNaNako\tarungonNaNako\bin\Debug\net8.0-windows\Assets (images)\down-to-line.png
-C:\Users\teche\source\repos\tarungonNaNako\tarungonNaNako\bin\Debug\net8.0-windows\Assets (images)\pencil.png
-C:\Users\teche\source\repos\tarungonNaNako\tarungonNaNako\bin\Debug\net8.0-windows\Assets (images)\trash.png

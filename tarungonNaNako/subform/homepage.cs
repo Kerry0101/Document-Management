@@ -31,6 +31,7 @@ namespace tarungonNaNako.subform
             LoadFilesIntoTablePanel();
         }
 
+
         private void homepage_Load(object sender, EventArgs e)
         {
             Guna2Panel1.Visible = Properties.Settings.Default.isPanel1Visible;
@@ -237,52 +238,102 @@ namespace tarungonNaNako.subform
             string download = Path.Combine(Application.StartupPath, "Assets (images)", "down-to-line.png");
             string rename = Path.Combine(Application.StartupPath, "Assets (images)", "pencil.png");
             string remove = Path.Combine(Application.StartupPath, "Assets (images)", "trash.png");
+
             // Clear previous controls in guna2Panel2 (if any)
             guna2Panel2.Controls.Clear();
-            guna2Panel2.Visible = false;
 
             // Set panel properties
-            guna2Panel2.Size = new Size(150, 120); // Adjust size
+            guna2Panel2.Anchor = AnchorStyles.Top | AnchorStyles.Left;
+            guna2Panel2.AutoSizeMode = AutoSizeMode.GrowOnly;
+            guna2Panel2.Size = new Size(181, 132); // Adjust size
             guna2Panel2.BorderRadius = 5;
-            guna2Panel2.BackColor = Color.LightYellow; // Match the screenshot
+            guna2Panel2.BackColor = Color.FromArgb(255, 255, 192);// Match the screenshot
             guna2Panel2.BringToFront();
+            guna2Panel2.Font = new Font("Segoe UI", 9);
+            guna2Panel2.ForeColor = Color.Black;
+
 
             // Create buttons
             Guna.UI2.WinForms.Guna2Button btnDownload = new Guna.UI2.WinForms.Guna2Button();
+            btnDownload.Anchor = AnchorStyles.Top | AnchorStyles.Left;
+            btnDownload.Size = new Size(181, 42);
             btnDownload.Text = "Download";
+            btnDownload.TextAlign = HorizontalAlignment.Center;
+            btnDownload.TextOffset = new Point(-18, 0);
+            btnDownload.BackColor = Color.FromArgb(255, 255, 192);
+            btnDownload.FillColor = Color.FromArgb(255, 236, 130);
+            btnDownload.Font = new Font("Microsoft Sans Serif", 10);
+            btnDownload.ForeColor = Color.Black;
             btnDownload.Image = Image.FromFile(download);
             btnDownload.ImageAlign = HorizontalAlignment.Left;
+            btnDownload.ImageOffset = new Point(0, 0);
+            btnDownload.ImageSize = new Size(15, 15);
+            btnDownload.Location = new Point(0, 1);
+            btnDownload.PressedColor = Color.Black;
+            btnDownload.PressedDepth = 10;
             //btnDownload.Click += (s, e) => DownloadCategory(categoryName);
 
             Guna.UI2.WinForms.Guna2Button btnRename = new Guna.UI2.WinForms.Guna2Button();
+            btnRename.Anchor = AnchorStyles.Top | AnchorStyles.Left;
+            btnRename.Size = new Size(181, 42);
             btnRename.Text = "Rename";
+            btnRename.TextAlign = HorizontalAlignment.Center;
+            btnRename.TextOffset = new Point(-18, 0);
+            btnRename.BackColor = Color.FromArgb(255, 255, 192);
+            btnRename.FillColor = Color.FromArgb(255, 236, 130);
+            btnRename.Font = new Font("Microsoft Sans Serif", 10);
+            btnRename.ForeColor = Color.Black;
             btnRename.Image = Image.FromFile(rename);
             btnRename.ImageAlign = HorizontalAlignment.Left;
+            btnRename.ImageOffset = new Point(0, 0);
+            btnRename.ImageSize = new Size(15, 15);
+            btnRename.Location = new Point(0, 44);
+            btnRename.PressedColor = Color.Black;
+            btnRename.PressedDepth = 10;
+
             btnRename.Click += (s, e) => EditCategory(GetCategoryIdByName(categoryName), categoryName);
 
             Guna.UI2.WinForms.Guna2Button btnDelete = new Guna.UI2.WinForms.Guna2Button();
+            btnDelete.Anchor = AnchorStyles.Top | AnchorStyles.Left;
+            btnDelete.BackColor = Color.FromArgb(255, 255, 192);
+            btnDelete.FillColor = Color.FromArgb(255, 236, 130);
+            btnDelete.Font = new Font("Microsoft Sans Serif", 10);
+            btnDelete.ForeColor = Color.Black;
+            btnDelete.ImageAlign = HorizontalAlignment.Left;
+            btnDelete.ImageSize = new Size(15, 15);
+            btnDelete.Location = new Point(0, 87);
+            btnDelete.PressedColor = Color.Black;
+            btnDelete.PressedDepth = 10;
+            btnDelete.Size = new Size(181, 42);
             btnDelete.Text = "Move to trash";
+            btnDelete.TextAlign = HorizontalAlignment.Right;
+            btnDelete.TextOffset = new Point(-12, 0);
             btnDelete.Image = Image.FromFile(remove);
             btnDelete.ImageAlign = HorizontalAlignment.Left;
             btnDelete.Click += (s, e) => RemoveCategory(categoryName);
 
-            // Button styling
-            foreach (var btnItem in new[] { btnDownload, btnRename, btnDelete })
-            {
-                btnItem.Size = new Size(140, 35);
-                btnItem.FillColor = Color.LightYellow;
-                btnItem.ForeColor = Color.Black;
-                btnItem.Font = new Font("Segoe UI", 10);
-                btnItem.TextAlign = HorizontalAlignment.Left;
-                btnItem.Cursor = Cursors.Hand;
-                btnItem.BorderRadius = 5;
-                btnItem.Dock = DockStyle.Top;
-                guna2Panel2.Controls.Add(btnItem);
-            }
+            //// Button styling
+            //foreach (var btnItem in new[] { btnDownload, btnRename, btnDelete })
+            //{
+            //    btnItem.Size = new Size(140, 35);
+            //    btnItem.FillColor = Color.LightYellow;
+            //    btnItem.ForeColor = Color.Black;
+            //    btnItem.Font = new Font("Segoe UI", 10);
+            //    btnItem.TextAlign = HorizontalAlignment.Left;
+            //    btnItem.Cursor = Cursors.Hand;
+            //    btnItem.BorderRadius = 5;
+            //    btnItem.Dock = DockStyle.Top;
+            //    guna2Panel2.Controls.Add(btnItem);
+            //}
 
             // Position panel below the clicked button
             guna2Panel2.Location = new Point(btn.Left, btn.Bottom + 5);
             guna2Panel2.Visible = true;
+
+            guna2Panel2.Controls.Add(btnDownload);
+            guna2Panel2.Controls.Add(btnRename);
+            guna2Panel2.Controls.Add(btnDelete);
+
         }
 
         private int GetCategoryIdByName(string categoryName)
@@ -374,11 +425,6 @@ namespace tarungonNaNako.subform
         }
 
         private void label6_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void guna2hScrollBar1_Scroll(object sender, ScrollEventArgs e)
         {
 
         }
@@ -527,6 +573,11 @@ namespace tarungonNaNako.subform
         private void tableLayoutPanel1_Paint(object sender, PaintEventArgs e)
         {
 
+        }
+
+        private void Guna2Panel1_Scroll(object sender, ScrollEventArgs e)
+        {
+            guna2Panel2.Visible = false;    
         }
     }
 }
