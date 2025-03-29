@@ -39,10 +39,10 @@
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges8 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges13 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges14 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges9 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges10 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges11 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges12 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges9 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             panel5 = new Panel();
             tableLayoutPanel1 = new TableLayoutPanel();
             label6 = new Label();
@@ -56,21 +56,21 @@
             label3 = new Label();
             pictureBox2 = new PictureBox();
             label1 = new Label();
-            flowLayoutPanel1 = new Guna.UI2.WinForms.Guna2Panel();
+            Guna2Panel1 = new Guna.UI2.WinForms.Guna2Panel();
+            guna2CircleButton3 = new Guna.UI2.WinForms.Guna2CircleButton();
             guna2CircleButton4 = new Guna.UI2.WinForms.Guna2CircleButton();
             guna2CircleButton2 = new Guna.UI2.WinForms.Guna2CircleButton();
             guna2CircleButton1 = new Guna.UI2.WinForms.Guna2CircleButton();
-            guna2CircleButton3 = new Guna.UI2.WinForms.Guna2CircleButton();
             panel5.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox3).BeginInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox2).BeginInit();
-            flowLayoutPanel1.SuspendLayout();
+            Guna2Panel1.SuspendLayout();
             SuspendLayout();
             // 
             // panel5
             // 
             panel5.AutoScroll = true;
-            panel5.BackColor = Color.FromArgb(255, 226, 97);
+            panel5.BackColor = Color.FromArgb(255, 207, 64);
             panel5.Controls.Add(tableLayoutPanel1);
             panel5.Controls.Add(label6);
             panel5.Controls.Add(label5);
@@ -154,8 +154,6 @@
             guna2Button4.TextAlign = HorizontalAlignment.Left;
             guna2Button4.TextFormatNoPrefix = true;
             guna2Button4.TextOffset = new Point(-25, 0);
-            guna2Button4.MouseEnter += guna2Button4_MouseEnter;
-            guna2Button4.MouseLeave += guna2Button4_MouseLeave;
             // 
             // guna2Button3
             // 
@@ -185,8 +183,6 @@
             guna2Button3.TextAlign = HorizontalAlignment.Left;
             guna2Button3.TextFormatNoPrefix = true;
             guna2Button3.TextOffset = new Point(-25, 0);
-            guna2Button3.MouseEnter += guna2Button3_MouseEnter;
-            guna2Button3.MouseLeave += guna2Button3_MouseLeave;
             // 
             // guna2Button1
             // 
@@ -216,8 +212,6 @@
             guna2Button1.TextAlign = HorizontalAlignment.Left;
             guna2Button1.TextFormatNoPrefix = true;
             guna2Button1.TextOffset = new Point(-25, 0);
-            guna2Button1.MouseEnter += guna2Button1_MouseEnter;
-            guna2Button1.MouseLeave += guna2Button1_MouseLeave;
             // 
             // guna2Button2
             // 
@@ -247,8 +241,6 @@
             guna2Button2.TextAlign = HorizontalAlignment.Left;
             guna2Button2.TextFormatNoPrefix = true;
             guna2Button2.TextOffset = new Point(-25, 0);
-            guna2Button2.MouseEnter += guna2Button2_MouseEnter;
-            guna2Button2.MouseLeave += guna2Button2_MouseLeave;
             // 
             // pictureBox3
             // 
@@ -290,23 +282,45 @@
             label1.TabIndex = 10;
             label1.Text = "Recent Folders";
             // 
-            // flowLayoutPanel1
+            // Guna2Panel1
             // 
-            flowLayoutPanel1.AutoScroll = true;
-            flowLayoutPanel1.Controls.Add(guna2CircleButton3);
-            flowLayoutPanel1.Controls.Add(guna2CircleButton4);
-            flowLayoutPanel1.Controls.Add(guna2CircleButton2);
-            flowLayoutPanel1.Controls.Add(guna2CircleButton1);
-            flowLayoutPanel1.Controls.Add(guna2Button4);
-            flowLayoutPanel1.Controls.Add(guna2Button1);
-            flowLayoutPanel1.Controls.Add(guna2Button2);
-            flowLayoutPanel1.Controls.Add(guna2Button3);
-            flowLayoutPanel1.CustomizableEdges = customizableEdges13;
-            flowLayoutPanel1.Location = new Point(16, 39);
-            flowLayoutPanel1.Name = "flowLayoutPanel1";
-            flowLayoutPanel1.ShadowDecoration.CustomizableEdges = customizableEdges14;
-            flowLayoutPanel1.Size = new Size(711, 100);
-            flowLayoutPanel1.TabIndex = 16;
+            Guna2Panel1.AutoScroll = true;
+            Guna2Panel1.Controls.Add(guna2CircleButton3);
+            Guna2Panel1.Controls.Add(guna2CircleButton4);
+            Guna2Panel1.Controls.Add(guna2CircleButton2);
+            Guna2Panel1.Controls.Add(guna2CircleButton1);
+            Guna2Panel1.Controls.Add(guna2Button4);
+            Guna2Panel1.Controls.Add(guna2Button1);
+            Guna2Panel1.Controls.Add(guna2Button2);
+            Guna2Panel1.Controls.Add(guna2Button3);
+            Guna2Panel1.CustomizableEdges = customizableEdges13;
+            Guna2Panel1.Location = new Point(16, 39);
+            Guna2Panel1.Name = "Guna2Panel1";
+            Guna2Panel1.ShadowDecoration.CustomizableEdges = customizableEdges14;
+            Guna2Panel1.Size = new Size(711, 90);
+            Guna2Panel1.TabIndex = 16;
+            // 
+            // guna2CircleButton3
+            // 
+            guna2CircleButton3.BackColor = Color.FromArgb(255, 226, 97);
+            guna2CircleButton3.DisabledState.BorderColor = Color.DarkGray;
+            guna2CircleButton3.DisabledState.CustomBorderColor = Color.DarkGray;
+            guna2CircleButton3.DisabledState.FillColor = Color.FromArgb(169, 169, 169);
+            guna2CircleButton3.DisabledState.ForeColor = Color.FromArgb(141, 141, 141);
+            guna2CircleButton3.FillColor = Color.Transparent;
+            guna2CircleButton3.Font = new Font("Segoe UI", 9F);
+            guna2CircleButton3.ForeColor = Color.Transparent;
+            guna2CircleButton3.Image = (Image)resources.GetObject("guna2CircleButton3.Image");
+            guna2CircleButton3.ImageOffset = new Point(0, 12);
+            guna2CircleButton3.ImageSize = new Size(15, 15);
+            guna2CircleButton3.Location = new Point(164, 26);
+            guna2CircleButton3.Name = "guna2CircleButton3";
+            guna2CircleButton3.PressedDepth = 10;
+            guna2CircleButton3.ShadowDecoration.CustomizableEdges = customizableEdges9;
+            guna2CircleButton3.ShadowDecoration.Mode = Guna.UI2.WinForms.Enums.ShadowMode.Circle;
+            guna2CircleButton3.Size = new Size(21, 26);
+            guna2CircleButton3.TabIndex = 14;
+            guna2CircleButton3.Text = "guna2CircleButton3";
             // 
             // guna2CircleButton4
             // 
@@ -374,35 +388,13 @@
             guna2CircleButton1.TabIndex = 10;
             guna2CircleButton1.Text = "guna2CircleButton1";
             // 
-            // guna2CircleButton3
-            // 
-            guna2CircleButton3.BackColor = Color.FromArgb(255, 226, 97);
-            guna2CircleButton3.DisabledState.BorderColor = Color.DarkGray;
-            guna2CircleButton3.DisabledState.CustomBorderColor = Color.DarkGray;
-            guna2CircleButton3.DisabledState.FillColor = Color.FromArgb(169, 169, 169);
-            guna2CircleButton3.DisabledState.ForeColor = Color.FromArgb(141, 141, 141);
-            guna2CircleButton3.FillColor = Color.Transparent;
-            guna2CircleButton3.Font = new Font("Segoe UI", 9F);
-            guna2CircleButton3.ForeColor = Color.Transparent;
-            guna2CircleButton3.Image = (Image)resources.GetObject("guna2CircleButton3.Image");
-            guna2CircleButton3.ImageOffset = new Point(0, 12);
-            guna2CircleButton3.ImageSize = new Size(15, 15);
-            guna2CircleButton3.Location = new Point(164, 26);
-            guna2CircleButton3.Name = "guna2CircleButton3";
-            guna2CircleButton3.PressedDepth = 10;
-            guna2CircleButton3.ShadowDecoration.CustomizableEdges = customizableEdges9;
-            guna2CircleButton3.ShadowDecoration.Mode = Guna.UI2.WinForms.Enums.ShadowMode.Circle;
-            guna2CircleButton3.Size = new Size(21, 26);
-            guna2CircleButton3.TabIndex = 14;
-            guna2CircleButton3.Text = "guna2CircleButton3";
-            // 
             // homepage
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(255, 255, 192);
             ClientSize = new Size(763, 520);
-            Controls.Add(flowLayoutPanel1);
+            Controls.Add(Guna2Panel1);
             Controls.Add(panel5);
             Controls.Add(pictureBox3);
             Controls.Add(label3);
@@ -416,7 +408,7 @@
             panel5.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox3).EndInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox2).EndInit();
-            flowLayoutPanel1.ResumeLayout(false);
+            Guna2Panel1.ResumeLayout(false);
             ResumeLayout(false);
             PerformLayout();
         }
@@ -436,7 +428,7 @@
         private Label label1;
         private TableLayoutPanel tableLayoutPanel1;
         private Label label5;
-        private Guna.UI2.WinForms.Guna2Panel flowLayoutPanel1;
+        private Guna.UI2.WinForms.Guna2Panel Guna2Panel1;
         private Guna.UI2.WinForms.Guna2CircleButton guna2CircleButton1;
         private Guna.UI2.WinForms.Guna2CircleButton guna2CircleButton2;
         private Guna.UI2.WinForms.Guna2CircleButton guna2CircleButton4;

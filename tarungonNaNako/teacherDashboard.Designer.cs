@@ -47,7 +47,8 @@
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges14 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges15 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges16 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            panel1 = new Panel();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges19 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges20 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             label2 = new Label();
             pictureBox1 = new PictureBox();
             panel3 = new Panel();
@@ -62,30 +63,19 @@
             guna2Panel1 = new Guna.UI2.WinForms.Guna2Panel();
             MinimizeBtn = new Guna.UI2.WinForms.Guna2Button();
             CloseBtn = new Guna.UI2.WinForms.Guna2Button();
-            panel1.SuspendLayout();
+            guna2CustomGradientPanel1 = new Guna.UI2.WinForms.Guna2CustomGradientPanel();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             panel4.SuspendLayout();
             panel2.SuspendLayout();
             guna2Panel1.SuspendLayout();
+            guna2CustomGradientPanel1.SuspendLayout();
             SuspendLayout();
-            // 
-            // panel1
-            // 
-            panel1.BackColor = Color.FromArgb(255, 236, 130);
-            panel1.BorderStyle = BorderStyle.FixedSingle;
-            panel1.Controls.Add(label2);
-            panel1.Controls.Add(pictureBox1);
-            panel1.Location = new Point(0, 34);
-            panel1.Margin = new Padding(2);
-            panel1.Name = "panel1";
-            panel1.Size = new Size(975, 55);
-            panel1.TabIndex = 3;
             // 
             // label2
             // 
             label2.AutoSize = true;
             label2.Font = new Font("Microsoft Sans Serif", 10.2F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            label2.Location = new Point(76, 16);
+            label2.Location = new Point(79, 16);
             label2.Name = "label2";
             label2.Size = new Size(200, 20);
             label2.TabIndex = 1;
@@ -94,7 +84,7 @@
             // pictureBox1
             // 
             pictureBox1.Image = (Image)resources.GetObject("pictureBox1.Image");
-            pictureBox1.Location = new Point(22, 2);
+            pictureBox1.Location = new Point(25, 2);
             pictureBox1.Margin = new Padding(2);
             pictureBox1.Name = "pictureBox1";
             pictureBox1.Size = new Size(48, 50);
@@ -340,16 +330,34 @@
             CloseBtn.TextOffset = new Point(-30, 0);
             CloseBtn.Click += CloseBtn_Click;
             // 
+            // guna2CustomGradientPanel1
+            // 
+            guna2CustomGradientPanel1.BackColor = Color.FromArgb(255, 236, 130);
+            guna2CustomGradientPanel1.Controls.Add(label2);
+            guna2CustomGradientPanel1.Controls.Add(pictureBox1);
+            guna2CustomGradientPanel1.CustomBorderColor = Color.Black;
+            guna2CustomGradientPanel1.CustomBorderThickness = new Padding(0, 1, 0, 1);
+            guna2CustomGradientPanel1.CustomizableEdges = customizableEdges19;
+            guna2CustomGradientPanel1.FillColor = Color.FromArgb(255, 236, 130);
+            guna2CustomGradientPanel1.FillColor2 = Color.FromArgb(255, 236, 130);
+            guna2CustomGradientPanel1.FillColor3 = Color.FromArgb(255, 236, 130);
+            guna2CustomGradientPanel1.FillColor4 = Color.FromArgb(255, 236, 130);
+            guna2CustomGradientPanel1.Location = new Point(0, 34);
+            guna2CustomGradientPanel1.Name = "guna2CustomGradientPanel1";
+            guna2CustomGradientPanel1.ShadowDecoration.CustomizableEdges = customizableEdges20;
+            guna2CustomGradientPanel1.Size = new Size(975, 55);
+            guna2CustomGradientPanel1.TabIndex = 2;
+            // 
             // teacherDashboard
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            BackColor = Color.Black;
+            BackColor = Color.FromArgb(224, 224, 224);
             ClientSize = new Size(975, 617);
+            Controls.Add(guna2CustomGradientPanel1);
             Controls.Add(guna2Panel1);
             Controls.Add(panel3);
             Controls.Add(panel2);
-            Controls.Add(panel1);
             ForeColor = Color.Black;
             FormBorderStyle = FormBorderStyle.None;
             Margin = new Padding(2);
@@ -357,18 +365,17 @@
             Name = "teacherDashboard";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "teacherDashboard";
-            panel1.ResumeLayout(false);
-            panel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             panel4.ResumeLayout(false);
             panel2.ResumeLayout(false);
             guna2Panel1.ResumeLayout(false);
+            guna2CustomGradientPanel1.ResumeLayout(false);
+            guna2CustomGradientPanel1.PerformLayout();
             ResumeLayout(false);
         }
 
         #endregion
         private Button button77;
-        private Panel panel1;
         private PictureBox pictureBox1;
         private Label label2;
         private Panel panel3;
@@ -383,5 +390,6 @@
         private Guna.UI2.WinForms.Guna2Panel guna2Panel1;
         private Guna.UI2.WinForms.Guna2Button CloseBtn;
         private Guna.UI2.WinForms.Guna2Button MinimizeBtn;
+        private Guna.UI2.WinForms.Guna2CustomGradientPanel guna2CustomGradientPanel1;
     }
 }

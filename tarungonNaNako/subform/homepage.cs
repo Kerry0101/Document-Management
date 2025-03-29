@@ -1,4 +1,7 @@
-﻿using System;
+﻿using MySql.Data.MySqlClient;
+
+using MySql.Data.MySqlClient;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -7,7 +10,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using MySql.Data.MySqlClient;
+using Guna.UI2.WinForms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
 
 namespace tarungonNaNako.subform
 {
@@ -15,6 +19,9 @@ namespace tarungonNaNako.subform
     {
         private string connectionString = "server=localhost;database=docsmanagement;uid=root;pwd=;";
         private Image originalImage;
+        string Folder = Path.Combine(Application.StartupPath, "Assets (images)", "folder.png");
+        string ThreeDotMenu = Path.Combine(Application.StartupPath, "Assets (images)", "menu-dots-vertical.png");
+
 
         public homepage()
 
@@ -26,7 +33,7 @@ namespace tarungonNaNako.subform
 
         private void homepage_Load(object sender, EventArgs e)
         {
-            flowLayoutPanel1.Visible = Properties.Settings.Default.isPanel1Visible;
+            Guna2Panel1.Visible = Properties.Settings.Default.isPanel1Visible;
             panel5.Visible = Properties.Settings.Default.isPanel5Visible;
 
             float rotationAngle2 = Properties.Settings.Default.isArrowDown2 ? 0 : -90;
@@ -153,47 +160,89 @@ namespace tarungonNaNako.subform
         }
 
 
-
-
-
-
         private void LoadCategoriesIntoButtons()
         {
+            Guna2Panel1.Controls.Clear(); // Clear previous buttons
+            int buttonWidth = 177; // Adjust as needed
+            int buttonHeight = 60; // Adjust as needed
+            int spacing = 10;
+            int xPosition = 0;
+
             using (MySqlConnection conn = new MySqlConnection(connectionString))
             {
                 try
                 {
                     conn.Open();
-                    string query = "SELECT categoryName FROM category LIMIT 4";
+                    string query = "SELECT categoryName FROM category LIMIT 5";
                     MySqlCommand cmd = new MySqlCommand(query, conn);
                     MySqlDataReader reader = cmd.ExecuteReader();
 
-                    // Assuming you have 4 Guna2Buttons named guna2Button1 to guna2Button4
-                    Guna.UI2.WinForms.Guna2Button[] buttons = { guna2Button1, guna2Button2, guna2Button3, guna2Button4 };
-
-                    int i = 0;
-                    while (reader.Read() && i < buttons.Length)
+                    while (reader.Read())
                     {
-                        buttons[i].Text = reader["categoryName"].ToString();
-                        i++;
-                    }
+                        string categoryName = reader["categoryName"].ToString();
 
-                    // Hide extra buttons if less than 4 categories
-                    for (; i < buttons.Length; i++)
-                    {
-                        buttons[i].Visible = false;
+                        // Create Category Button
+                        Guna.UI2.WinForms.Guna2Button categoryButton = new Guna.UI2.WinForms.Guna2Button();
+                        categoryButton.Text = categoryName;
+                        categoryButton.Width = buttonWidth;
+                        categoryButton.Height = buttonHeight;
+                        categoryButton.BorderRadius = 10;
+                        categoryButton.PressedDepth = 0;
+                        categoryButton.FillColor = Color.FromArgb(255, 226, 97);
+                        categoryButton.ForeColor = Color.Black;
+                        categoryButton.Font = new Font("Segoe UI", 10, FontStyle.Bold);
+                        categoryButton.Image = Image.FromFile(Folder);
+                        categoryButton.ImageSize = new Size(15, 15);
+                        categoryButton.ImageAlign = HorizontalAlignment.Left;
+                        categoryButton.TextAlign = HorizontalAlignment.Left;
+                        categoryButton.Location = new Point(xPosition, 0);
+
+                        // Create Three-Dot Menu Button
+                        Guna.UI2.WinForms.Guna2CircleButton menuButton = new Guna.UI2.WinForms.Guna2CircleButton();
+                        menuButton.Image = Image.FromFile(ThreeDotMenu);
+                        menuButton.ImageSize = new Size(15, 15);
+                        menuButton.ImageAlign = HorizontalAlignment.Center;
+                        menuButton.ImageOffset = new Point(0, 12);
+                        menuButton.BackColor = Color.FromArgb(255, 226, 97);
+                        menuButton.FillColor = Color.Transparent;
+                        menuButton.Size = new Size(21, 26);
+                        menuButton.Text = "⋮";
+                        menuButton.Location = new Point(xPosition + buttonWidth - 25, 15);
+                        menuButton.Click += (s, e) => ShowContextMenu(categoryName, menuButton);
+
+                        // Attach MouseEnter and MouseLeave event handlers
+                        categoryButton.MouseEnter += (s, e) => menuButton.BackColor = Color.FromArgb(219, 195, 0);
+                        categoryButton.MouseLeave += (s, e) => menuButton.BackColor = ColorTranslator.FromHtml("#ffe261");
+
+                        // Add controls to Panel
+                        Guna2Panel1.Controls.Add(menuButton);
+                        Guna2Panel1.Controls.Add(categoryButton);
+
+                        xPosition += buttonWidth + spacing;
                     }
                 }
                 catch (Exception ex)
                 {
                     MessageBox.Show("Error loading categories: " + ex.Message);
                 }
-                finally
-                {
-                    conn.Close();
-                }
             }
         }
+
+
+
+
+        // Example function for showing the menu when clicking the three-dot button
+        private void ShowContextMenu(string categoryName, Control btn)
+        {
+            ContextMenuStrip menu = new ContextMenuStrip();
+            menu.Items.Add("Edit").Click += (s, e) => EditCategory(categoryName);
+            menu.Items.Add("Delete").Click += (s, e) => DeleteCategory(categoryName);
+            menu.Show(btn, new Point(0, btn.Height));
+        }
+
+
+
+
 
         private void LoadPngImage()
         {
@@ -206,8 +255,8 @@ namespace tarungonNaNako.subform
 
         private void pictureBox2_Click(object sender, EventArgs e)
         {
-            flowLayoutPanel1.Visible = !flowLayoutPanel1.Visible;
-            Properties.Settings.Default.isPanel1Visible = flowLayoutPanel1.Visible;
+            Guna2Panel1.Visible = !Guna2Panel1.Visible;
+            Properties.Settings.Default.isPanel1Visible = Guna2Panel1.Visible;
 
             Properties.Settings.Default.isArrowDown2 = !Properties.Settings.Default.isArrowDown2;
             float rotationAngle = Properties.Settings.Default.isArrowDown2 ? 0 : -90;
@@ -273,44 +322,24 @@ namespace tarungonNaNako.subform
 
         }
 
-        private void guna2Button1_MouseEnter(object sender, EventArgs e)
+
+
+
+        private void EditCategory(string categoryName)
         {
-            guna2CircleButton3.BackColor = Color.FromArgb(219, 195, 0);
+            // Implement the logic to edit the category here
+            MessageBox.Show($"Edit category: {categoryName}");
         }
 
-        private void guna2Button1_MouseLeave(object sender, EventArgs e)
+        private void DeleteCategory(string categoryName)
         {
-            guna2CircleButton3.BackColor = ColorTranslator.FromHtml("#ffe261");
+            // Implement the logic to delete the category here
+            MessageBox.Show($"Delete category: {categoryName}");
         }
 
-        private void guna2Button2_MouseEnter(object sender, EventArgs e)
+        private void tableLayoutPanel1_Paint(object sender, PaintEventArgs e)
         {
-            guna2CircleButton2.BackColor = Color.FromArgb(219, 195, 0);
-        }
 
-        private void guna2Button2_MouseLeave(object sender, EventArgs e)
-        {
-            guna2CircleButton2.BackColor = ColorTranslator.FromHtml("#ffe261");
-        }
-
-        private void guna2Button4_MouseEnter(object sender, EventArgs e)
-        {
-            guna2CircleButton4.BackColor = Color.FromArgb(219, 195, 0);
-        }
-
-        private void guna2Button4_MouseLeave(object sender, EventArgs e)
-        {
-            guna2CircleButton4.BackColor = ColorTranslator.FromHtml("#ffe261");
-        }
-
-        private void guna2Button3_MouseEnter(object sender, EventArgs e)
-        {
-            guna2CircleButton1.BackColor = Color.FromArgb(219, 195, 0);
-        }
-
-        private void guna2Button3_MouseLeave(object sender, EventArgs e)
-        {
-            guna2CircleButton1.BackColor = ColorTranslator.FromHtml("#ffe261");
         }
     }
 }

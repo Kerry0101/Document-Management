@@ -18,19 +18,19 @@ namespace tarungonNaNako
             string mysqlCon = "server=localhost; user=root; Database=docsmanagement; password=";
             MySqlConnection mySqlConnection = new MySqlConnection(mysqlCon);
 
-            try
-            {
-                mySqlConnection.Open();
-                MessageBox.Show("Connected to database");
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
-            finally
-            {
-                mySqlConnection.Close();
-            }
+            //try
+            //{
+            //    mySqlConnection.Open();
+            //    MessageBox.Show("Connected to database");
+            //}
+            //catch (Exception ex)
+            //{
+            //    MessageBox.Show(ex.Message);
+            //}
+            //finally
+            //{
+            //    mySqlConnection.Close();
+            //}
 
         }
 

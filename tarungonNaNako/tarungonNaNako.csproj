@@ -30,6 +30,24 @@
     </EmbeddedResource>
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="Assets %28images%29\dropdown-select %281%29.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Assets %28images%29\dropdown-select.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Assets %28images%29\folder.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Assets %28images%29\house-chimney.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Assets %28images%29\menu-dots-vertical.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
   <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
     <Exec Command="if exist &quot;$(TargetPath).locked&quot; del &quot;$(TargetPath).locked&quot;&#xD;&#xA;if exist &quot;$(TargetPath)&quot; if not exist &quot;$(TargetPath).locked&quot; move &quot;$(TargetPath)&quot; &quot;$(TargetPath).locked&quot;" />
   </Target>
