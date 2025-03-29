@@ -94,6 +94,7 @@
             panel5.Name = "panel5";
             panel5.Size = new Size(730, 335);
             panel5.TabIndex = 15;
+            panel5.Scroll += panel5_Scroll;
             panel5.Paint += panel5_Paint;
             // 
             // tableLayoutPanel1

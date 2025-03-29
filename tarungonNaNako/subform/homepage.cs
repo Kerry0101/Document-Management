@@ -18,6 +18,8 @@ namespace tarungonNaNako.subform
 {
     public partial class homepage : Form
     {
+        private string selectedType = ""; // "file" or "category"
+        private string selectedName = ""; // Holds fileName or categoryName
         private string connectionString = "server=localhost;database=docsmanagement;uid=root;pwd=;";
         private Image originalImage;
         string Folder = Path.Combine(Application.StartupPath, "Assets (images)", "folder.png");
@@ -155,7 +157,11 @@ namespace tarungonNaNako.subform
                                     PressedDepth = 10
                                 };
 
-                                actionButton.Click += (s, e) => ShowContextMenu(fileName, actionButton);
+                                actionButton.Click += (s, e) =>
+                                {
+                                    //ShowContextMenu(fileName, actionButton);
+                                    ShowPanel("file", fileName, categoryName, actionButton); // Show panel with file-related options
+                                };
 
                                 // ✅ Add hover effect to row and its labels 255, 255, 192
                                 void RowHover(object sender, EventArgs e)
@@ -258,7 +264,15 @@ namespace tarungonNaNako.subform
                         menuButton.Size = new Size(28, 26);
                         menuButton.Text = "⋮";
                         menuButton.Location = new Point(xPosition + buttonWidth - 35, 15);
-                        menuButton.Click += (s, e) => ShowContextMenu(categoryName, menuButton);
+                        menuButton.Click += (s, e) =>
+                        {
+                            menuButton.Click += (s, e) =>
+                            {
+                                //ShowContextMenu(categoryName, menuButton); s
+                                ShowPanel("category", categoryName, null, menuButton); // Show panel with category-related options
+                            };
+                        };
+
                         menuButton.PressedDepth = 10;
 
                         // Attach MouseEnter and MouseLeave event handlers
@@ -279,13 +293,11 @@ namespace tarungonNaNako.subform
             }
         }
 
-
-
-
-        // Example function for showing the menu when clicking the three-dot button
-        private void ShowContextMenu(string categoryName, Control btn)
+        private void ShowPanel(string type, string name, string categoryName, Control btn)
         {
-            // Toggle visibility of guna2Panel2
+            selectedType = type; // Store what was clicked
+            selectedName = name; // Store file or category name
+                                 // Toggle visibility of guna2Panel2
             if (guna2Panel2.Visible)
             {
                 guna2Panel2.Visible = false;
@@ -296,16 +308,26 @@ namespace tarungonNaNako.subform
             string rename = Path.Combine(Application.StartupPath, "Assets (images)", "pencil.png");
             string remove = Path.Combine(Application.StartupPath, "Assets (images)", "trash.png");
 
-            // Clear previous controls in guna2Panel2 (if any)
-            guna2Panel2.Controls.Clear();
+            guna2Panel2.Controls.Clear(); // Clear previous content
+            guna2Panel2.Visible = true;   // Show the panel
 
             // Set panel properties
-            guna2Panel2.Size = new Size(181, 132); // Adjust size
+            guna2Panel2.Size = new Size(181, 132); // Adjust size     181, 132
             guna2Panel2.BorderRadius = 5;
             guna2Panel2.BackColor = Color.FromArgb(255, 255, 192);
             guna2Panel2.BringToFront();
             guna2Panel2.Font = new Font("Segoe UI", 9);
             guna2Panel2.ForeColor = Color.Black;
+
+
+
+            Label titleLabel = new Label
+            {
+                Text = (type == "file") ? "File Options" : "Category Options",
+                Font = new Font("Segoe UI", 12, FontStyle.Bold),
+                Dock = DockStyle.Top,
+                TextAlign = ContentAlignment.MiddleCenter
+            };
 
             // Create buttons
             Guna.UI2.WinForms.Guna2Button btnDownload = new Guna.UI2.WinForms.Guna2Button();
@@ -323,6 +345,9 @@ namespace tarungonNaNako.subform
             btnDownload.Location = new Point(0, 1);
             btnDownload.PressedColor = Color.Black;
             btnDownload.PressedDepth = 10;
+
+            // ✅ Attach the event that handles downloading differently
+            btnDownload.Click += DownloadButton_Click;
 
             Guna.UI2.WinForms.Guna2Button btnRename = new Guna.UI2.WinForms.Guna2Button();
             btnRename.Size = new Size(181, 42);
@@ -381,13 +406,59 @@ namespace tarungonNaNako.subform
             // Ensure panel doesn't go beyond the bottom boundary
             if (panelY + panelHeight > this.ClientSize.Height)
             {
-                panelY = btnScreenLocation.Y - panelHeight - 5;
+                panelY = this.ClientSize.Height - panelHeight - 10;
             }
 
             // Apply final position
             guna2Panel2.Location = new Point(panelX, panelY);
             guna2Panel2.Visible = true;
+
         }
+
+        private void DownloadButton_Click(object sender, EventArgs e)
+        {
+            if (selectedType == "file")
+            {
+                DownloadFile(selectedName);
+            }
+            else if (selectedType == "category")
+            {
+                DownloadCategory(selectedName);
+            }
+        }
+
+        private void DownloadFile(string fileName)
+        {
+            MessageBox.Show($"Downloading file: {fileName}", "Download", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            // Add your file download logic here...
+        }
+
+        private void DownloadCategory(string categoryName)
+        {
+            MessageBox.Show($"Downloading category: {categoryName}", "Download", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            // Add your category download logic here...
+        }
+
+
+        // Example function for showing the menu when clicking the three-dot button
+        //private void ShowContextMenu(string categoryName, Control btn)
+        //{
+
+
+        //    //// Clear previous controls in guna2Panel2 (if any)
+        //    //guna2Panel2.Controls.Clear();
+
+
+
+
+
+
+
+
+
+
+
+        //}
 
 
         private int GetCategoryIdByName(string categoryName)
@@ -652,6 +723,11 @@ namespace tarungonNaNako.subform
         }
 
         private void panel3_Click(object sender, EventArgs e)
+        {
+            guna2Panel2.Hide();
+        }
+
+        private void panel5_Scroll(object sender, ScrollEventArgs e)
         {
             guna2Panel2.Hide();
         }
