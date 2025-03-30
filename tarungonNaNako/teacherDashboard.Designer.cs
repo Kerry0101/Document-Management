@@ -139,6 +139,7 @@
             button8.TabIndex = 15;
             button8.Text = "LOGOUT";
             button8.TextOffset = new Point(-10, 0);
+            button8.Click += button8_Click;
             // 
             // button7
             // 
@@ -162,6 +163,7 @@
             button7.TabIndex = 14;
             button7.Text = "PROFILE";
             button7.TextOffset = new Point(-10, 0);
+            button7.Click += button7_Click;
             // 
             // button9
             // 

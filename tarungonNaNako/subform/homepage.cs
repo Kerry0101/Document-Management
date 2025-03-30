@@ -76,7 +76,8 @@ namespace tarungonNaNako.subform
                     conn.Open();
                     string query = @"SELECT f.fileName, f.updated_at, c.categoryName
                                      FROM files f
-                                     JOIN category c ON f.categoryId = c.categoryId";
+                                     JOIN category c ON f.categoryId = c.categoryId
+                                     WHERE f.isArchived = 0";
 
                     using (MySqlCommand cmd = new MySqlCommand(query, conn))
                     {
@@ -264,9 +265,10 @@ namespace tarungonNaNako.subform
                         categoryButton.TextAlign = HorizontalAlignment.Left;
                         categoryButton.Location = new Point(xPosition, 0);
                         categoryButton.Cursor = Cursors.Hand;
-                        categoryButton.Click += (s, e) =>
+                        categoryButton.PressedDepth = 10;
+                        categoryButton.DoubleClick += (s, e) =>
                         {
-                            LoadFormInPanel(new fetchDocuments());
+                            LoadFormInPanel(new fetchDocuments(categoryName));
                         };
 
                         // Create Three-Dot Menu Button
@@ -308,6 +310,8 @@ namespace tarungonNaNako.subform
                 }
             }
         }
+
+
 
         //private void ShowPanel(string type, string name, string categoryName, Control btn)
         //{
@@ -519,7 +523,7 @@ namespace tarungonNaNako.subform
             btnDelete.Location = new Point(0, 87);
             btnDelete.PressedColor = Color.Black;
             btnDelete.PressedDepth = 10;
-            btnDelete.Click += (s, e) => RemoveCategory(categoryName);
+            btnDelete.Click += (s, e) => RemoveButton_Click();
 
             // Add buttons to panel
             guna2Panel2.Controls.Add(btnDownload);
@@ -552,6 +556,17 @@ namespace tarungonNaNako.subform
             guna2Panel2.Visible = true;
         }
 
+        private void DownloadButton_Click(object sender, EventArgs e)
+        {
+            if (selectedType == "file")
+            {
+                DownloadFile(selectedName);
+            }
+            else if (selectedType == "category")
+            {
+                DownloadCategory(selectedName);
+            }
+        }
 
         private void RenameButton_Click()
         {
@@ -565,15 +580,46 @@ namespace tarungonNaNako.subform
             }
         }
 
-        private void DownloadButton_Click(object sender, EventArgs e)
+        private void RemoveButton_Click()
         {
             if (selectedType == "file")
             {
-                DownloadFile(selectedName);
+                RemoveFile(selectedName);
             }
             else if (selectedType == "category")
             {
-                DownloadCategory(selectedName);
+                RemoveCategory(selectedName);
+            }
+        }
+
+        private void RemoveFile(string fileName)
+        {
+            try
+            {
+                using (MySqlConnection conn = new MySqlConnection(connectionString))
+                {
+                    conn.Open();
+                    string query = "UPDATE files SET isArchived = 1 WHERE fileName = @fileName";
+                    using (MySqlCommand cmd = new MySqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@fileName", fileName);
+                        int rowsAffected = cmd.ExecuteNonQuery();
+                        if (rowsAffected > 0)
+                        {
+                            guna2Panel2.Visible = false;
+                            MessageBox.Show($"File '{fileName}' removed successfully.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            LoadFilesIntoTablePanel(); // Refresh the panel after removing the file
+                        }
+                        else
+                        {
+                            MessageBox.Show("File not found.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error removing file: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -944,6 +990,8 @@ namespace tarungonNaNako.subform
             }
         }
 
+
+
         private void RefreshCategoriesPanel()
         {
             LoadCategoriesIntoButtons();
@@ -981,5 +1029,14 @@ namespace tarungonNaNako.subform
 
         }
 
+        private void panel5_Click(object sender, EventArgs e)
+        {
+            guna2Panel2.Hide();
+        }
+
+        private void Guna2Panel1_Click(object sender, EventArgs e)
+        {
+            guna2Panel2.Hide();
+        }
     }
 }

@@ -29,8 +29,21 @@ namespace tarungonNaNako
         {
             InitializeComponent();
             LoadFormInPanel(new homepage());
+            HighlightButton(button1);
         }
+        private void HighlightButton(Guna.UI2.WinForms.Guna2Button buttonToHighlight)
+        {
+            // Reset the highlight for all buttons
+            button1.FillColor = Color.Transparent;
+            button2.FillColor = Color.Transparent;
+            button3.FillColor = Color.Transparent;
+            button7.FillColor = Color.Transparent;
+            button8.FillColor = Color.Transparent;
+            button9.FillColor = Color.Transparent;
 
+            // Highlight the selected button
+            buttonToHighlight.FillColor = Color.FromArgb(219, 195, 0);
+        }
         public void LoadFormInPanel(Form form)
         {
             // Clear previous controls in the panel (replace "panel5" with your content panel name)
@@ -50,22 +63,26 @@ namespace tarungonNaNako
 
         private void button3_Click(object sender, EventArgs e)
         {
+            HighlightButton(button3);
             LoadFormInPanel(new categories());
 
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
+            HighlightButton(button1);
             LoadFormInPanel(new homepage());
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
+            HighlightButton(button2);
             LoadFormInPanel(new manageDocs());
         }
 
         private void button9_Click(object sender, EventArgs e)
         {
+            HighlightButton(button9);
             LoadFormInPanel(new archived());
         }
 
@@ -93,5 +110,14 @@ namespace tarungonNaNako
             this.WindowState = FormWindowState.Minimized;
         }
 
+        private void button7_Click(object sender, EventArgs e)
+        {
+            HighlightButton(button7);
+        }
+
+        private void button8_Click(object sender, EventArgs e)
+        {
+            HighlightButton(button8);
+        }
     }
 }
