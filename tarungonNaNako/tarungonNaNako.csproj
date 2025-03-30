@@ -31,6 +31,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="Assets %28images%29\document.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Assets %28images%29\down-to-line.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
