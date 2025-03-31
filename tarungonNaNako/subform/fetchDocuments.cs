@@ -22,14 +22,181 @@ namespace tarungonNaNako.subform
         private string connectionString = "server=localhost;database=docsmanagement;uid=root;pwd=;";
         string Document = Path.Combine(Application.StartupPath, "Assets (images)", "document.png");
         string ThreeDotMenu = Path.Combine(Application.StartupPath, "Assets (images)", "menu-dots-vertical.png");
+        string FolderIcon = Path.Combine(Application.StartupPath, "Assets (images)", "folder.png");
+        string DocumentIcon = Path.Combine(Application.StartupPath, "Assets (images)", "document.png");
         public fetchDocuments(string categoryName)
         {
             selectedCategoryName = categoryName;
             InitializeComponent();
-            LoadFilesIntoTablePanel();
+            LoadFilesAndFoldersIntoTablePanel();
         }
 
-        private void LoadFilesIntoTablePanel()
+        //private void LoadFilesAndFoldersIntoTablePanel()
+        //{
+        //    int buttonWidth = 177; // Adjust as needed
+        //    int buttonHeight = 60; // Adjust as needed
+        //    int spacing = 10;
+        //    int xPosition = 0;
+        //    try
+        //    {
+        //        using (MySqlConnection conn = new MySqlConnection(connectionString))
+        //        {
+        //            conn.Open();
+        //            string query = @"SELECT f.fileName, f.updated_at, c.categoryName
+        //                         FROM files f
+        //                         JOIN category c ON f.categoryId = c.categoryId
+        //                         WHERE c.categoryName = @categoryName AND f.isArchived = 0";
+
+        //            using (MySqlCommand cmd = new MySqlCommand(query, conn))
+        //            {
+        //                cmd.Parameters.AddWithValue("@categoryName", selectedCategoryName);
+        //                using (MySqlDataReader reader = cmd.ExecuteReader())
+        //                {
+        //                    // Clear existing rows
+        //                    tableLayoutPanel1.Controls.Clear();
+        //                    tableLayoutPanel1.RowCount = 0;
+        //                    tableLayoutPanel1.Padding = new Padding(0, 0, 0, 10);
+        //                    tableLayoutPanel1.RowStyles.Clear();
+
+        //                    int rowIndex = 0;
+
+        //                    while (reader.Read())
+        //                    {
+        //                        string fileName = reader["fileName"].ToString();
+        //                        string modificationTime = Convert.ToDateTime(reader["updated_at"]).ToString("yyyy-MM-dd hh:mm tt");
+        //                        string categoryName = reader["categoryName"].ToString();
+
+        //                        // ✅ Create TableLayoutPanel for Row
+        //                        TableLayoutPanel rowTable = new TableLayoutPanel
+        //                        {
+        //                            ColumnCount = 5,
+        //                            Dock = DockStyle.Fill,
+        //                            Height = 50, // Adjust row height
+        //                            BackColor = ColorTranslator.FromHtml("#ffe261")
+        //                        };
+
+        //                        // Set column sizes
+        //                        rowTable.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 40)); // Image Icon
+        //                        rowTable.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 200)); // File Name
+        //                        rowTable.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 180)); // Modification Time
+        //                        rowTable.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 180)); // Category
+        //                        rowTable.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 10)); // Action
+
+        //                        Image fileIcon = Image.FromFile(Document); // Load file icon
+
+        //                        // 🔴 Create Labels (aligned properly)
+        //                        Label fileLabel = new Label
+        //                        {
+        //                            Text = fileName,
+        //                            Dock = DockStyle.Fill,
+        //                            AutoSize = false,
+        //                            TextAlign = ContentAlignment.MiddleLeft,
+        //                            Padding = new Padding(5, 0, 0, 0),
+        //                            Font = new Font("Microsoft Sans Serif", 10),
+        //                            BackColor = Color.Transparent // Ensure background remains transparent
+        //                        };
+
+        //                        Label dateLabel = new Label
+        //                        {
+        //                            Text = modificationTime,
+        //                            Dock = DockStyle.Fill,
+        //                            AutoSize = false,
+        //                            TextAlign = ContentAlignment.MiddleLeft,
+        //                            Padding = new Padding(10, 0, 0, 0),
+        //                            Font = new Font("Microsoft Sans Serif", 10),
+        //                            BackColor = Color.Transparent
+        //                        };
+
+        //                        Label categoryLabel = new Label
+        //                        {
+        //                            Text = categoryName,
+        //                            Dock = DockStyle.Fill,
+        //                            AutoSize = false,
+        //                            TextAlign = ContentAlignment.MiddleLeft,
+        //                            Padding = new Padding(10, 0, 0, 0),
+        //                            Font = new Font("Microsoft Sans Serif", 10),
+        //                            BackColor = Color.Transparent
+        //                        };
+
+        //                        Guna.UI2.WinForms.Guna2CircleButton actionButton = new Guna.UI2.WinForms.Guna2CircleButton
+        //                        {
+        //                            Image = Image.FromFile(ThreeDotMenu),
+        //                            ImageSize = new Size(15, 15),
+        //                            ImageAlign = HorizontalAlignment.Center,
+        //                            ImageOffset = new Point(0, 12),
+        //                            BackColor = Color.FromArgb(255, 226, 97),
+        //                            FillColor = Color.Transparent,
+        //                            Size = new Size(30, 26),
+        //                            Text = "⋮",
+        //                            Anchor = AnchorStyles.Right, // This will align the button to the right
+        //                            Margin = new Padding(0, 5, 30, 0), // Adjust the right margin if needed
+        //                            PressedDepth = 10
+        //                        };
+
+        //                        actionButton.Click += (s, e) =>
+        //                        {
+        //                            //ShowContextMenu(fileName, actionButton);
+        //                            ShowPanel("file", fileName, categoryName, actionButton); // Show panel with file-related options
+        //                        };
+
+        //                        // ✅ Add hover effect to row and its labels 255, 255, 192
+        //                        void RowHover(object sender, EventArgs e)
+        //                        {
+        //                            rowTable.BackColor = Color.FromArgb(219, 195, 0);
+        //                            actionButton.BackColor = Color.FromArgb(219, 195, 0);
+        //                        }
+        //                        void RowLeave(object sender, EventArgs e)
+        //                        {
+        //                            rowTable.BackColor = ColorTranslator.FromHtml("#ffe261");
+        //                            actionButton.BackColor = ColorTranslator.FromHtml("#ffe261");
+        //                        }
+
+        //                        rowTable.MouseEnter += RowHover;
+        //                        rowTable.MouseLeave += RowLeave;
+
+        //                        fileLabel.MouseEnter += RowHover;
+        //                        fileLabel.MouseLeave += RowLeave;
+
+        //                        dateLabel.MouseEnter += RowHover;
+        //                        dateLabel.MouseLeave += RowLeave;
+
+        //                        categoryLabel.MouseEnter += RowHover;
+        //                        categoryLabel.MouseLeave += RowLeave;
+
+        //                        // ✅ Add Labels and Button to rowTable
+        //                        PictureBox fileIconPictureBox = new PictureBox
+        //                        {
+        //                            Image = fileIcon,
+        //                            SizeMode = PictureBoxSizeMode.Zoom, // Change to Zoom to maintain aspect ratio
+        //                            Margin = new Padding(20, 18, 0, 5),
+        //                            Width = 15, // Set desired width
+        //                            Height = 15 // Set desired height
+        //                        };
+
+        //                        rowTable.Controls.Add(fileIconPictureBox, 0, 0);
+        //                        rowTable.Controls.Add(fileLabel, 1, 0);
+        //                        rowTable.Controls.Add(dateLabel, 2, 0);
+        //                        rowTable.Controls.Add(categoryLabel, 3, 0);
+        //                        rowTable.Controls.Add(actionButton, 4, 0);
+
+        //                        // 🔴 Add rowTable to TableLayoutPanel
+        //                        tableLayoutPanel1.RowCount = rowIndex + 1;
+        //                        tableLayoutPanel1.Controls.Add(rowTable, 0, rowIndex);
+        //                        tableLayoutPanel1.SetColumnSpan(rowTable, 3); // Span all columns
+
+        //                        rowIndex++;
+        //                    }
+        //                }
+        //            }
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        MessageBox.Show($"Error loading files: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        //    }
+        //}
+
+        private void LoadFilesAndFoldersIntoTablePanel()
         {
             int buttonWidth = 177; // Adjust as needed
             int buttonHeight = 60; // Adjust as needed
@@ -40,10 +207,16 @@ namespace tarungonNaNako.subform
                 using (MySqlConnection conn = new MySqlConnection(connectionString))
                 {
                     conn.Open();
-                    string query = @"SELECT f.fileName, f.updated_at, c.categoryName
-                                 FROM files f
-                                 JOIN category c ON f.categoryId = c.categoryId
-                                 WHERE c.categoryName = @categoryName AND f.isArchived = 0";
+                    string query = @"
+                SELECT 'file' AS type, f.fileName AS name, f.updated_at AS updated_at, c.categoryName AS categoryName
+                FROM files f
+                JOIN category c ON f.categoryId = c.categoryId
+                WHERE c.categoryName = @categoryName AND f.isArchived = 0
+                UNION
+                SELECT 'folder' AS type, s.subcategoryName AS name, s.updated_at AS updated_at, c.categoryName AS categoryName
+                FROM subcategory s
+                JOIN category c ON s.categoryId = c.categoryId
+                WHERE c.categoryName = @categoryName AND s.is_archived = 0";
 
                     using (MySqlCommand cmd = new MySqlCommand(query, conn))
                     {
@@ -60,11 +233,12 @@ namespace tarungonNaNako.subform
 
                             while (reader.Read())
                             {
-                                string fileName = reader["fileName"].ToString();
+                                string type = reader["type"].ToString();
+                                string name = reader["name"].ToString();
                                 string modificationTime = Convert.ToDateTime(reader["updated_at"]).ToString("yyyy-MM-dd hh:mm tt");
                                 string categoryName = reader["categoryName"].ToString();
 
-                                // ✅ Create TableLayoutPanel for Row
+                                // Create TableLayoutPanel for Row
                                 TableLayoutPanel rowTable = new TableLayoutPanel
                                 {
                                     ColumnCount = 5,
@@ -75,17 +249,17 @@ namespace tarungonNaNako.subform
 
                                 // Set column sizes
                                 rowTable.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 40)); // Image Icon
-                                rowTable.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 200)); // File Name
+                                rowTable.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 200)); // Name
                                 rowTable.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 180)); // Modification Time
                                 rowTable.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 180)); // Category
                                 rowTable.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 10)); // Action
 
-                                Image fileIcon = Image.FromFile(Document); // Load file icon
+                                Image icon = type == "file" ? Image.FromFile(Document) : Image.FromFile(FolderIcon); // Load appropriate icon
 
-                                // 🔴 Create Labels (aligned properly)
-                                Label fileLabel = new Label
+                                // Create Labels (aligned properly)
+                                Label nameLabel = new Label
                                 {
-                                    Text = fileName,
+                                    Text = name,
                                     Dock = DockStyle.Fill,
                                     AutoSize = false,
                                     TextAlign = ContentAlignment.MiddleLeft,
@@ -133,11 +307,10 @@ namespace tarungonNaNako.subform
 
                                 actionButton.Click += (s, e) =>
                                 {
-                                    //ShowContextMenu(fileName, actionButton);
-                                    ShowPanel("file", fileName, categoryName, actionButton); // Show panel with file-related options
+                                    ShowPanel(type, name, categoryName, actionButton); // Show panel with file or folder-related options
                                 };
 
-                                // ✅ Add hover effect to row and its labels 255, 255, 192
+                                // Add hover effect to row and its labels
                                 void RowHover(object sender, EventArgs e)
                                 {
                                     rowTable.BackColor = Color.FromArgb(219, 195, 0);
@@ -152,8 +325,8 @@ namespace tarungonNaNako.subform
                                 rowTable.MouseEnter += RowHover;
                                 rowTable.MouseLeave += RowLeave;
 
-                                fileLabel.MouseEnter += RowHover;
-                                fileLabel.MouseLeave += RowLeave;
+                                nameLabel.MouseEnter += RowHover;
+                                nameLabel.MouseLeave += RowLeave;
 
                                 dateLabel.MouseEnter += RowHover;
                                 dateLabel.MouseLeave += RowLeave;
@@ -161,23 +334,23 @@ namespace tarungonNaNako.subform
                                 categoryLabel.MouseEnter += RowHover;
                                 categoryLabel.MouseLeave += RowLeave;
 
-                                // ✅ Add Labels and Button to rowTable
-                                PictureBox fileIconPictureBox = new PictureBox
+                                // Add Labels and Button to rowTable
+                                PictureBox iconPictureBox = new PictureBox
                                 {
-                                    Image = fileIcon,
+                                    Image = icon,
                                     SizeMode = PictureBoxSizeMode.Zoom, // Change to Zoom to maintain aspect ratio
                                     Margin = new Padding(20, 18, 0, 5),
                                     Width = 15, // Set desired width
                                     Height = 15 // Set desired height
                                 };
 
-                                rowTable.Controls.Add(fileIconPictureBox, 0, 0);
-                                rowTable.Controls.Add(fileLabel, 1, 0);
+                                rowTable.Controls.Add(iconPictureBox, 0, 0);
+                                rowTable.Controls.Add(nameLabel, 1, 0);
                                 rowTable.Controls.Add(dateLabel, 2, 0);
                                 rowTable.Controls.Add(categoryLabel, 3, 0);
                                 rowTable.Controls.Add(actionButton, 4, 0);
 
-                                // 🔴 Add rowTable to TableLayoutPanel
+                                // Add rowTable to TableLayoutPanel
                                 tableLayoutPanel1.RowCount = rowIndex + 1;
                                 tableLayoutPanel1.Controls.Add(rowTable, 0, rowIndex);
                                 tableLayoutPanel1.SetColumnSpan(rowTable, 3); // Span all columns
@@ -190,9 +363,19 @@ namespace tarungonNaNako.subform
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error loading files: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Error loading files and folders: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
+
+
+
+        private void FetchSubcategoryDocuments(string subcategoryName)
+        {
+            selectedCategoryName = subcategoryName;
+            LoadFilesAndFoldersIntoTablePanel(); // Reload files for this subcategory
+        }
+
 
         private void ShowPanel(string type, string name, string categoryName, Control btn)
         {
@@ -461,7 +644,7 @@ namespace tarungonNaNako.subform
                         {
                             guna2Panel2.Visible = false;
                             MessageBox.Show($"File renamed to '{newFileName}' successfully.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                            LoadFilesIntoTablePanel(); // Refresh the panel after renaming the file
+                            LoadFilesAndFoldersIntoTablePanel(); // Refresh the panel after renaming the file
                         }
                         else
                         {
@@ -494,7 +677,7 @@ namespace tarungonNaNako.subform
                         {
                             guna2Panel2.Visible = false;
                             MessageBox.Show($"File '{fileName}' removed successfully.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                            LoadFilesIntoTablePanel(); // Refresh the panel after removing the file
+                            LoadFilesAndFoldersIntoTablePanel(); // Refresh the panel after removing the file
                         }
                         else
                         {
@@ -583,7 +766,7 @@ namespace tarungonNaNako.subform
                             guna2Panel2.Visible = false;
                             MessageBox.Show($"Category renamed to '{newCategoryName}' successfully.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
                             RefreshPanel5();
-                            LoadFilesIntoTablePanel();
+                            LoadFilesAndFoldersIntoTablePanel();
                         }
                         else
                         {
@@ -634,7 +817,7 @@ namespace tarungonNaNako.subform
             panel5.Controls.Clear();
 
             // Reload files into the panel
-            LoadFilesIntoTablePanel();
+            LoadFilesAndFoldersIntoTablePanel();
         }
 
     }

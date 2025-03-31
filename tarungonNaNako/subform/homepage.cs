@@ -13,6 +13,7 @@ using System.Windows.Forms;
 using Guna.UI2.WinForms;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
 using tarungonNaNako.sidebar;
+using System.Xml.Linq;
 
 namespace tarungonNaNako.subform
 {
@@ -1037,6 +1038,100 @@ namespace tarungonNaNako.subform
         private void Guna2Panel1_Click(object sender, EventArgs e)
         {
             guna2Panel2.Hide();
+        }
+
+        private void Newbtn_Click(object sender, EventArgs e)
+        {
+            CREATE_FOLDER_AND_FILE_PANEL();
+        }
+
+        private void CREATE_FOLDER_AND_FILE_PANEL()
+        {
+
+            if (popupPanel.Visible)
+            {
+                popupPanel.Visible = false;
+                return;
+            }
+
+            string newFolder = Path.Combine(Application.StartupPath, "Assets (images)", "newfolder.png");
+            string fileUpload = Path.Combine(Application.StartupPath, "Assets (images)", "fileupload.png");
+            string folderUpload = Path.Combine(Application.StartupPath, "Assets (images)", "folderupload.png");
+
+            popupPanel.Controls.Clear(); // Clear previous content
+            popupPanel.Visible = true;   // Show the panel
+
+            // Create buttons
+            Guna.UI2.WinForms.Guna2Button btnNewFolder = new Guna.UI2.WinForms.Guna2Button
+            {
+                Size = new Size(181, 42),
+                Text = "New Folder",
+                TextAlign = HorizontalAlignment.Center,
+                TextOffset = new Point(-18, 0),
+                BackColor = Color.FromArgb(255, 255, 192),
+                FillColor = Color.FromArgb(255, 236, 130),
+                Font = new Font("Microsoft Sans Serif", 10),
+                ForeColor = Color.Black,
+                Image = Image.FromFile("newfolder.png"),
+                ImageAlign = HorizontalAlignment.Left,
+                ImageSize = new Size(15, 15),
+                Location = new Point(10, 10),
+                PressedColor = Color.Black,
+                PressedDepth = 10,
+            };
+            btnNewFolder.Click += (s, e) => { MessageBox.Show("New Folder Clicked"); };
+
+            Guna.UI2.WinForms.Guna2Button btnFileUpload = new Guna.UI2.WinForms.Guna2Button
+            {
+                Size = new Size(181, 42),
+                Text = "File Upload",
+                TextAlign = HorizontalAlignment.Center,
+                TextOffset = new Point(-18, 0),
+                BackColor = Color.FromArgb(255, 255, 192),
+                FillColor = Color.FromArgb(255, 236, 130),
+                Font = new Font("Microsoft Sans Serif", 10),
+                ForeColor = Color.Black,
+                Image = Image.FromFile("fileupload.png"),
+                ImageAlign = HorizontalAlignment.Left,
+                ImageSize = new Size(15, 15),
+                Location = new Point(10, 55),
+                PressedColor = Color.Black,
+                PressedDepth = 10,
+            };
+            btnFileUpload.Click += (s, e) => { MessageBox.Show("File Upload Clicked"); };
+
+            Guna.UI2.WinForms.Guna2Button btnFolderUpload = new Guna.UI2.WinForms.Guna2Button
+            {
+                Size = new Size(181, 42),
+                Text = "Folder Upload",
+                TextAlign = HorizontalAlignment.Center,
+                TextOffset = new Point(-18, 0),
+                BackColor = Color.FromArgb(255, 255, 192),
+                FillColor = Color.FromArgb(255, 236, 130),
+                Font = new Font("Microsoft Sans Serif", 10),
+                ForeColor = Color.Black,
+                Image = Image.FromFile("folderupload.png"),
+                ImageAlign = HorizontalAlignment.Left,
+                ImageSize = new Size(15, 15),
+                Location = new Point(10, 100),
+                PressedColor = Color.Black,
+                PressedDepth = 10,
+            };
+            btnFolderUpload.Click += (s, e) => { MessageBox.Show("Folder Upload Clicked"); };
+
+            // Add buttons to the panel
+            popupPanel.Controls.Add(btnNewFolder);
+            popupPanel.Controls.Add(btnFileUpload);
+            popupPanel.Controls.Add(btnFolderUpload);
+
+            // Add panel to the form
+            this.Controls.Add(popupPanel);
+            popupPanel.BringToFront();
+        }
+
+        private void Guna2Panel1_Paint(object sender, PaintEventArgs e)
+        {
+
         }
     }
 }

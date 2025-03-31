@@ -38,15 +38,15 @@
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges5 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges6 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             panel5 = new Panel();
+            guna2Panel2 = new Guna.UI2.WinForms.Guna2Panel();
+            guna2Button6 = new Guna.UI2.WinForms.Guna2Button();
+            guna2Button5 = new Guna.UI2.WinForms.Guna2Button();
+            button1 = new Guna.UI2.WinForms.Guna2Button();
             label2 = new Label();
             tableLayoutPanel1 = new TableLayoutPanel();
             label6 = new Label();
             label5 = new Label();
             label4 = new Label();
-            guna2Panel2 = new Guna.UI2.WinForms.Guna2Panel();
-            guna2Button6 = new Guna.UI2.WinForms.Guna2Button();
-            guna2Button5 = new Guna.UI2.WinForms.Guna2Button();
-            button1 = new Guna.UI2.WinForms.Guna2Button();
             panel5.SuspendLayout();
             guna2Panel2.SuspendLayout();
             SuspendLayout();
@@ -61,66 +61,11 @@
             panel5.Controls.Add(label6);
             panel5.Controls.Add(label5);
             panel5.Controls.Add(label4);
-            panel5.Location = new Point(27, 26);
+            panel5.Location = new Point(27, 114);
             panel5.Name = "panel5";
             panel5.Padding = new Padding(0, 0, 0, 100);
-            panel5.Size = new Size(730, 478);
+            panel5.Size = new Size(730, 390);
             panel5.TabIndex = 16;
-            // 
-            // label2
-            // 
-            label2.AutoSize = true;
-            label2.Font = new Font("Microsoft Sans Serif", 10.2F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            label2.Location = new Point(617, 9);
-            label2.Name = "label2";
-            label2.Size = new Size(62, 20);
-            label2.TabIndex = 11;
-            label2.Text = "Action";
-            label2.Click += label2_Click;
-            // 
-            // tableLayoutPanel1
-            // 
-            tableLayoutPanel1.AutoSize = true;
-            tableLayoutPanel1.ColumnCount = 1;
-            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 56.7615662F));
-            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 20F));
-            tableLayoutPanel1.Cursor = Cursors.Hand;
-            tableLayoutPanel1.Location = new Point(10, 33);
-            tableLayoutPanel1.Name = "tableLayoutPanel1";
-            tableLayoutPanel1.RowCount = 1;
-            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tableLayoutPanel1.Size = new Size(707, 51);
-            tableLayoutPanel1.TabIndex = 9;
-            // 
-            // label6
-            // 
-            label6.AutoSize = true;
-            label6.Font = new Font("Microsoft Sans Serif", 10.2F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            label6.Location = new Point(444, 9);
-            label6.Name = "label6";
-            label6.Size = new Size(81, 20);
-            label6.TabIndex = 8;
-            label6.Text = "Location";
-            // 
-            // label5
-            // 
-            label5.AutoSize = true;
-            label5.Font = new Font("Microsoft Sans Serif", 10.2F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            label5.Location = new Point(265, 9);
-            label5.Name = "label5";
-            label5.Size = new Size(158, 20);
-            label5.TabIndex = 7;
-            label5.Text = "Modification Time";
-            // 
-            // label4
-            // 
-            label4.AutoSize = true;
-            label4.Font = new Font("Microsoft Sans Serif", 10.2F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            label4.Location = new Point(13, 9);
-            label4.Name = "label4";
-            label4.Size = new Size(57, 20);
-            label4.TabIndex = 6;
-            label4.Text = "Name";
             // 
             // guna2Panel2
             // 
@@ -128,7 +73,7 @@
             guna2Panel2.Controls.Add(guna2Button5);
             guna2Panel2.Controls.Add(button1);
             guna2Panel2.CustomizableEdges = customizableEdges7;
-            guna2Panel2.Location = new Point(213, 20);
+            guna2Panel2.Location = new Point(3, 90);
             guna2Panel2.Name = "guna2Panel2";
             guna2Panel2.ShadowDecoration.CustomizableEdges = customizableEdges8;
             guna2Panel2.Size = new Size(181, 132);
@@ -201,6 +146,61 @@
             button1.TabIndex = 1;
             button1.Text = "Download";
             button1.TextOffset = new Point(-18, 0);
+            // 
+            // label2
+            // 
+            label2.AutoSize = true;
+            label2.Font = new Font("Microsoft Sans Serif", 10.2F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            label2.Location = new Point(617, 9);
+            label2.Name = "label2";
+            label2.Size = new Size(62, 20);
+            label2.TabIndex = 11;
+            label2.Text = "Action";
+            label2.Click += label2_Click;
+            // 
+            // tableLayoutPanel1
+            // 
+            tableLayoutPanel1.AutoSize = true;
+            tableLayoutPanel1.ColumnCount = 1;
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 56.7615662F));
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 20F));
+            tableLayoutPanel1.Cursor = Cursors.Hand;
+            tableLayoutPanel1.Location = new Point(10, 33);
+            tableLayoutPanel1.Name = "tableLayoutPanel1";
+            tableLayoutPanel1.RowCount = 1;
+            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            tableLayoutPanel1.Size = new Size(707, 51);
+            tableLayoutPanel1.TabIndex = 9;
+            // 
+            // label6
+            // 
+            label6.AutoSize = true;
+            label6.Font = new Font("Microsoft Sans Serif", 10.2F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            label6.Location = new Point(444, 9);
+            label6.Name = "label6";
+            label6.Size = new Size(81, 20);
+            label6.TabIndex = 8;
+            label6.Text = "Location";
+            // 
+            // label5
+            // 
+            label5.AutoSize = true;
+            label5.Font = new Font("Microsoft Sans Serif", 10.2F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            label5.Location = new Point(265, 9);
+            label5.Name = "label5";
+            label5.Size = new Size(158, 20);
+            label5.TabIndex = 7;
+            label5.Text = "Modification Time";
+            // 
+            // label4
+            // 
+            label4.AutoSize = true;
+            label4.Font = new Font("Microsoft Sans Serif", 10.2F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            label4.Location = new Point(13, 9);
+            label4.Name = "label4";
+            label4.Size = new Size(57, 20);
+            label4.TabIndex = 6;
+            label4.Text = "Name";
             // 
             // fetchDocuments
             // 
