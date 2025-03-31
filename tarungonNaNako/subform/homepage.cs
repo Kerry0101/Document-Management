@@ -289,6 +289,7 @@ namespace tarungonNaNako.subform
                             {
                                 //ShowContextMenu(categoryName, menuButton); s
                                 ShowPanel("category", categoryName, null, menuButton); // Show panel with category-related options
+                                popupPanel.Hide();
                             };
                         };
 
@@ -1018,6 +1019,7 @@ namespace tarungonNaNako.subform
         private void panel3_Click(object sender, EventArgs e)
         {
             guna2Panel2.Hide();
+            popupPanel.Hide();
         }
 
         private void panel5_Scroll(object sender, ScrollEventArgs e)
@@ -1042,6 +1044,7 @@ namespace tarungonNaNako.subform
 
         private void Newbtn_Click(object sender, EventArgs e)
         {
+            guna2Panel2.Hide();
             CREATE_FOLDER_AND_FILE_PANEL();
         }
 
@@ -1061,18 +1064,28 @@ namespace tarungonNaNako.subform
             popupPanel.Controls.Clear(); // Clear previous content
             popupPanel.Visible = true;   // Show the panel
 
+
+            // Set panel properties
+            popupPanel.Size = new Size(200, 150); // Adjust size     181, 132
+            popupPanel.BorderRadius = 5;
+            popupPanel.Padding = new Padding(0,0,0,0);
+            popupPanel.BackColor = Color.FromArgb(255, 255, 192);
+            popupPanel.BringToFront();
+            popupPanel.Font = new Font("Segoe UI", 9);
+            popupPanel.ForeColor = Color.Black;
+
             // Create buttons
             Guna.UI2.WinForms.Guna2Button btnNewFolder = new Guna.UI2.WinForms.Guna2Button
             {
                 Size = new Size(181, 42),
                 Text = "New Folder",
                 TextAlign = HorizontalAlignment.Center,
-                TextOffset = new Point(-18, 0),
+                TextOffset = new Point(-12, 0),
                 BackColor = Color.FromArgb(255, 255, 192),
                 FillColor = Color.FromArgb(255, 236, 130),
                 Font = new Font("Microsoft Sans Serif", 10),
                 ForeColor = Color.Black,
-                Image = Image.FromFile("newfolder.png"),
+                Image = Image.FromFile(newFolder),
                 ImageAlign = HorizontalAlignment.Left,
                 ImageSize = new Size(15, 15),
                 Location = new Point(10, 10),
@@ -1086,12 +1099,12 @@ namespace tarungonNaNako.subform
                 Size = new Size(181, 42),
                 Text = "File Upload",
                 TextAlign = HorizontalAlignment.Center,
-                TextOffset = new Point(-18, 0),
+                TextOffset = new Point(-12, 0),
                 BackColor = Color.FromArgb(255, 255, 192),
                 FillColor = Color.FromArgb(255, 236, 130),
                 Font = new Font("Microsoft Sans Serif", 10),
                 ForeColor = Color.Black,
-                Image = Image.FromFile("fileupload.png"),
+                Image = Image.FromFile(fileUpload),
                 ImageAlign = HorizontalAlignment.Left,
                 ImageSize = new Size(15, 15),
                 Location = new Point(10, 55),
@@ -1105,12 +1118,12 @@ namespace tarungonNaNako.subform
                 Size = new Size(181, 42),
                 Text = "Folder Upload",
                 TextAlign = HorizontalAlignment.Center,
-                TextOffset = new Point(-18, 0),
+                TextOffset = new Point(-1, 0),
                 BackColor = Color.FromArgb(255, 255, 192),
                 FillColor = Color.FromArgb(255, 236, 130),
                 Font = new Font("Microsoft Sans Serif", 10),
                 ForeColor = Color.Black,
-                Image = Image.FromFile("folderupload.png"),
+                Image = Image.FromFile(folderUpload),
                 ImageAlign = HorizontalAlignment.Left,
                 ImageSize = new Size(15, 15),
                 Location = new Point(10, 100),
