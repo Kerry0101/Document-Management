@@ -55,7 +55,6 @@
             // 
             panel5.AutoScroll = true;
             panel5.BackColor = Color.FromArgb(255, 207, 64);
-            panel5.Controls.Add(guna2Panel2);
             panel5.Controls.Add(label2);
             panel5.Controls.Add(tableLayoutPanel1);
             panel5.Controls.Add(label6);
@@ -73,7 +72,7 @@
             guna2Panel2.Controls.Add(guna2Button5);
             guna2Panel2.Controls.Add(button1);
             guna2Panel2.CustomizableEdges = customizableEdges7;
-            guna2Panel2.Location = new Point(3, 90);
+            guna2Panel2.Location = new Point(509, 92);
             guna2Panel2.Name = "guna2Panel2";
             guna2Panel2.ShadowDecoration.CustomizableEdges = customizableEdges8;
             guna2Panel2.Size = new Size(181, 132);
@@ -208,6 +207,7 @@
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(255, 255, 192);
             ClientSize = new Size(785, 529);
+            Controls.Add(guna2Panel2);
             Controls.Add(panel5);
             FormBorderStyle = FormBorderStyle.None;
             Name = "fetchDocuments";

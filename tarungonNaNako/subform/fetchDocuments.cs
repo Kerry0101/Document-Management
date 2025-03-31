@@ -815,7 +815,7 @@ namespace tarungonNaNako.subform
         {
             // Clear existing controls
             panel5.Controls.Clear();
-
+             
             // Reload files into the panel
             LoadFilesAndFoldersIntoTablePanel();
         }
