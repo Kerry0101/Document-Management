@@ -70,31 +70,18 @@ namespace tarungonNaNako.subform
             int buttonHeight = 60; // Adjust as needed
             int spacing = 10;
             int xPosition = 0;
-
             try
             {
                 using (MySqlConnection conn = new MySqlConnection(connectionString))
                 {
                     conn.Open();
-
-                    // Ensure that Session.CurrentUserId contains the logged-in user ID
-                    if (Session.CurrentUserId == 0)
-                    {
-                        MessageBox.Show("User is not logged in.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        return;
-                    }
-
                     string query = @"SELECT f.fileName, f.updated_at, c.categoryName
-                             FROM files f
-                             JOIN category c ON f.categoryId = c.categoryId
-                             WHERE f.isArchived = 0 
-                             AND f.uploadedBy = @userId
-                             ORDER BY f.updated_at DESC";  // Ensures most recent files appear at the top
+                                     FROM files f
+                                     JOIN category c ON f.categoryId = c.categoryId
+                                     WHERE f.isArchived = 0";
 
                     using (MySqlCommand cmd = new MySqlCommand(query, conn))
                     {
-                        cmd.Parameters.AddWithValue("@userId", Session.CurrentUserId); // Filter by logged-in user
-
                         using (MySqlDataReader reader = cmd.ExecuteReader())
                         {
                             // Clear existing rows
@@ -116,20 +103,20 @@ namespace tarungonNaNako.subform
                                 {
                                     ColumnCount = 5,
                                     Dock = DockStyle.Fill,
-                                    Height = 50,
+                                    Height = 50, // Adjust row height
                                     BackColor = ColorTranslator.FromHtml("#ffe261")
                                 };
 
                                 // Set column sizes
-                                rowTable.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 40));
-                                rowTable.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 200));
-                                rowTable.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 180));
-                                rowTable.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 180));
-                                rowTable.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 10));
+                                rowTable.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 40)); // Image Icon
+                                rowTable.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 200)); // File Name
+                                rowTable.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 180)); // Modification Time
+                                rowTable.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 180)); // Category
+                                rowTable.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 10)); // Action
 
-                                Image fileIcon = Image.FromFile(Document);
+                                Image fileIcon = Image.FromFile(Document); // Load file icon
 
-                                // 🔴 Create Labels
+                                // 🔴 Create Labels (aligned properly)
                                 Label fileLabel = new Label
                                 {
                                     Text = fileName,
@@ -138,7 +125,7 @@ namespace tarungonNaNako.subform
                                     TextAlign = ContentAlignment.MiddleLeft,
                                     Padding = new Padding(5, 0, 0, 0),
                                     Font = new Font("Microsoft Sans Serif", 10),
-                                    BackColor = Color.Transparent
+                                    BackColor = Color.Transparent // Ensure background remains transparent
                                 };
 
                                 Label dateLabel = new Label
@@ -163,25 +150,71 @@ namespace tarungonNaNako.subform
                                     BackColor = Color.Transparent
                                 };
 
-                                // 🔴 Add Controls
+                                Guna.UI2.WinForms.Guna2CircleButton actionButton = new Guna.UI2.WinForms.Guna2CircleButton
+                                {
+                                    Image = Image.FromFile(ThreeDotMenu),
+                                    ImageSize = new Size(15, 15),
+                                    ImageAlign = HorizontalAlignment.Center,
+                                    ImageOffset = new Point(0, 12),
+                                    BackColor = Color.FromArgb(255, 226, 97),
+                                    FillColor = Color.Transparent,
+                                    Size = new Size(30, 26),
+                                    Text = "⋮",
+                                    Anchor = AnchorStyles.Right, // This will align the button to the right
+                                    Margin = new Padding(0, 5, 30, 0), // Adjust the right margin if needed
+                                    PressedDepth = 10
+                                };
+
+                                actionButton.Click += (s, e) =>
+                                {
+                                    //ShowContextMenu(fileName, actionButton);
+                                    ShowPanel("file", fileName, categoryName, actionButton); // Show panel with file-related options
+                                };
+
+                                // ✅ Add hover effect to row and its labels 255, 255, 192
+                                void RowHover(object sender, EventArgs e)
+                                {
+                                    rowTable.BackColor = Color.FromArgb(219, 195, 0);
+                                    actionButton.BackColor = Color.FromArgb(219, 195, 0);
+                                }
+                                void RowLeave(object sender, EventArgs e)
+                                {
+                                    rowTable.BackColor = ColorTranslator.FromHtml("#ffe261");
+                                    actionButton.BackColor = ColorTranslator.FromHtml("#ffe261");
+                                }
+
+                                rowTable.MouseEnter += RowHover;
+                                rowTable.MouseLeave += RowLeave;
+
+                                fileLabel.MouseEnter += RowHover;
+                                fileLabel.MouseLeave += RowLeave;
+
+                                dateLabel.MouseEnter += RowHover;
+                                dateLabel.MouseLeave += RowLeave;
+
+                                categoryLabel.MouseEnter += RowHover;
+                                categoryLabel.MouseLeave += RowLeave;
+
+                                // ✅ Add Labels and Button to rowTable
                                 PictureBox fileIconPictureBox = new PictureBox
                                 {
                                     Image = fileIcon,
-                                    SizeMode = PictureBoxSizeMode.Zoom,
+                                    SizeMode = PictureBoxSizeMode.Zoom, // Change to Zoom to maintain aspect ratio
                                     Margin = new Padding(20, 18, 0, 5),
-                                    Width = 15,
-                                    Height = 15
+                                    Width = 15, // Set desired width
+                                    Height = 15 // Set desired height
                                 };
 
                                 rowTable.Controls.Add(fileIconPictureBox, 0, 0);
                                 rowTable.Controls.Add(fileLabel, 1, 0);
                                 rowTable.Controls.Add(dateLabel, 2, 0);
                                 rowTable.Controls.Add(categoryLabel, 3, 0);
+                                rowTable.Controls.Add(actionButton, 4, 0);
 
                                 // 🔴 Add rowTable to TableLayoutPanel
                                 tableLayoutPanel1.RowCount = rowIndex + 1;
                                 tableLayoutPanel1.Controls.Add(rowTable, 0, rowIndex);
-                                tableLayoutPanel1.SetColumnSpan(rowTable, 3);
+                                tableLayoutPanel1.SetColumnSpan(rowTable, 3); // Span all columns
 
                                 rowIndex++;
                             }
@@ -222,7 +255,7 @@ namespace tarungonNaNako.subform
                 SELECT categoryName 
                 FROM category 
                 WHERE is_archived = 0 
-                AND uploadedBy = @userId 
+                AND userId = @userId 
                 ORDER BY created_at DESC 
                 LIMIT 5"; // Fetch only the 5 most recent categories
 
