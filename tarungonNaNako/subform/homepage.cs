@@ -76,17 +76,11 @@ namespace tarungonNaNako.subform
                 {
                     conn.Open();
                     string query = @"SELECT f.fileName, f.updated_at, c.categoryName
-<<<<<<< Updated upstream
-                                     FROM files f
-                                     JOIN category c ON f.categoryId = c.categoryId
-                                     WHERE f.isArchived = 0";
-=======
                              FROM files f
                              JOIN category c ON f.categoryId = c.categoryId
                              WHERE f.isArchived = 0 
                              AND f.userId = @userId
                              ORDER BY f.updated_at DESC";  // Ensures most recent files appear at the top
->>>>>>> Stashed changes
 
                     using (MySqlCommand cmd = new MySqlCommand(query, conn))
                     {
@@ -209,14 +203,9 @@ namespace tarungonNaNako.subform
                                     Image = fileIcon,
                                     SizeMode = PictureBoxSizeMode.Zoom, // Change to Zoom to maintain aspect ratio
                                     Margin = new Padding(20, 18, 0, 5),
-<<<<<<< Updated upstream
-                                    Width = 15, // Set desired width
-                                    Height = 15 // Set desired height
-=======
                                     Text = ":",
                                     Width = 15,
                                     Height = 15
->>>>>>> Stashed changes
                                 };
 
                                 rowTable.Controls.Add(fileIconPictureBox, 0, 0);
