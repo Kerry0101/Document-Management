@@ -70,20 +70,31 @@ namespace tarungonNaNako.subform
             int buttonHeight = 60; // Adjust as needed
             int spacing = 10;
             int xPosition = 0;
+
             try
             {
                 using (MySqlConnection conn = new MySqlConnection(connectionString))
                 {
                     conn.Open();
-                    string query = @"SELECT f.fileName, f.updated_at, c.categoryName
-                             FROM files f
-                             JOIN category c ON f.categoryId = c.categoryId
-                             WHERE f.isArchived = 0 
-                             AND f.userId = @userId
-                             ORDER BY f.updated_at DESC";  // Ensures most recent files appear at the top
+
+                    // Ensure the user is logged in
+                    if (Session.CurrentUserId == 0)
+                    {
+                        MessageBox.Show("User is not logged in.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return;
+                    }
+
+                    string query = @"
+                SELECT f.fileName, f.updated_at, c.categoryName
+                FROM files f
+                JOIN category c ON f.categoryId = c.categoryId
+                WHERE f.isArchived = 0 
+                AND f.userId = @userId"; // Filter by logged-in user
 
                     using (MySqlCommand cmd = new MySqlCommand(query, conn))
                     {
+                        cmd.Parameters.AddWithValue("@userId", Session.CurrentUserId); // Bind the logged-in user ID
+
                         using (MySqlDataReader reader = cmd.ExecuteReader())
                         {
                             // Clear existing rows
@@ -169,11 +180,11 @@ namespace tarungonNaNako.subform
 
                                 actionButton.Click += (s, e) =>
                                 {
-                                    //ShowContextMenu(fileName, actionButton);
                                     ShowPanel("file", fileName, categoryName, actionButton); // Show panel with file-related options
+                                    popupPanel.Hide(); // Hide the category panel if it's open
                                 };
 
-                                // ✅ Add hover effect to row and its labels 255, 255, 192
+                                // ✅ Add hover effect to row and its labels
                                 void RowHover(object sender, EventArgs e)
                                 {
                                     rowTable.BackColor = Color.FromArgb(219, 195, 0);
@@ -230,6 +241,7 @@ namespace tarungonNaNako.subform
                 MessageBox.Show($"Error loading files: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
 
 
 
@@ -336,130 +348,6 @@ namespace tarungonNaNako.subform
             }
         }
 
-
-
-
-        //private void ShowPanel(string type, string name, string categoryName, Control btn)
-        //{
-        //    selectedType = type; // Store what was clicked
-        //    selectedName = name; // Store file or category name
-        //                         // Toggle visibility of guna2Panel2
-        //    if (guna2Panel2.Visible)
-        //    {
-        //        guna2Panel2.Visible = false;
-        //        return;
-        //    }
-
-        //    string download = Path.Combine(Application.StartupPath, "Assets (images)", "down-to-line.png");
-        //    string rename = Path.Combine(Application.StartupPath, "Assets (images)", "pencil.png");
-        //    string remove = Path.Combine(Application.StartupPath, "Assets (images)", "trash.png");
-
-        //    guna2Panel2.Controls.Clear(); // Clear previous content
-        //    guna2Panel2.Visible = true;   // Show the panel
-
-        //    // Set panel properties
-        //    guna2Panel2.Size = new Size(181, 132); // Adjust size     181, 132
-        //    guna2Panel2.BorderRadius = 5;
-        //    guna2Panel2.BackColor = Color.FromArgb(255, 255, 192);
-        //    guna2Panel2.BringToFront();
-        //    guna2Panel2.Font = new Font("Segoe UI", 9);
-        //    guna2Panel2.ForeColor = Color.Black;
-
-
-
-        //    Label titleLabel = new Label
-        //    {
-        //        Text = (type == "file") ? "File Options" : "Category Options",
-        //        Font = new Font("Segoe UI", 12, FontStyle.Bold),
-        //        Dock = DockStyle.Top,
-        //        TextAlign = ContentAlignment.MiddleCenter
-        //    };
-
-        //    // Create buttons
-        //    Guna.UI2.WinForms.Guna2Button btnDownload = new Guna.UI2.WinForms.Guna2Button();
-        //    btnDownload.Size = new Size(181, 42);
-        //    btnDownload.Text = "Download";
-        //    btnDownload.TextAlign = HorizontalAlignment.Center;
-        //    btnDownload.TextOffset = new Point(-18, 0);
-        //    btnDownload.BackColor = Color.FromArgb(255, 255, 192);
-        //    btnDownload.FillColor = Color.FromArgb(255, 236, 130);
-        //    btnDownload.Font = new Font("Microsoft Sans Serif", 10);
-        //    btnDownload.ForeColor = Color.Black;
-        //    btnDownload.Image = Image.FromFile(download);
-        //    btnDownload.ImageAlign = HorizontalAlignment.Left;
-        //    btnDownload.ImageSize = new Size(15, 15);
-        //    btnDownload.Location = new Point(0, 1);
-        //    btnDownload.PressedColor = Color.Black;
-        //    btnDownload.PressedDepth = 10;
-
-        //    // ✅ Attach the event that handles downloading differently
-        //    btnDownload.Click += DownloadButton_Click;
-
-        //    Guna.UI2.WinForms.Guna2Button btnRename = new Guna.UI2.WinForms.Guna2Button();
-        //    btnRename.Size = new Size(181, 42);
-        //    btnRename.Text = "Rename";
-        //    btnRename.TextAlign = HorizontalAlignment.Center;
-        //    btnRename.TextOffset = new Point(-18, 0);
-        //    btnRename.BackColor = Color.FromArgb(255, 255, 192);
-        //    btnRename.FillColor = Color.FromArgb(255, 236, 130);
-        //    btnRename.Font = new Font("Microsoft Sans Serif", 10);
-        //    btnRename.ForeColor = Color.Black;
-        //    btnRename.Image = Image.FromFile(rename);
-        //    btnRename.ImageAlign = HorizontalAlignment.Left;
-        //    btnRename.ImageSize = new Size(15, 15);
-        //    btnRename.Location = new Point(0, 44);
-        //    btnRename.PressedColor = Color.Black;
-        //    btnRename.PressedDepth = 10;
-        //    btnRename.Click += (s, e) => EditCategory(GetCategoryIdByName(categoryName), categoryName);
-
-        //    Guna.UI2.WinForms.Guna2Button btnDelete = new Guna.UI2.WinForms.Guna2Button();
-        //    btnDelete.Size = new Size(181, 42);
-        //    btnDelete.Text = "Move to trash";
-        //    btnDelete.TextAlign = HorizontalAlignment.Right;
-        //    btnDelete.TextOffset = new Point(-12, 0);
-        //    btnDelete.BackColor = Color.FromArgb(255, 255, 192);
-        //    btnDelete.FillColor = Color.FromArgb(255, 236, 130);
-        //    btnDelete.Font = new Font("Microsoft Sans Serif", 10);
-        //    btnDelete.ForeColor = Color.Black;
-        //    btnDelete.Image = Image.FromFile(remove);
-        //    btnDelete.ImageAlign = HorizontalAlignment.Left;
-        //    btnDelete.ImageSize = new Size(15, 15);
-        //    btnDelete.Location = new Point(0, 87);
-        //    btnDelete.PressedColor = Color.Black;
-        //    btnDelete.PressedDepth = 10;
-        //    btnDelete.Click += (s, e) => RemoveCategory(categoryName);
-
-        //    // Add buttons to panel
-        //    guna2Panel2.Controls.Add(btnDownload);
-        //    guna2Panel2.Controls.Add(btnRename);
-        //    guna2Panel2.Controls.Add(btnDelete);
-
-        //    // ===== Adjust Panel Position to Keep it Inside the Form =====
-        //    Point btnScreenLocation = btn.Parent.PointToScreen(btn.Location);
-        //    Point panelLocation = this.PointToClient(new Point(btnScreenLocation.X, btnScreenLocation.Y + btn.Height + 5));
-
-        //    int panelX = panelLocation.X;
-        //    int panelY = panelLocation.Y;
-        //    int panelWidth = guna2Panel2.Width;
-        //    int panelHeight = guna2Panel2.Height;
-
-        //    // Ensure panel doesn't go beyond the right boundary
-        //    if (panelX + panelWidth > this.ClientSize.Width)
-        //    {
-        //        panelX = this.ClientSize.Width - panelWidth - 10;
-        //    }
-
-        //    // Ensure panel doesn't go beyond the bottom boundary
-        //    if (panelY + panelHeight > this.ClientSize.Height)
-        //    {
-        //        panelY = this.ClientSize.Height - panelHeight - 10;
-        //    }
-
-        //    // Apply final position
-        //    guna2Panel2.Location = new Point(panelX, panelY);
-        //    guna2Panel2.Visible = true;
-
-        //}
 
         private void ShowPanel(string type, string name, string categoryName, Control btn)
         {
@@ -680,7 +568,7 @@ namespace tarungonNaNako.subform
 
         private void DownloadCategory(string categoryName)
         {
-            string storagePath = @"C:\DocSpace\UploadedFiles\"; // Ensure this is correct
+            string storagePath = @"C:\DocsManagement"; // Ensure this is correct
             string categoryPath = Path.Combine(storagePath, categoryName);
 
             // Debugging: Show the path to confirm it's correct
@@ -1125,6 +1013,7 @@ namespace tarungonNaNako.subform
                 NewFolder.MinimizeBox = false; // Remove minimize button
                 NewFolder.MaximizeBox = false; // Remove maximize button
                 NewFolder.ShowDialog(this); // Show the form as a dialog
+                popupPanel.Hide();
             };
 
             Guna.UI2.WinForms.Guna2Button btnFileUpload = new Guna.UI2.WinForms.Guna2Button
