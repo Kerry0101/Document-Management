@@ -25,8 +25,9 @@ namespace tarungonNaNako.subform
         private string connectionString = "server=localhost;database=docsmanagement;uid=root;pwd=;";
         private Image originalImage;
         string Folder = Path.Combine(Application.StartupPath, "Assets (images)", "folder.png");
-        string Document = Path.Combine(Application.StartupPath, "Assets (images)", "document.png");
         string ThreeDotMenu = Path.Combine(Application.StartupPath, "Assets (images)", "menu-dots-vertical.png");
+        string DocumentIcon = Path.Combine(Application.StartupPath, "Assets (images)", "document.png");
+        string ZippedFolderIcon = Path.Combine(Application.StartupPath, "Assets (images)", "zip (1).png");
 
 
         public homepage()
@@ -77,23 +78,24 @@ namespace tarungonNaNako.subform
                 {
                     conn.Open();
 
-                    // Ensure that Session.CurrentUserId contains the logged-in user ID
+                    // Ensure the user is logged in
                     if (Session.CurrentUserId == 0)
                     {
                         MessageBox.Show("User is not logged in.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         return;
                     }
 
-                    string query = @"SELECT f.fileName, f.updated_at, c.categoryName
-                             FROM files f
-                             JOIN category c ON f.categoryId = c.categoryId
-                             WHERE f.isArchived = 0 
-                             AND f.uploadedBy = @userId
-                             ORDER BY f.updated_at DESC";  // Ensures most recent files appear at the top
+                    string query = @"
+                    SELECT f.fileName, f.updated_at, c.categoryName
+                    FROM files f
+                    JOIN category c ON f.categoryId = c.categoryId
+                    WHERE f.isArchived = 0 
+                    AND f.userId = @userId
+                    ORDER BY f.updated_at DESC"; // Filter by logged-in user and order by updated_at
 
                     using (MySqlCommand cmd = new MySqlCommand(query, conn))
                     {
-                        cmd.Parameters.AddWithValue("@userId", Session.CurrentUserId); // Filter by logged-in user
+                        cmd.Parameters.AddWithValue("@userId", Session.CurrentUserId); // Bind the logged-in user ID
 
                         using (MySqlDataReader reader = cmd.ExecuteReader())
                         {
@@ -116,20 +118,30 @@ namespace tarungonNaNako.subform
                                 {
                                     ColumnCount = 5,
                                     Dock = DockStyle.Fill,
-                                    Height = 50,
+                                    Height = 50, // Adjust row height
                                     BackColor = ColorTranslator.FromHtml("#ffe261")
                                 };
 
                                 // Set column sizes
-                                rowTable.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 40));
-                                rowTable.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 200));
-                                rowTable.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 180));
-                                rowTable.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 180));
-                                rowTable.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 10));
+                                rowTable.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 40)); // Image Icon
+                                rowTable.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 200)); // File Name
+                                rowTable.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 180)); // Modification Time
+                                rowTable.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 180)); // Category
+                                rowTable.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 10)); // Action
 
-                                Image fileIcon = Image.FromFile(Document);
+                                // Determine the icon based on file type
+                                Image icon;
+                                string fileExtension = Path.GetExtension(fileName).ToLower();
+                                if (fileExtension == ".zip")
+                                {
+                                    icon = Image.FromFile(ZippedFolderIcon); // Use zipped folder icon
+                                }
+                                else
+                                {
+                                    icon = Image.FromFile(DocumentIcon); // Use document icon
+                                }
 
-                                // 🔴 Create Labels
+                                // 🔴 Create Labels (aligned properly)
                                 Label fileLabel = new Label
                                 {
                                     Text = fileName,
@@ -138,7 +150,7 @@ namespace tarungonNaNako.subform
                                     TextAlign = ContentAlignment.MiddleLeft,
                                     Padding = new Padding(5, 0, 0, 0),
                                     Font = new Font("Microsoft Sans Serif", 10),
-                                    BackColor = Color.Transparent
+                                    BackColor = Color.Transparent // Ensure background remains transparent
                                 };
 
                                 Label dateLabel = new Label
@@ -163,12 +175,58 @@ namespace tarungonNaNako.subform
                                     BackColor = Color.Transparent
                                 };
 
-                                // 🔴 Add Controls
+                                Guna.UI2.WinForms.Guna2CircleButton actionButton = new Guna.UI2.WinForms.Guna2CircleButton
+                                {
+                                    Image = Image.FromFile(ThreeDotMenu),
+                                    ImageSize = new Size(15, 15),
+                                    ImageAlign = HorizontalAlignment.Center,
+                                    ImageOffset = new Point(0, 12),
+                                    BackColor = Color.FromArgb(255, 226, 97),
+                                    FillColor = Color.Transparent,
+                                    Size = new Size(30, 26),
+                                    Text = "⋮",
+                                    Anchor = AnchorStyles.Right, // This will align the button to the right
+                                    Margin = new Padding(0, 5, 30, 0), // Adjust the right margin if needed
+                                    PressedDepth = 10
+                                };
+
+                                actionButton.Click += (s, e) =>
+                                {
+                                    ShowPanel("file", fileName, categoryName, actionButton); // Show panel with file-related options
+                                    popupPanel.Hide(); // Hide the category panel if it's open
+                                };
+
+                                // ✅ Add hover effect to row and its labels
+                                void RowHover(object sender, EventArgs e)
+                                {
+                                    rowTable.BackColor = Color.FromArgb(219, 195, 0);
+                                    actionButton.BackColor = Color.FromArgb(219, 195, 0);
+                                }
+                                void RowLeave(object sender, EventArgs e)
+                                {
+                                    rowTable.BackColor = ColorTranslator.FromHtml("#ffe261");
+                                    actionButton.BackColor = ColorTranslator.FromHtml("#ffe261");
+                                }
+
+                                rowTable.MouseEnter += RowHover;
+                                rowTable.MouseLeave += RowLeave;
+
+                                fileLabel.MouseEnter += RowHover;
+                                fileLabel.MouseLeave += RowLeave;
+
+                                dateLabel.MouseEnter += RowHover;
+                                dateLabel.MouseLeave += RowLeave;
+
+                                categoryLabel.MouseEnter += RowHover;
+                                categoryLabel.MouseLeave += RowLeave;
+
+                                // ✅ Add Labels and Button to rowTable
                                 PictureBox fileIconPictureBox = new PictureBox
                                 {
-                                    Image = fileIcon,
-                                    SizeMode = PictureBoxSizeMode.Zoom,
+                                    Image = icon,
+                                    SizeMode = PictureBoxSizeMode.Zoom, // Change to Zoom to maintain aspect ratio
                                     Margin = new Padding(20, 18, 0, 5),
+                                    Text = ":",
                                     Width = 15,
                                     Height = 15
                                 };
@@ -177,11 +235,12 @@ namespace tarungonNaNako.subform
                                 rowTable.Controls.Add(fileLabel, 1, 0);
                                 rowTable.Controls.Add(dateLabel, 2, 0);
                                 rowTable.Controls.Add(categoryLabel, 3, 0);
+                                rowTable.Controls.Add(actionButton, 4, 0);
 
                                 // 🔴 Add rowTable to TableLayoutPanel
                                 tableLayoutPanel1.RowCount = rowIndex + 1;
                                 tableLayoutPanel1.Controls.Add(rowTable, 0, rowIndex);
-                                tableLayoutPanel1.SetColumnSpan(rowTable, 3);
+                                tableLayoutPanel1.SetColumnSpan(rowTable, 3); // Span all columns
 
                                 rowIndex++;
                             }
@@ -194,6 +253,7 @@ namespace tarungonNaNako.subform
                 MessageBox.Show($"Error loading files: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
 
 
 
@@ -222,8 +282,8 @@ namespace tarungonNaNako.subform
                 SELECT categoryName 
                 FROM category 
                 WHERE is_archived = 0 
-                AND uploadedBy = @userId 
-                ORDER BY created_at DESC 
+                AND userId = @userId 
+                ORDER BY updated_at DESC 
                 LIMIT 5"; // Fetch only the 5 most recent categories
 
                     using (MySqlCommand cmd = new MySqlCommand(query, conn))
@@ -266,12 +326,11 @@ namespace tarungonNaNako.subform
                                     Image = Image.FromFile(ThreeDotMenu),
                                     ImageSize = new Size(15, 15),
                                     ImageAlign = HorizontalAlignment.Center,
-                                    ImageOffset = new Point(0, 12),
+                                    ImageOffset = new Point(1, 0),
                                     BackColor = Color.FromArgb(255, 226, 97),
                                     FillColor = Color.Transparent,
                                     Size = new Size(28, 26),
                                     Location = new Point(xPosition + buttonWidth - 35, 15),
-                                    Text = "⋮",
                                     PressedDepth = 10
                                 };
 
@@ -301,130 +360,6 @@ namespace tarungonNaNako.subform
             }
         }
 
-
-
-
-        //private void ShowPanel(string type, string name, string categoryName, Control btn)
-        //{
-        //    selectedType = type; // Store what was clicked
-        //    selectedName = name; // Store file or category name
-        //                         // Toggle visibility of guna2Panel2
-        //    if (guna2Panel2.Visible)
-        //    {
-        //        guna2Panel2.Visible = false;
-        //        return;
-        //    }
-
-        //    string download = Path.Combine(Application.StartupPath, "Assets (images)", "down-to-line.png");
-        //    string rename = Path.Combine(Application.StartupPath, "Assets (images)", "pencil.png");
-        //    string remove = Path.Combine(Application.StartupPath, "Assets (images)", "trash.png");
-
-        //    guna2Panel2.Controls.Clear(); // Clear previous content
-        //    guna2Panel2.Visible = true;   // Show the panel
-
-        //    // Set panel properties
-        //    guna2Panel2.Size = new Size(181, 132); // Adjust size     181, 132
-        //    guna2Panel2.BorderRadius = 5;
-        //    guna2Panel2.BackColor = Color.FromArgb(255, 255, 192);
-        //    guna2Panel2.BringToFront();
-        //    guna2Panel2.Font = new Font("Segoe UI", 9);
-        //    guna2Panel2.ForeColor = Color.Black;
-
-
-
-        //    Label titleLabel = new Label
-        //    {
-        //        Text = (type == "file") ? "File Options" : "Category Options",
-        //        Font = new Font("Segoe UI", 12, FontStyle.Bold),
-        //        Dock = DockStyle.Top,
-        //        TextAlign = ContentAlignment.MiddleCenter
-        //    };
-
-        //    // Create buttons
-        //    Guna.UI2.WinForms.Guna2Button btnDownload = new Guna.UI2.WinForms.Guna2Button();
-        //    btnDownload.Size = new Size(181, 42);
-        //    btnDownload.Text = "Download";
-        //    btnDownload.TextAlign = HorizontalAlignment.Center;
-        //    btnDownload.TextOffset = new Point(-18, 0);
-        //    btnDownload.BackColor = Color.FromArgb(255, 255, 192);
-        //    btnDownload.FillColor = Color.FromArgb(255, 236, 130);
-        //    btnDownload.Font = new Font("Microsoft Sans Serif", 10);
-        //    btnDownload.ForeColor = Color.Black;
-        //    btnDownload.Image = Image.FromFile(download);
-        //    btnDownload.ImageAlign = HorizontalAlignment.Left;
-        //    btnDownload.ImageSize = new Size(15, 15);
-        //    btnDownload.Location = new Point(0, 1);
-        //    btnDownload.PressedColor = Color.Black;
-        //    btnDownload.PressedDepth = 10;
-
-        //    // ✅ Attach the event that handles downloading differently
-        //    btnDownload.Click += DownloadButton_Click;
-
-        //    Guna.UI2.WinForms.Guna2Button btnRename = new Guna.UI2.WinForms.Guna2Button();
-        //    btnRename.Size = new Size(181, 42);
-        //    btnRename.Text = "Rename";
-        //    btnRename.TextAlign = HorizontalAlignment.Center;
-        //    btnRename.TextOffset = new Point(-18, 0);
-        //    btnRename.BackColor = Color.FromArgb(255, 255, 192);
-        //    btnRename.FillColor = Color.FromArgb(255, 236, 130);
-        //    btnRename.Font = new Font("Microsoft Sans Serif", 10);
-        //    btnRename.ForeColor = Color.Black;
-        //    btnRename.Image = Image.FromFile(rename);
-        //    btnRename.ImageAlign = HorizontalAlignment.Left;
-        //    btnRename.ImageSize = new Size(15, 15);
-        //    btnRename.Location = new Point(0, 44);
-        //    btnRename.PressedColor = Color.Black;
-        //    btnRename.PressedDepth = 10;
-        //    btnRename.Click += (s, e) => EditCategory(GetCategoryIdByName(categoryName), categoryName);
-
-        //    Guna.UI2.WinForms.Guna2Button btnDelete = new Guna.UI2.WinForms.Guna2Button();
-        //    btnDelete.Size = new Size(181, 42);
-        //    btnDelete.Text = "Move to trash";
-        //    btnDelete.TextAlign = HorizontalAlignment.Right;
-        //    btnDelete.TextOffset = new Point(-12, 0);
-        //    btnDelete.BackColor = Color.FromArgb(255, 255, 192);
-        //    btnDelete.FillColor = Color.FromArgb(255, 236, 130);
-        //    btnDelete.Font = new Font("Microsoft Sans Serif", 10);
-        //    btnDelete.ForeColor = Color.Black;
-        //    btnDelete.Image = Image.FromFile(remove);
-        //    btnDelete.ImageAlign = HorizontalAlignment.Left;
-        //    btnDelete.ImageSize = new Size(15, 15);
-        //    btnDelete.Location = new Point(0, 87);
-        //    btnDelete.PressedColor = Color.Black;
-        //    btnDelete.PressedDepth = 10;
-        //    btnDelete.Click += (s, e) => RemoveCategory(categoryName);
-
-        //    // Add buttons to panel
-        //    guna2Panel2.Controls.Add(btnDownload);
-        //    guna2Panel2.Controls.Add(btnRename);
-        //    guna2Panel2.Controls.Add(btnDelete);
-
-        //    // ===== Adjust Panel Position to Keep it Inside the Form =====
-        //    Point btnScreenLocation = btn.Parent.PointToScreen(btn.Location);
-        //    Point panelLocation = this.PointToClient(new Point(btnScreenLocation.X, btnScreenLocation.Y + btn.Height + 5));
-
-        //    int panelX = panelLocation.X;
-        //    int panelY = panelLocation.Y;
-        //    int panelWidth = guna2Panel2.Width;
-        //    int panelHeight = guna2Panel2.Height;
-
-        //    // Ensure panel doesn't go beyond the right boundary
-        //    if (panelX + panelWidth > this.ClientSize.Width)
-        //    {
-        //        panelX = this.ClientSize.Width - panelWidth - 10;
-        //    }
-
-        //    // Ensure panel doesn't go beyond the bottom boundary
-        //    if (panelY + panelHeight > this.ClientSize.Height)
-        //    {
-        //        panelY = this.ClientSize.Height - panelHeight - 10;
-        //    }
-
-        //    // Apply final position
-        //    guna2Panel2.Location = new Point(panelX, panelY);
-        //    guna2Panel2.Visible = true;
-
-        //}
 
         private void ShowPanel(string type, string name, string categoryName, Control btn)
         {
@@ -645,7 +580,7 @@ namespace tarungonNaNako.subform
 
         private void DownloadCategory(string categoryName)
         {
-            string storagePath = @"C:\DocSpace\UploadedFiles\"; // Ensure this is correct
+            string storagePath = @"C:\DocsManagement"; // Ensure this is correct
             string categoryPath = Path.Combine(storagePath, categoryName);
 
             // Debugging: Show the path to confirm it's correct
@@ -788,7 +723,8 @@ namespace tarungonNaNako.subform
         }
 
         private void EditFile(int categoryId, string selectedName)
-        {             // Prompt user for new file name
+        {
+            // Prompt user for new file name
             string newFileName = Microsoft.VisualBasic.Interaction.InputBox(
                 "Enter new file name:",
                 "Edit File",
@@ -798,6 +734,12 @@ namespace tarungonNaNako.subform
             {
                 MessageBox.Show("File name cannot be empty.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
+            }
+            // Ensure the new file name includes the correct extension
+            string fileExtension = Path.GetExtension(selectedName);
+            if (!newFileName.EndsWith(fileExtension, StringComparison.OrdinalIgnoreCase))
+            {
+                newFileName += fileExtension;
             }
             // Prevent duplicate file names
             if (IsFileNameExists(newFileName))
@@ -819,13 +761,28 @@ namespace tarungonNaNako.subform
                         int rowsAffected = cmd.ExecuteNonQuery();
                         if (rowsAffected > 0)
                         {
+                            // Update the file name in the storage path
+                            string storagePath = @"C:\DocsManagement\";
+                            string oldFilePath = Path.Combine(storagePath, selectedName);
+                            string newFilePath = Path.Combine(storagePath, newFileName);
+
+                            if (File.Exists(oldFilePath))
+                            {
+                                File.Move(oldFilePath, newFilePath);
+                            }
+                            else
+                            {
+                                MessageBox.Show("File not found in storage path.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                return;
+                            }
+
                             guna2Panel2.Visible = false;
                             MessageBox.Show($"File renamed to '{newFileName}' successfully.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
                             LoadFilesIntoTablePanel(); // Refresh the panel after renaming the file
                         }
                         else
                         {
-                            MessageBox.Show("File not found.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            MessageBox.Show("File not found in database.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         }
                     }
                 }
@@ -835,6 +792,7 @@ namespace tarungonNaNako.subform
                 MessageBox.Show($"Error renaming file: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
 
         private void EditCategory(int categoryId, string categoryName)
         {
@@ -1081,7 +1039,17 @@ namespace tarungonNaNako.subform
                 PressedColor = Color.Black,
                 PressedDepth = 10,
             };
-            btnNewFolder.Click += (s, e) => { MessageBox.Show("New Folder Clicked"); };
+            btnNewFolder.Click += (s, e) =>
+            {
+                createNewFolderForm NewFolder = new createNewFolderForm();
+                NewFolder.StartPosition = FormStartPosition.CenterScreen;
+                NewFolder.TopMost = true; // Ensure the form appears on top
+                NewFolder.FormBorderStyle = FormBorderStyle.FixedDialog; // Set the form border style
+                NewFolder.MinimizeBox = false; // Remove minimize button
+                NewFolder.MaximizeBox = false; // Remove maximize button
+                NewFolder.ShowDialog(this); // Show the form as a dialog
+                popupPanel.Hide();
+            };
 
             Guna.UI2.WinForms.Guna2Button btnFileUpload = new Guna.UI2.WinForms.Guna2Button
             {
@@ -1101,6 +1069,7 @@ namespace tarungonNaNako.subform
                 PressedDepth = 10,
             };
             btnFileUpload.Click += (s, e) => {
+                popupPanel.Hide();
                 LoadFormInPanel(new addDocs());
             };
 
@@ -1121,7 +1090,10 @@ namespace tarungonNaNako.subform
                 PressedColor = Color.Black,
                 PressedDepth = 10,
             };
-            btnFolderUpload.Click += (s, e) => { MessageBox.Show("Folder Upload Clicked"); };
+            btnFolderUpload.Click += (s, e) => {
+                popupPanel.Hide();
+                LoadFormInPanel(new addDocs());
+            };
 
             // Add buttons to the panel
             popupPanel.Controls.Add(btnNewFolder);
