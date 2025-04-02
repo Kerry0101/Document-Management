@@ -29,12 +29,12 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(addDocs));
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges7 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges8 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges9 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges10 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges11 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges12 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges1 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges2 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges3 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges4 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges5 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges6 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             label1 = new Label();
             panel1 = new Panel();
             suggestionListBox = new ListBox();
@@ -61,9 +61,9 @@
             label1.Location = new Point(25, 32);
             label1.Margin = new Padding(2, 0, 2, 0);
             label1.Name = "label1";
-            label1.Size = new Size(254, 24);
+            label1.Size = new Size(283, 24);
             label1.TabIndex = 1;
-            label1.Text = "Add documents and folders";
+            label1.Text = "Upload documents and folders";
             label1.Click += label1_Click;
             // 
             // panel1
@@ -110,7 +110,7 @@
             // 
             // textBox1
             // 
-            textBox1.CustomizableEdges = customizableEdges7;
+            textBox1.CustomizableEdges = customizableEdges1;
             textBox1.DefaultText = "";
             textBox1.DisabledState.BorderColor = Color.FromArgb(208, 208, 208);
             textBox1.DisabledState.FillColor = Color.FromArgb(226, 226, 226);
@@ -125,7 +125,7 @@
             textBox1.Name = "textBox1";
             textBox1.PlaceholderText = "";
             textBox1.SelectedText = "";
-            textBox1.ShadowDecoration.CustomizableEdges = customizableEdges8;
+            textBox1.ShadowDecoration.CustomizableEdges = customizableEdges2;
             textBox1.Size = new Size(186, 40);
             textBox1.TabIndex = 13;
             textBox1.TextChanged += textBox1_TextChanged_1;
@@ -144,7 +144,7 @@
             // searchBar
             // 
             searchBar.BorderRadius = 5;
-            searchBar.CustomizableEdges = customizableEdges9;
+            searchBar.CustomizableEdges = customizableEdges3;
             searchBar.DefaultText = "";
             searchBar.DisabledState.BorderColor = Color.FromArgb(208, 208, 208);
             searchBar.DisabledState.FillColor = Color.FromArgb(226, 226, 226);
@@ -160,7 +160,7 @@
             searchBar.PlaceholderForeColor = Color.Gray;
             searchBar.PlaceholderText = "Search folders. . .";
             searchBar.SelectedText = "";
-            searchBar.ShadowDecoration.CustomizableEdges = customizableEdges10;
+            searchBar.ShadowDecoration.CustomizableEdges = customizableEdges4;
             searchBar.Size = new Size(186, 40);
             searchBar.TabIndex = 11;
             // 
@@ -221,13 +221,13 @@
             // 
             // guna2PictureBox1
             // 
-            guna2PictureBox1.CustomizableEdges = customizableEdges11;
+            guna2PictureBox1.CustomizableEdges = customizableEdges5;
             guna2PictureBox1.FillColor = Color.FromArgb(255, 207, 64);
             guna2PictureBox1.Image = (Image)resources.GetObject("guna2PictureBox1.Image");
             guna2PictureBox1.ImageRotate = 0F;
             guna2PictureBox1.Location = new Point(326, 41);
             guna2PictureBox1.Name = "guna2PictureBox1";
-            guna2PictureBox1.ShadowDecoration.CustomizableEdges = customizableEdges12;
+            guna2PictureBox1.ShadowDecoration.CustomizableEdges = customizableEdges6;
             guna2PictureBox1.Size = new Size(378, 357);
             guna2PictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
             guna2PictureBox1.TabIndex = 16;
