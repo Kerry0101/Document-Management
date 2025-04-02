@@ -85,11 +85,12 @@ namespace tarungonNaNako.subform
                     }
 
                     string query = @"
-                SELECT f.fileName, f.updated_at, c.categoryName
-                FROM files f
-                JOIN category c ON f.categoryId = c.categoryId
-                WHERE f.isArchived = 0 
-                AND f.userId = @userId"; // Filter by logged-in user
+                    SELECT f.fileName, f.updated_at, c.categoryName
+                    FROM files f
+                    JOIN category c ON f.categoryId = c.categoryId
+                    WHERE f.isArchived = 0 
+                    AND f.userId = @userId
+                    ORDER BY f.updated_at DESC"; // Filter by logged-in user and order by updated_at
 
                     using (MySqlCommand cmd = new MySqlCommand(query, conn))
                     {
@@ -271,7 +272,7 @@ namespace tarungonNaNako.subform
                 FROM category 
                 WHERE is_archived = 0 
                 AND userId = @userId 
-                ORDER BY created_at DESC 
+                ORDER BY updated_at DESC 
                 LIMIT 5"; // Fetch only the 5 most recent categories
 
                     using (MySqlCommand cmd = new MySqlCommand(query, conn))

@@ -28,12 +28,12 @@
         /// </summary>
         private void InitializeComponent()
         {
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges7 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges8 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges9 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges10 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges11 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges12 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges1 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges2 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges3 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges4 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges5 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges6 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Cancelbtn = new Guna.UI2.WinForms.Guna2Button();
             Createbtn = new Guna.UI2.WinForms.Guna2Button();
             label1 = new Label();
@@ -45,7 +45,7 @@
             Cancelbtn.BorderColor = Color.FromArgb(255, 255, 192);
             Cancelbtn.BorderRadius = 20;
             Cancelbtn.Cursor = Cursors.Hand;
-            Cancelbtn.CustomizableEdges = customizableEdges7;
+            Cancelbtn.CustomizableEdges = customizableEdges1;
             Cancelbtn.DisabledState.BorderColor = Color.DarkGray;
             Cancelbtn.DisabledState.CustomBorderColor = Color.DarkGray;
             Cancelbtn.DisabledState.FillColor = Color.FromArgb(169, 169, 169);
@@ -60,19 +60,19 @@
             Cancelbtn.Margin = new Padding(10, 3, 5, 3);
             Cancelbtn.Name = "Cancelbtn";
             Cancelbtn.PressedDepth = 10;
-            Cancelbtn.ShadowDecoration.CustomizableEdges = customizableEdges8;
+            Cancelbtn.ShadowDecoration.CustomizableEdges = customizableEdges2;
             Cancelbtn.Size = new Size(95, 42);
-            Cancelbtn.TabIndex = 19;
+            Cancelbtn.TabIndex = 2;
             Cancelbtn.Text = "Cancel";
             Cancelbtn.TextFormatNoPrefix = true;
-            //Cancelbtn.Click += Cancelbtn_Click;
+            Cancelbtn.Click += Cancelbtn_Click;
             // 
             // Createbtn
             // 
             Createbtn.BorderColor = Color.FromArgb(255, 255, 192);
             Createbtn.BorderRadius = 20;
             Createbtn.Cursor = Cursors.Hand;
-            Createbtn.CustomizableEdges = customizableEdges9;
+            Createbtn.CustomizableEdges = customizableEdges3;
             Createbtn.DisabledState.BorderColor = Color.DarkGray;
             Createbtn.DisabledState.CustomBorderColor = Color.DarkGray;
             Createbtn.DisabledState.FillColor = Color.FromArgb(169, 169, 169);
@@ -87,9 +87,9 @@
             Createbtn.Margin = new Padding(10, 3, 5, 3);
             Createbtn.Name = "Createbtn";
             Createbtn.PressedDepth = 10;
-            Createbtn.ShadowDecoration.CustomizableEdges = customizableEdges10;
+            Createbtn.ShadowDecoration.CustomizableEdges = customizableEdges4;
             Createbtn.Size = new Size(95, 42);
-            Createbtn.TabIndex = 20;
+            Createbtn.TabIndex = 3;
             Createbtn.Text = "Create";
             Createbtn.TextFormatNoPrefix = true;
             Createbtn.Click += Createbtn_Click;
@@ -109,7 +109,7 @@
             // 
             CreatefolderTextBox.BorderColor = Color.Yellow;
             CreatefolderTextBox.BorderRadius = 5;
-            CreatefolderTextBox.CustomizableEdges = customizableEdges11;
+            CreatefolderTextBox.CustomizableEdges = customizableEdges5;
             CreatefolderTextBox.DefaultText = "";
             CreatefolderTextBox.DisabledState.BorderColor = Color.FromArgb(208, 208, 208);
             CreatefolderTextBox.DisabledState.FillColor = Color.FromArgb(226, 226, 226);
@@ -126,9 +126,9 @@
             CreatefolderTextBox.PlaceholderForeColor = Color.DarkGray;
             CreatefolderTextBox.PlaceholderText = "Untitled folder";
             CreatefolderTextBox.SelectedText = "";
-            CreatefolderTextBox.ShadowDecoration.CustomizableEdges = customizableEdges12;
+            CreatefolderTextBox.ShadowDecoration.CustomizableEdges = customizableEdges6;
             CreatefolderTextBox.Size = new Size(331, 45);
-            CreatefolderTextBox.TabIndex = 22;
+            CreatefolderTextBox.TabIndex = 1;
             // 
             // createNewFolderForm
             // 
