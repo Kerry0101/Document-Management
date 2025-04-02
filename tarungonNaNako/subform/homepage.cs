@@ -1035,6 +1035,7 @@ namespace tarungonNaNako.subform
                 PressedDepth = 10,
             };
             btnFileUpload.Click += (s, e) => {
+                popupPanel.Hide();
                 LoadFormInPanel(new addDocs());
             };
 

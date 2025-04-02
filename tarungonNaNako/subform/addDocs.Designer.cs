@@ -28,20 +28,26 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(addDocs));
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges1 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges2 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges3 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges4 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             label1 = new Label();
             panel1 = new Panel();
+            suggestionListBox = new ListBox();
+            pictureBox1 = new PictureBox();
+            textBox1 = new Guna.UI2.WinForms.Guna2TextBox();
+            label5 = new Label();
+            searchBar = new Guna.UI2.WinForms.Guna2TextBox();
             button3 = new Button();
             button2 = new Button();
-            comboBox2 = new ComboBox();
-            label6 = new Label();
-            comboBox1 = new ComboBox();
-            label4 = new Label();
             label3 = new Label();
             button1 = new Button();
             label2 = new Label();
-            textBox1 = new TextBox();
             openFileDialog1 = new OpenFileDialog();
             panel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             SuspendLayout();
             // 
             // label1
@@ -59,26 +65,99 @@
             // panel1
             // 
             panel1.BackColor = Color.FromArgb(255, 207, 64);
+            panel1.Controls.Add(suggestionListBox);
+            panel1.Controls.Add(pictureBox1);
+            panel1.Controls.Add(textBox1);
+            panel1.Controls.Add(label5);
+            panel1.Controls.Add(searchBar);
             panel1.Controls.Add(button3);
             panel1.Controls.Add(button2);
-            panel1.Controls.Add(comboBox2);
-            panel1.Controls.Add(label6);
-            panel1.Controls.Add(comboBox1);
-            panel1.Controls.Add(label4);
             panel1.Controls.Add(label3);
             panel1.Controls.Add(button1);
             panel1.Controls.Add(label2);
-            panel1.Controls.Add(textBox1);
             panel1.Location = new Point(22, 63);
-            panel1.Margin = new Padding(2, 2, 2, 2);
+            panel1.Margin = new Padding(2);
             panel1.Name = "panel1";
             panel1.Size = new Size(718, 435);
             panel1.TabIndex = 2;
             // 
+            // suggestionListBox
+            // 
+            suggestionListBox.FormattingEnabled = true;
+            suggestionListBox.Location = new Point(19, 270);
+            suggestionListBox.Name = "suggestionListBox";
+            suggestionListBox.Size = new Size(186, 104);
+            suggestionListBox.TabIndex = 15;
+            suggestionListBox.Visible = false;
+            suggestionListBox.Click += suggestionListBox_Click;
+            // 
+            // pictureBox1
+            // 
+            pictureBox1.BackColor = Color.White;
+            pictureBox1.Image = (Image)resources.GetObject("pictureBox1.Image");
+            pictureBox1.Location = new Point(167, 232);
+            pictureBox1.Name = "pictureBox1";
+            pictureBox1.Size = new Size(32, 29);
+            pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
+            pictureBox1.TabIndex = 14;
+            pictureBox1.TabStop = false;
+            // 
+            // textBox1
+            // 
+            textBox1.CustomizableEdges = customizableEdges1;
+            textBox1.DefaultText = "";
+            textBox1.DisabledState.BorderColor = Color.FromArgb(208, 208, 208);
+            textBox1.DisabledState.FillColor = Color.FromArgb(226, 226, 226);
+            textBox1.DisabledState.ForeColor = Color.FromArgb(138, 138, 138);
+            textBox1.DisabledState.PlaceholderForeColor = Color.FromArgb(138, 138, 138);
+            textBox1.FocusedState.BorderColor = Color.FromArgb(94, 148, 255);
+            textBox1.Font = new Font("Segoe UI", 9F);
+            textBox1.HoverState.BorderColor = Color.FromArgb(94, 148, 255);
+            textBox1.Location = new Point(24, 138);
+            textBox1.Margin = new Padding(3, 4, 3, 4);
+            textBox1.Name = "textBox1";
+            textBox1.PlaceholderText = "";
+            textBox1.SelectedText = "";
+            textBox1.ShadowDecoration.CustomizableEdges = customizableEdges2;
+            textBox1.Size = new Size(186, 40);
+            textBox1.TabIndex = 13;
+            // 
+            // label5
+            // 
+            label5.AutoSize = true;
+            label5.Font = new Font("Segoe UI", 10F);
+            label5.Location = new Point(21, 201);
+            label5.Margin = new Padding(2, 0, 2, 0);
+            label5.Name = "label5";
+            label5.Size = new Size(300, 23);
+            label5.TabIndex = 12;
+            label5.Text = "Where do you want to upload the file:";
+            // 
+            // searchBar
+            // 
+            searchBar.CustomizableEdges = customizableEdges3;
+            searchBar.DefaultText = "";
+            searchBar.DisabledState.BorderColor = Color.FromArgb(208, 208, 208);
+            searchBar.DisabledState.FillColor = Color.FromArgb(226, 226, 226);
+            searchBar.DisabledState.ForeColor = Color.FromArgb(138, 138, 138);
+            searchBar.DisabledState.PlaceholderForeColor = Color.FromArgb(138, 138, 138);
+            searchBar.FocusedState.BorderColor = Color.FromArgb(94, 148, 255);
+            searchBar.Font = new Font("Segoe UI", 9F);
+            searchBar.HoverState.BorderColor = Color.FromArgb(94, 148, 255);
+            searchBar.Location = new Point(19, 226);
+            searchBar.Margin = new Padding(3, 4, 3, 4);
+            searchBar.Name = "searchBar";
+            searchBar.PlaceholderForeColor = Color.Gray;
+            searchBar.PlaceholderText = "Search folders. . .";
+            searchBar.SelectedText = "";
+            searchBar.ShadowDecoration.CustomizableEdges = customizableEdges4;
+            searchBar.Size = new Size(186, 40);
+            searchBar.TabIndex = 11;
+            // 
             // button3
             // 
-            button3.Location = new Point(167, 269);
-            button3.Margin = new Padding(2, 2, 2, 2);
+            button3.Location = new Point(167, 317);
+            button3.Margin = new Padding(2);
             button3.Name = "button3";
             button3.Size = new Size(124, 27);
             button3.TabIndex = 10;
@@ -88,8 +167,8 @@
             // 
             // button2
             // 
-            button2.Location = new Point(22, 269);
-            button2.Margin = new Padding(2, 2, 2, 2);
+            button2.Location = new Point(22, 317);
+            button2.Margin = new Padding(2);
             button2.Name = "button2";
             button2.Size = new Size(126, 27);
             button2.TabIndex = 9;
@@ -97,64 +176,23 @@
             button2.UseVisualStyleBackColor = true;
             button2.Click += button2_Click;
             // 
-            // comboBox2
-            // 
-            comboBox2.FormattingEnabled = true;
-            comboBox2.Location = new Point(266, 142);
-            comboBox2.Margin = new Padding(2, 2, 2, 2);
-            comboBox2.Name = "comboBox2";
-            comboBox2.Size = new Size(146, 28);
-            comboBox2.TabIndex = 8;
-            comboBox2.SelectedIndexChanged += comboBox2_SelectedIndexChanged;
-            // 
-            // label6
-            // 
-            label6.AutoSize = true;
-            label6.Location = new Point(266, 117);
-            label6.Margin = new Padding(2, 0, 2, 0);
-            label6.Name = "label6";
-            label6.RightToLeft = RightToLeft.Yes;
-            label6.Size = new Size(94, 20);
-            label6.TabIndex = 7;
-            label6.Text = "SubCategory";
-            // 
-            // comboBox1
-            // 
-            comboBox1.FormattingEnabled = true;
-            comboBox1.Location = new Point(22, 142);
-            comboBox1.Margin = new Padding(2, 2, 2, 2);
-            comboBox1.Name = "comboBox1";
-            comboBox1.Size = new Size(146, 28);
-            comboBox1.TabIndex = 5;
-            comboBox1.SelectedIndexChanged += comboBox1_SelectedIndexChanged;
-            // 
-            // label4
-            // 
-            label4.AutoSize = true;
-            label4.Location = new Point(22, 117);
-            label4.Margin = new Padding(2, 0, 2, 0);
-            label4.Name = "label4";
-            label4.RightToLeft = RightToLeft.Yes;
-            label4.Size = new Size(69, 20);
-            label4.TabIndex = 4;
-            label4.Text = "Category";
-            // 
             // label3
             // 
             label3.AutoSize = true;
-            label3.Location = new Point(197, 50);
+            label3.Font = new Font("Segoe UI", 10F);
+            label3.Location = new Point(25, 111);
             label3.Margin = new Padding(2, 0, 2, 0);
             label3.Name = "label3";
-            label3.Size = new Size(76, 20);
+            label3.Size = new Size(87, 23);
             label3.TabIndex = 3;
             label3.Text = "File name:";
             // 
             // button1
             // 
-            button1.Location = new Point(22, 76);
-            button1.Margin = new Padding(2, 2, 2, 2);
+            button1.Location = new Point(22, 51);
+            button1.Margin = new Padding(2);
             button1.Name = "button1";
-            button1.Size = new Size(146, 27);
+            button1.Size = new Size(136, 40);
             button1.TabIndex = 2;
             button1.Text = "Select Files";
             button1.UseVisualStyleBackColor = true;
@@ -171,15 +209,6 @@
             label2.TabIndex = 1;
             label2.Text = "Upload document:";
             // 
-            // textBox1
-            // 
-            textBox1.Location = new Point(197, 76);
-            textBox1.Margin = new Padding(2, 2, 2, 2);
-            textBox1.Name = "textBox1";
-            textBox1.Size = new Size(187, 27);
-            textBox1.TabIndex = 0;
-            textBox1.TextChanged += textBox1_TextChanged;
-            // 
             // openFileDialog1
             // 
             openFileDialog1.FileName = "openFileDialog1";
@@ -194,12 +223,13 @@
             Controls.Add(panel1);
             Controls.Add(label1);
             FormBorderStyle = FormBorderStyle.None;
-            Margin = new Padding(2, 2, 2, 2);
+            Margin = new Padding(2);
             Name = "addDocs";
             Text = "addDocs";
             Load += addDocs_Load;
             panel1.ResumeLayout(false);
             panel1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -210,14 +240,14 @@
         private Panel panel1;
         private Button button1;
         private Label label2;
-        private TextBox textBox1;
         private OpenFileDialog openFileDialog1;
-        private ComboBox comboBox1;
-        private Label label4;
         private Label label3;
-        private ComboBox comboBox2;
-        private Label label6;
         private Button button3;
         private Button button2;
+        private Guna.UI2.WinForms.Guna2TextBox textBox1;
+        private Label label5;
+        private Guna.UI2.WinForms.Guna2TextBox searchBar;
+        private PictureBox pictureBox1;
+        private ListBox suggestionListBox;
     }
 }
