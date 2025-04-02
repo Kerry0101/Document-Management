@@ -34,6 +34,7 @@ namespace tarungonNaNako.subform
         {
             // Usage example:
             guna2PictureBox1.Image = SetImageOpacity(guna2PictureBox1.Image, 0.9f); // 50% opacity
+            btnBack.Image = SetImageOpacity(btnBack.Image, 0.5f); // 50% opacity
 
         }
 
@@ -129,7 +130,6 @@ namespace tarungonNaNako.subform
                 {
                     selectedFilePath = openFileDialog.FileName; // Assign to the class variable
                     textBox1.Text = Path.GetFileName(selectedFilePath);
-                    MessageBox.Show($"Selected file path: {selectedFilePath}", "Debug Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
                 else
                 {
@@ -220,7 +220,16 @@ namespace tarungonNaNako.subform
 
                 // Copy the file to the destination with the new name
                 File.Copy(selectedFilePath, filePath, true);
-                MessageBox.Show($"File uploaded successfully to: {filePath}", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show($"File uploaded successfully!");
+                    var teacherDashboard = Application.OpenForms["teacherDashboard"] as teacherDashboard;
+                    if (teacherDashboard != null)
+                    {
+                        teacherDashboard.LoadFormInPanel(new homepage());
+                    }
+                    else
+                    {
+                        MessageBox.Show("teacherDashboard form is not open.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
 
                 // Step 1: Insert the file data into the `files` table
                 using (MySqlConnection conn = new MySqlConnection(connectionString))
@@ -239,16 +248,7 @@ namespace tarungonNaNako.subform
                         cmd.Parameters.AddWithValue("@userId", userId);
                         cmd.Parameters.AddWithValue("@fileType", fileType);
                         cmd.Parameters.AddWithValue("@fileSize", fileSize);
-
                         int rowsAffected = cmd.ExecuteNonQuery();
-                        if (rowsAffected > 0)
-                        {
-                            MessageBox.Show("File uploaded and data saved to database successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        }
-                        else
-                        {
-                            MessageBox.Show("File upload succeeded, but data saving to database failed.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        }
                     }
                 }
 
@@ -270,6 +270,7 @@ namespace tarungonNaNako.subform
                         cmd.ExecuteNonQuery();
                     }
                 }
+            
             }
             catch (Exception ex)
             {
@@ -327,6 +328,23 @@ namespace tarungonNaNako.subform
         private void textBox1_TextChanged_1(object sender, EventArgs e)
         {
 
+        }
+
+        private void btnBack_Click(object sender, EventArgs e)
+        {
+            // Hide the current form
+            this.Hide();
+
+            // Show the existing instance of teacherDashboard
+            var teacherDashboard = Application.OpenForms["teacherDashboard"] as teacherDashboard;
+            if (teacherDashboard != null)
+            {
+                teacherDashboard.LoadFormInPanel(new homepage());
+            }
+            else
+            {
+                MessageBox.Show("teacherDashboard form is not open.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
     }
 }
