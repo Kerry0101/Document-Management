@@ -25,8 +25,9 @@ namespace tarungonNaNako.subform
         private string connectionString = "server=localhost;database=docsmanagement;uid=root;pwd=;";
         private Image originalImage;
         string Folder = Path.Combine(Application.StartupPath, "Assets (images)", "folder.png");
-        string Document = Path.Combine(Application.StartupPath, "Assets (images)", "document.png");
         string ThreeDotMenu = Path.Combine(Application.StartupPath, "Assets (images)", "menu-dots-vertical.png");
+        string DocumentIcon = Path.Combine(Application.StartupPath, "Assets (images)", "document.png");
+        string ZippedFolderIcon = Path.Combine(Application.StartupPath, "Assets (images)", "zip (1).png");
 
 
         public homepage()
@@ -128,7 +129,17 @@ namespace tarungonNaNako.subform
                                 rowTable.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 180)); // Category
                                 rowTable.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 10)); // Action
 
-                                Image fileIcon = Image.FromFile(Document); // Load file icon
+                                // Determine the icon based on file type
+                                Image icon;
+                                string fileExtension = Path.GetExtension(fileName).ToLower();
+                                if (fileExtension == ".zip")
+                                {
+                                    icon = Image.FromFile(ZippedFolderIcon); // Use zipped folder icon
+                                }
+                                else
+                                {
+                                    icon = Image.FromFile(DocumentIcon); // Use document icon
+                                }
 
                                 // 🔴 Create Labels (aligned properly)
                                 Label fileLabel = new Label
@@ -212,7 +223,7 @@ namespace tarungonNaNako.subform
                                 // ✅ Add Labels and Button to rowTable
                                 PictureBox fileIconPictureBox = new PictureBox
                                 {
-                                    Image = fileIcon,
+                                    Image = icon,
                                     SizeMode = PictureBoxSizeMode.Zoom, // Change to Zoom to maintain aspect ratio
                                     Margin = new Padding(20, 18, 0, 5),
                                     Text = ":",
@@ -712,7 +723,8 @@ namespace tarungonNaNako.subform
         }
 
         private void EditFile(int categoryId, string selectedName)
-        {             // Prompt user for new file name
+        {
+            // Prompt user for new file name
             string newFileName = Microsoft.VisualBasic.Interaction.InputBox(
                 "Enter new file name:",
                 "Edit File",
@@ -722,6 +734,12 @@ namespace tarungonNaNako.subform
             {
                 MessageBox.Show("File name cannot be empty.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
+            }
+            // Ensure the new file name includes the correct extension
+            string fileExtension = Path.GetExtension(selectedName);
+            if (!newFileName.EndsWith(fileExtension, StringComparison.OrdinalIgnoreCase))
+            {
+                newFileName += fileExtension;
             }
             // Prevent duplicate file names
             if (IsFileNameExists(newFileName))
@@ -743,13 +761,28 @@ namespace tarungonNaNako.subform
                         int rowsAffected = cmd.ExecuteNonQuery();
                         if (rowsAffected > 0)
                         {
+                            // Update the file name in the storage path
+                            string storagePath = @"C:\DocsManagement\";
+                            string oldFilePath = Path.Combine(storagePath, selectedName);
+                            string newFilePath = Path.Combine(storagePath, newFileName);
+
+                            if (File.Exists(oldFilePath))
+                            {
+                                File.Move(oldFilePath, newFilePath);
+                            }
+                            else
+                            {
+                                MessageBox.Show("File not found in storage path.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                return;
+                            }
+
                             guna2Panel2.Visible = false;
                             MessageBox.Show($"File renamed to '{newFileName}' successfully.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
                             LoadFilesIntoTablePanel(); // Refresh the panel after renaming the file
                         }
                         else
                         {
-                            MessageBox.Show("File not found.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            MessageBox.Show("File not found in database.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         }
                     }
                 }
@@ -759,6 +792,7 @@ namespace tarungonNaNako.subform
                 MessageBox.Show($"Error renaming file: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
 
         private void EditCategory(int categoryId, string categoryName)
         {
@@ -1056,7 +1090,10 @@ namespace tarungonNaNako.subform
                 PressedColor = Color.Black,
                 PressedDepth = 10,
             };
-            btnFolderUpload.Click += (s, e) => { MessageBox.Show("Folder Upload Clicked"); };
+            btnFolderUpload.Click += (s, e) => {
+                popupPanel.Hide();
+                LoadFormInPanel(new addDocs());
+            };
 
             // Add buttons to the panel
             popupPanel.Controls.Add(btnNewFolder);

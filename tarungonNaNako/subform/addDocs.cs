@@ -33,7 +33,8 @@ namespace tarungonNaNako.subform
         private void addDocs_Load(object sender, EventArgs e)
         {
             // Usage example:
-            guna2PictureBox1.Image = SetImageOpacity(guna2PictureBox1.Image, 0.5f); // 50% opacity
+            guna2PictureBox1.Image = SetImageOpacity(guna2PictureBox1.Image, 0.9f); // 50% opacity
+
         }
 
         private void searchBar_TextChanged(object sender, EventArgs e)
@@ -113,10 +114,13 @@ namespace tarungonNaNako.subform
 
         }
 
+
+
+
         private void button1_Click(object sender, EventArgs e)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
-            openFileDialog.Filter = "All Files (*.*)|*.*|Text Files (*.txt)|*.txt|Image Files (*.jpg;*.png)|*.jpg;*.png";
+            openFileDialog.Filter = "All Files (*.*)|*.*|Text Files (*.txt)|*.txt|Image Files (*.jpg;*.png)|*.jpg;*.png|PDF Files (*.pdf)|*.pdf|Word Documents (*.doc;*.docx)|*.doc;*.docx";
             openFileDialog.Title = "Select a File";
 
             if (openFileDialog.ShowDialog() == DialogResult.OK)
@@ -137,7 +141,6 @@ namespace tarungonNaNako.subform
                 MessageBox.Show("File selection canceled.", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
-
 
 
 

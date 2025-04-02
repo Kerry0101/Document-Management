@@ -28,21 +28,24 @@
         /// </summary>
         private void InitializeComponent()
         {
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges9 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(addDocs));
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges1 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges2 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges3 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges4 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges5 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges6 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges10 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges11 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges12 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges13 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges14 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges15 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges16 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             label1 = new Label();
             panel1 = new Panel();
+            button3 = new Button();
+            label5 = new Label();
+            guna2PictureBox2 = new Guna.UI2.WinForms.Guna2PictureBox();
             suggestionListBox = new ListBox();
             pictureBox1 = new PictureBox();
             textBox1 = new Guna.UI2.WinForms.Guna2TextBox();
-            label5 = new Label();
             searchBar = new Guna.UI2.WinForms.Guna2TextBox();
-            button3 = new Button();
             button2 = new Button();
             label3 = new Label();
             button1 = new Button();
@@ -50,6 +53,7 @@
             guna2PictureBox1 = new Guna.UI2.WinForms.Guna2PictureBox();
             openFileDialog1 = new OpenFileDialog();
             panel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)guna2PictureBox2).BeginInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)guna2PictureBox1).BeginInit();
             SuspendLayout();
@@ -69,22 +73,62 @@
             // panel1
             // 
             panel1.BackColor = Color.FromArgb(255, 207, 64);
+            panel1.Controls.Add(label5);
+            panel1.Controls.Add(guna2PictureBox2);
             panel1.Controls.Add(suggestionListBox);
             panel1.Controls.Add(pictureBox1);
             panel1.Controls.Add(textBox1);
-            panel1.Controls.Add(label5);
             panel1.Controls.Add(searchBar);
-            panel1.Controls.Add(button3);
             panel1.Controls.Add(button2);
             panel1.Controls.Add(label3);
             panel1.Controls.Add(button1);
             panel1.Controls.Add(label2);
             panel1.Controls.Add(guna2PictureBox1);
+            panel1.Controls.Add(button3);
             panel1.Location = new Point(22, 63);
             panel1.Margin = new Padding(2);
             panel1.Name = "panel1";
             panel1.Size = new Size(718, 435);
             panel1.TabIndex = 2;
+            // 
+            // button3
+            // 
+            button3.Location = new Point(167, 317);
+            button3.Margin = new Padding(2);
+            button3.Name = "button3";
+            button3.Size = new Size(124, 27);
+            button3.TabIndex = 10;
+            button3.Text = "Cancel";
+            button3.UseVisualStyleBackColor = true;
+            button3.Click += button3_Click;
+            // 
+            // label5
+            // 
+            label5.AutoSize = true;
+            label5.BackColor = Color.Transparent;
+            label5.Font = new Font("Segoe UI", 10F);
+            label5.Location = new Point(21, 201);
+            label5.Margin = new Padding(2, 0, 2, 0);
+            label5.Name = "label5";
+            label5.Size = new Size(156, 23);
+            label5.TabIndex = 12;
+            label5.Text = "Location of the file:";
+            // 
+            // guna2PictureBox2
+            // 
+            guna2PictureBox2.BackColor = Color.Transparent;
+            guna2PictureBox2.CustomizableEdges = customizableEdges9;
+            guna2PictureBox2.FillColor = Color.FromArgb(255, 207, 64);
+            guna2PictureBox2.Image = (Image)resources.GetObject("guna2PictureBox2.Image");
+            guna2PictureBox2.ImageRotate = 0F;
+            guna2PictureBox2.Location = new Point(306, 112);
+            guna2PictureBox2.Name = "guna2PictureBox2";
+            guna2PictureBox2.ShadowDecoration.CustomizableEdges = customizableEdges10;
+            guna2PictureBox2.Size = new Size(324, 320);
+            guna2PictureBox2.SizeMode = PictureBoxSizeMode.StretchImage;
+            guna2PictureBox2.TabIndex = 17;
+            guna2PictureBox2.TabStop = false;
+            guna2PictureBox2.UseTransparentBackground = true;
             // 
             // suggestionListBox
             // 
@@ -110,7 +154,7 @@
             // 
             // textBox1
             // 
-            textBox1.CustomizableEdges = customizableEdges1;
+            textBox1.CustomizableEdges = customizableEdges11;
             textBox1.DefaultText = "";
             textBox1.DisabledState.BorderColor = Color.FromArgb(208, 208, 208);
             textBox1.DisabledState.FillColor = Color.FromArgb(226, 226, 226);
@@ -125,26 +169,15 @@
             textBox1.Name = "textBox1";
             textBox1.PlaceholderText = "";
             textBox1.SelectedText = "";
-            textBox1.ShadowDecoration.CustomizableEdges = customizableEdges2;
+            textBox1.ShadowDecoration.CustomizableEdges = customizableEdges12;
             textBox1.Size = new Size(186, 40);
             textBox1.TabIndex = 13;
             textBox1.TextChanged += textBox1_TextChanged_1;
             // 
-            // label5
-            // 
-            label5.AutoSize = true;
-            label5.Font = new Font("Segoe UI", 10F);
-            label5.Location = new Point(21, 201);
-            label5.Margin = new Padding(2, 0, 2, 0);
-            label5.Name = "label5";
-            label5.Size = new Size(300, 23);
-            label5.TabIndex = 12;
-            label5.Text = "Where do you want to upload the file:";
-            // 
             // searchBar
             // 
             searchBar.BorderRadius = 5;
-            searchBar.CustomizableEdges = customizableEdges3;
+            searchBar.CustomizableEdges = customizableEdges13;
             searchBar.DefaultText = "";
             searchBar.DisabledState.BorderColor = Color.FromArgb(208, 208, 208);
             searchBar.DisabledState.FillColor = Color.FromArgb(226, 226, 226);
@@ -160,20 +193,9 @@
             searchBar.PlaceholderForeColor = Color.Gray;
             searchBar.PlaceholderText = "Search folders. . .";
             searchBar.SelectedText = "";
-            searchBar.ShadowDecoration.CustomizableEdges = customizableEdges4;
+            searchBar.ShadowDecoration.CustomizableEdges = customizableEdges14;
             searchBar.Size = new Size(186, 40);
             searchBar.TabIndex = 11;
-            // 
-            // button3
-            // 
-            button3.Location = new Point(167, 317);
-            button3.Margin = new Padding(2);
-            button3.Name = "button3";
-            button3.Size = new Size(124, 27);
-            button3.TabIndex = 10;
-            button3.Text = "Cancel";
-            button3.UseVisualStyleBackColor = true;
-            button3.Click += button3_Click;
             // 
             // button2
             // 
@@ -211,27 +233,29 @@
             // label2
             // 
             label2.AutoSize = true;
-            label2.Font = new Font("Microsoft Sans Serif", 10.2F, FontStyle.Bold);
+            label2.Font = new Font("Microsoft Sans Serif", 10.2F, FontStyle.Regular, GraphicsUnit.Point, 0);
             label2.Location = new Point(22, 26);
             label2.Margin = new Padding(2, 0, 2, 0);
             label2.Name = "label2";
-            label2.Size = new Size(160, 20);
+            label2.Size = new Size(144, 20);
             label2.TabIndex = 1;
             label2.Text = "Upload document:";
             // 
             // guna2PictureBox1
             // 
-            guna2PictureBox1.CustomizableEdges = customizableEdges5;
+            guna2PictureBox1.BackColor = Color.Transparent;
+            guna2PictureBox1.CustomizableEdges = customizableEdges15;
             guna2PictureBox1.FillColor = Color.FromArgb(255, 207, 64);
             guna2PictureBox1.Image = (Image)resources.GetObject("guna2PictureBox1.Image");
             guna2PictureBox1.ImageRotate = 0F;
-            guna2PictureBox1.Location = new Point(326, 41);
+            guna2PictureBox1.Location = new Point(333, 31);
             guna2PictureBox1.Name = "guna2PictureBox1";
-            guna2PictureBox1.ShadowDecoration.CustomizableEdges = customizableEdges6;
+            guna2PictureBox1.ShadowDecoration.CustomizableEdges = customizableEdges16;
             guna2PictureBox1.Size = new Size(378, 357);
             guna2PictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
             guna2PictureBox1.TabIndex = 16;
             guna2PictureBox1.TabStop = false;
+            guna2PictureBox1.UseTransparentBackground = true;
             // 
             // openFileDialog1
             // 
@@ -253,6 +277,7 @@
             Load += addDocs_Load;
             panel1.ResumeLayout(false);
             panel1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)guna2PictureBox2).EndInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             ((System.ComponentModel.ISupportInitialize)guna2PictureBox1).EndInit();
             ResumeLayout(false);
@@ -275,5 +300,6 @@
         private PictureBox pictureBox1;
         private ListBox suggestionListBox;
         private Guna.UI2.WinForms.Guna2PictureBox guna2PictureBox1;
+        private Guna.UI2.WinForms.Guna2PictureBox guna2PictureBox2;
     }
 }
