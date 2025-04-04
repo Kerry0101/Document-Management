@@ -48,7 +48,6 @@ namespace tarungonNaNako
         {
             // Clear previous controls in the panel (replace "panel5" with your content panel name)
             panel3.Controls.Clear();
-
             // Set properties for the form to display it in the panel
             form.TopLevel = false;
             form.Dock = DockStyle.Fill;

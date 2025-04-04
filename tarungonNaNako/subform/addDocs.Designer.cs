@@ -28,18 +28,18 @@
         /// </summary>
         private void InitializeComponent()
         {
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges12 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges1 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(addDocs));
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges13 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges14 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges15 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges16 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges17 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges18 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges19 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges20 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges21 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges22 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges2 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges3 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges4 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges5 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges6 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges7 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges8 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges9 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges10 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges11 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             label1 = new Label();
             panel1 = new Panel();
             label5 = new Label();
@@ -48,12 +48,12 @@
             pictureBox1 = new PictureBox();
             textBox1 = new Guna.UI2.WinForms.Guna2TextBox();
             searchBar = new Guna.UI2.WinForms.Guna2TextBox();
-            button2 = new Button();
+            btnSave = new Button();
             label3 = new Label();
             button1 = new Button();
             label2 = new Label();
             guna2PictureBox1 = new Guna.UI2.WinForms.Guna2PictureBox();
-            button3 = new Button();
+            btnCancel = new Button();
             openFileDialog1 = new OpenFileDialog();
             btnBack = new Guna.UI2.WinForms.Guna2CircleButton();
             panel3 = new Guna.UI2.WinForms.Guna2Panel();
@@ -85,12 +85,12 @@
             panel1.Controls.Add(pictureBox1);
             panel1.Controls.Add(textBox1);
             panel1.Controls.Add(searchBar);
-            panel1.Controls.Add(button2);
+            panel1.Controls.Add(btnSave);
             panel1.Controls.Add(label3);
             panel1.Controls.Add(button1);
             panel1.Controls.Add(label2);
             panel1.Controls.Add(guna2PictureBox1);
-            panel1.Controls.Add(button3);
+            panel1.Controls.Add(btnCancel);
             panel1.Location = new Point(19, 60);
             panel1.Margin = new Padding(2);
             panel1.Name = "panel1";
@@ -112,13 +112,13 @@
             // guna2PictureBox2
             // 
             guna2PictureBox2.BackColor = Color.Transparent;
-            guna2PictureBox2.CustomizableEdges = customizableEdges12;
+            guna2PictureBox2.CustomizableEdges = customizableEdges1;
             guna2PictureBox2.FillColor = Color.FromArgb(255, 207, 64);
             guna2PictureBox2.Image = (Image)resources.GetObject("guna2PictureBox2.Image");
             guna2PictureBox2.ImageRotate = 0F;
             guna2PictureBox2.Location = new Point(306, 112);
             guna2PictureBox2.Name = "guna2PictureBox2";
-            guna2PictureBox2.ShadowDecoration.CustomizableEdges = customizableEdges13;
+            guna2PictureBox2.ShadowDecoration.CustomizableEdges = customizableEdges2;
             guna2PictureBox2.Size = new Size(324, 320);
             guna2PictureBox2.SizeMode = PictureBoxSizeMode.StretchImage;
             guna2PictureBox2.TabIndex = 17;
@@ -127,9 +127,10 @@
             // 
             // suggestionListBox
             // 
+            suggestionListBox.BackColor = Color.FromArgb(255, 255, 128);
             suggestionListBox.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
             suggestionListBox.FormattingEnabled = true;
-            suggestionListBox.Location = new Point(19, 273);
+            suggestionListBox.Location = new Point(19, 268);
             suggestionListBox.Name = "suggestionListBox";
             suggestionListBox.Size = new Size(186, 104);
             suggestionListBox.TabIndex = 15;
@@ -138,7 +139,7 @@
             // 
             // pictureBox1
             // 
-            pictureBox1.BackColor = Color.White;
+            pictureBox1.BackColor = Color.FromArgb(255, 255, 128);
             pictureBox1.Image = (Image)resources.GetObject("pictureBox1.Image");
             pictureBox1.Location = new Point(168, 237);
             pictureBox1.Name = "pictureBox1";
@@ -149,12 +150,13 @@
             // 
             // textBox1
             // 
-            textBox1.CustomizableEdges = customizableEdges14;
+            textBox1.CustomizableEdges = customizableEdges3;
             textBox1.DefaultText = "";
             textBox1.DisabledState.BorderColor = Color.FromArgb(208, 208, 208);
             textBox1.DisabledState.FillColor = Color.FromArgb(226, 226, 226);
             textBox1.DisabledState.ForeColor = Color.FromArgb(138, 138, 138);
             textBox1.DisabledState.PlaceholderForeColor = Color.FromArgb(138, 138, 138);
+            textBox1.FillColor = Color.FromArgb(255, 255, 128);
             textBox1.FocusedState.BorderColor = Color.FromArgb(94, 148, 255);
             textBox1.Font = new Font("Segoe UI", 9F);
             textBox1.ForeColor = Color.Black;
@@ -164,20 +166,21 @@
             textBox1.Name = "textBox1";
             textBox1.PlaceholderText = "";
             textBox1.SelectedText = "";
-            textBox1.ShadowDecoration.CustomizableEdges = customizableEdges15;
+            textBox1.ShadowDecoration.CustomizableEdges = customizableEdges4;
             textBox1.Size = new Size(186, 40);
-            textBox1.TabIndex = 13;
+            textBox1.TabIndex = 2;
             textBox1.TextChanged += textBox1_TextChanged_1;
             // 
             // searchBar
             // 
             searchBar.BorderRadius = 5;
-            searchBar.CustomizableEdges = customizableEdges16;
+            searchBar.CustomizableEdges = customizableEdges5;
             searchBar.DefaultText = "";
             searchBar.DisabledState.BorderColor = Color.FromArgb(208, 208, 208);
             searchBar.DisabledState.FillColor = Color.FromArgb(226, 226, 226);
             searchBar.DisabledState.ForeColor = Color.FromArgb(138, 138, 138);
             searchBar.DisabledState.PlaceholderForeColor = Color.FromArgb(138, 138, 138);
+            searchBar.FillColor = Color.FromArgb(255, 255, 128);
             searchBar.FocusedState.BorderColor = Color.FromArgb(94, 148, 255);
             searchBar.Font = new Font("Segoe UI", 9F);
             searchBar.ForeColor = Color.Black;
@@ -185,23 +188,23 @@
             searchBar.Location = new Point(19, 226);
             searchBar.Margin = new Padding(3, 4, 3, 4);
             searchBar.Name = "searchBar";
-            searchBar.PlaceholderForeColor = Color.Gray;
+            searchBar.PlaceholderForeColor = Color.DimGray;
             searchBar.PlaceholderText = "Search folders. . .";
             searchBar.SelectedText = "";
-            searchBar.ShadowDecoration.CustomizableEdges = customizableEdges17;
+            searchBar.ShadowDecoration.CustomizableEdges = customizableEdges6;
             searchBar.Size = new Size(186, 40);
-            searchBar.TabIndex = 11;
+            searchBar.TabIndex = 3;
             // 
-            // button2
+            // btnSave
             // 
-            button2.Location = new Point(22, 317);
-            button2.Margin = new Padding(2);
-            button2.Name = "button2";
-            button2.Size = new Size(126, 27);
-            button2.TabIndex = 9;
-            button2.Text = "Save";
-            button2.UseVisualStyleBackColor = true;
-            button2.Click += button2_Click;
+            btnSave.Location = new Point(22, 317);
+            btnSave.Margin = new Padding(2);
+            btnSave.Name = "btnSave";
+            btnSave.Size = new Size(126, 27);
+            btnSave.TabIndex = 4;
+            btnSave.Text = "Save";
+            btnSave.UseVisualStyleBackColor = true;
+            btnSave.Click += btnSave_Click;
             // 
             // label3
             // 
@@ -220,7 +223,7 @@
             button1.Margin = new Padding(2);
             button1.Name = "button1";
             button1.Size = new Size(136, 40);
-            button1.TabIndex = 2;
+            button1.TabIndex = 1;
             button1.Text = "Select Files";
             button1.UseVisualStyleBackColor = true;
             button1.Click += button1_Click;
@@ -239,29 +242,29 @@
             // guna2PictureBox1
             // 
             guna2PictureBox1.BackColor = Color.Transparent;
-            guna2PictureBox1.CustomizableEdges = customizableEdges18;
+            guna2PictureBox1.CustomizableEdges = customizableEdges7;
             guna2PictureBox1.FillColor = Color.FromArgb(255, 207, 64);
             guna2PictureBox1.Image = (Image)resources.GetObject("guna2PictureBox1.Image");
             guna2PictureBox1.ImageRotate = 0F;
             guna2PictureBox1.Location = new Point(333, 31);
             guna2PictureBox1.Name = "guna2PictureBox1";
-            guna2PictureBox1.ShadowDecoration.CustomizableEdges = customizableEdges19;
+            guna2PictureBox1.ShadowDecoration.CustomizableEdges = customizableEdges8;
             guna2PictureBox1.Size = new Size(378, 357);
             guna2PictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
             guna2PictureBox1.TabIndex = 16;
             guna2PictureBox1.TabStop = false;
             guna2PictureBox1.UseTransparentBackground = true;
             // 
-            // button3
+            // btnCancel
             // 
-            button3.Location = new Point(167, 317);
-            button3.Margin = new Padding(2);
-            button3.Name = "button3";
-            button3.Size = new Size(124, 27);
-            button3.TabIndex = 10;
-            button3.Text = "Cancel";
-            button3.UseVisualStyleBackColor = true;
-            button3.Click += button3_Click;
+            btnCancel.Location = new Point(167, 317);
+            btnCancel.Margin = new Padding(2);
+            btnCancel.Name = "btnCancel";
+            btnCancel.Size = new Size(124, 27);
+            btnCancel.TabIndex = 5;
+            btnCancel.Text = "Cancel";
+            btnCancel.UseVisualStyleBackColor = true;
+            btnCancel.Click += btnCancel_Click;
             // 
             // openFileDialog1
             // 
@@ -283,10 +286,10 @@
             btnBack.Location = new Point(684, 7);
             btnBack.Name = "btnBack";
             btnBack.PressedDepth = 10;
-            btnBack.ShadowDecoration.CustomizableEdges = customizableEdges20;
+            btnBack.ShadowDecoration.CustomizableEdges = customizableEdges9;
             btnBack.ShadowDecoration.Mode = Guna.UI2.WinForms.Enums.ShadowMode.Circle;
             btnBack.Size = new Size(48, 46);
-            btnBack.TabIndex = 3;
+            btnBack.TabIndex = 6;
             btnBack.Click += btnBack_Click;
             // 
             // panel3
@@ -294,10 +297,10 @@
             panel3.Controls.Add(btnBack);
             panel3.Controls.Add(panel1);
             panel3.Controls.Add(label1);
-            panel3.CustomizableEdges = customizableEdges21;
+            panel3.CustomizableEdges = customizableEdges10;
             panel3.Location = new Point(3, 3);
             panel3.Name = "panel3";
-            panel3.ShadowDecoration.CustomizableEdges = customizableEdges22;
+            panel3.ShadowDecoration.CustomizableEdges = customizableEdges11;
             panel3.Size = new Size(758, 514);
             panel3.TabIndex = 4;
             // 
@@ -331,8 +334,8 @@
         private Label label2;
         private OpenFileDialog openFileDialog1;
         private Label label3;
-        private Button button3;
-        private Button button2;
+        private Button btnCancel;
+        private Button btnSave;
         private Guna.UI2.WinForms.Guna2TextBox textBox1;
         private Label label5;
         private Guna.UI2.WinForms.Guna2TextBox searchBar;

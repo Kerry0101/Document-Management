@@ -27,7 +27,7 @@ namespace tarungonNaNako.subform
         string Folder = Path.Combine(Application.StartupPath, "Assets (images)", "folder.png");
         string ThreeDotMenu = Path.Combine(Application.StartupPath, "Assets (images)", "menu-dots-vertical.png");
         string DocumentIcon = Path.Combine(Application.StartupPath, "Assets (images)", "document.png");
-        string ZippedFolderIcon = Path.Combine(Application.StartupPath, "Assets (images)", "zip (1).png");
+        string ZippedFolderIcon = Path.Combine(Application.StartupPath, "Assets (images)", "zip-file-format.png");
 
 
         public homepage()
@@ -37,6 +37,8 @@ namespace tarungonNaNako.subform
             LoadPngImage();
             LoadFilesIntoTablePanel();
         }
+
+
 
 
         public void LoadFormInPanel(Form form)
@@ -118,7 +120,7 @@ namespace tarungonNaNako.subform
                                 {
                                     ColumnCount = 5,
                                     Dock = DockStyle.Fill,
-                                    Height = 50, // Adjust row height
+                                    Height = 60, // Adjust row height
                                     BackColor = ColorTranslator.FromHtml("#ffe261")
                                 };
 
@@ -225,10 +227,10 @@ namespace tarungonNaNako.subform
                                 {
                                     Image = icon,
                                     SizeMode = PictureBoxSizeMode.Zoom, // Change to Zoom to maintain aspect ratio
-                                    Margin = new Padding(20, 18, 0, 5),
+                                    Margin = new Padding(13, 17, 5, 5),
                                     Text = ":",
-                                    Width = 15,
-                                    Height = 15
+                                    Width = 25,
+                                    Height = 25
                                 };
 
                                 rowTable.Controls.Add(fileIconPictureBox, 0, 0);
