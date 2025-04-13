@@ -46,6 +46,9 @@
     <Compile Update="subform\addUser.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Update="subform\createChildFolder.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Update="subform\createNewFolderForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -56,6 +59,9 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Update="subform\subCategories.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="subform\UPLOAD_FILE_INSIDE_CHILD_FOLDER.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Update="teacherDashboard.cs">

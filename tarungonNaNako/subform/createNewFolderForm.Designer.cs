@@ -143,6 +143,7 @@
             FormBorderStyle = FormBorderStyle.FixedDialog;
             Name = "createNewFolderForm";
             StartPosition = FormStartPosition.CenterScreen;
+            Text = "Create folder";
             ResumeLayout(false);
             PerformLayout();
         }

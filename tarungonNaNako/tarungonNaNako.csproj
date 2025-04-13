@@ -58,6 +58,9 @@
     <None Update="Assets %28images%29\menu-dots-vertical.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="Assets %28images%29\menu.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Assets %28images%29\newfolder.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

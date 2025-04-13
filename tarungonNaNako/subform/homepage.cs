@@ -39,7 +39,10 @@ namespace tarungonNaNako.subform
         }
 
 
-
+        public int GetCurrentCategoryId()
+        {
+            return 0; // Return the current category ID or 0 if null
+        }
 
         public void LoadFormInPanel(Form form)
         {
@@ -64,10 +67,10 @@ namespace tarungonNaNako.subform
             float rotationAngle3 = Properties.Settings.Default.isArrowDown3 ? 0 : -90;
             pictureBox3.Image = RotateImage(originalImage, rotationAngle3);
 
-            LoadCategoriesIntoButtons();  // Load categories dynamically
+            LoadCategoriesIntoButtons(currentCategoryId);  // Load categories dynamically
         }
 
-        private void LoadFilesIntoTablePanel()
+        public void LoadFilesIntoTablePanel()
         {
             int buttonWidth = 177; // Adjust as needed
             int buttonHeight = 60; // Adjust as needed
@@ -256,10 +259,18 @@ namespace tarungonNaNako.subform
             }
         }
 
+        private int? currentCategoryId = null; // NULL means Root Folder
+        private Stack<int?> navigationHistory = new Stack<int?>(); // Stack to track navigation
+
+        public void NavigateToCategory(int categoryId)
+        {
+            navigationHistory.Push(currentCategoryId); // Store current category before navigating
+            currentCategoryId = categoryId; // Update current category
+            LoadCategoriesIntoButtons(currentCategoryId); // Reload with new category
+        }
 
 
-
-        private void LoadCategoriesIntoButtons()
+        private void LoadCategoriesIntoButtons(int? currentCategoryId)
         {
             Guna2Panel1.Controls.Clear(); // Clear previous buttons
             int buttonWidth = 177; // Adjust as needed
@@ -280,22 +291,25 @@ namespace tarungonNaNako.subform
                         return;
                     }
 
+                    // Updated Query: Fetch categories based on parentCategoryId
                     string query = @"
-                SELECT categoryName 
+                SELECT categoryId, categoryName 
                 FROM category 
                 WHERE is_archived = 0 
                 AND userId = @userId 
-                ORDER BY updated_at DESC 
-                LIMIT 5"; // Fetch only the 5 most recent categories
+                AND (parentCategoryId = @parentCategoryId OR (@parentCategoryId IS NULL AND parentCategoryId IS NULL))
+                ORDER BY updated_at DESC";
 
                     using (MySqlCommand cmd = new MySqlCommand(query, conn))
                     {
-                        cmd.Parameters.AddWithValue("@userId", Session.CurrentUserId); // Filter by logged-in user
+                        cmd.Parameters.AddWithValue("@userId", Session.CurrentUserId);
+                        cmd.Parameters.AddWithValue("@parentCategoryId", (object)currentCategoryId ?? DBNull.Value);
 
                         using (MySqlDataReader reader = cmd.ExecuteReader())
                         {
                             while (reader.Read())
                             {
+                                int categoryId = Convert.ToInt32(reader["categoryId"]);
                                 string categoryName = reader["categoryName"].ToString();
 
                                 // ✅ Create Category Button
@@ -319,8 +333,11 @@ namespace tarungonNaNako.subform
 
                                 categoryButton.DoubleClick += (s, e) =>
                                 {
-                                    LoadFormInPanel(new fetchDocuments(categoryName));
+                                    popupPanel.Hide();
+                                    NavigateToCategory(categoryId); // Updates navigation history and currentCategoryId
+                                    LoadFormInPanel(new fetchDocuments(categoryId, categoryName, "")); // Loads the fetchDocuments form
                                 };
+
 
                                 // ✅ Create Three-Dot Menu Button
                                 Guna.UI2.WinForms.Guna2CircleButton menuButton = new Guna.UI2.WinForms.Guna2CircleButton
@@ -943,9 +960,9 @@ namespace tarungonNaNako.subform
 
 
 
-        private void RefreshCategoriesPanel()
+        public void RefreshCategoriesPanel()
         {
-            LoadCategoriesIntoButtons();
+            LoadCategoriesIntoButtons(currentCategoryId);
         }
 
 
@@ -1043,14 +1060,15 @@ namespace tarungonNaNako.subform
             };
             btnNewFolder.Click += (s, e) =>
             {
-                createNewFolderForm NewFolder = new createNewFolderForm();
+                createNewFolderForm NewFolder = new createNewFolderForm(); // Pass 'this'
                 NewFolder.StartPosition = FormStartPosition.CenterScreen;
-                NewFolder.TopMost = true; // Ensure the form appears on top
-                NewFolder.FormBorderStyle = FormBorderStyle.FixedDialog; // Set the form border style
-                NewFolder.MinimizeBox = false; // Remove minimize button
-                NewFolder.MaximizeBox = false; // Remove maximize button
+                NewFolder.TopMost = true;
+                NewFolder.FormBorderStyle = FormBorderStyle.FixedDialog;
+                NewFolder.MinimizeBox = false;
+                NewFolder.MaximizeBox = false;
                 NewFolder.ShowDialog(this); // Show the form as a dialog
                 popupPanel.Hide();
+                RefreshCategoriesPanel(); // Refresh the Guna2Panel1 after creating a new folder
             };
 
             Guna.UI2.WinForms.Guna2Button btnFileUpload = new Guna.UI2.WinForms.Guna2Button
@@ -1078,9 +1096,9 @@ namespace tarungonNaNako.subform
             Guna.UI2.WinForms.Guna2Button btnFolderUpload = new Guna.UI2.WinForms.Guna2Button
             {
                 Size = new Size(181, 42),
-                Text = "Folder Upload",
+                Text = "Zip Upload",
                 TextAlign = HorizontalAlignment.Center,
-                TextOffset = new Point(-1, 0),
+                TextOffset = new Point(-13, 0),
                 BackColor = Color.FromArgb(255, 255, 192),
                 FillColor = Color.FromArgb(255, 236, 130),
                 Font = new Font("Microsoft Sans Serif", 10),

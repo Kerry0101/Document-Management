@@ -5,7 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks; 
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using MySql.Data.MySqlClient;
 
@@ -49,40 +49,78 @@ namespace tarungonNaNako.subform
         {
             string folderName = CreatefolderTextBox.Text.Trim();
 
+            // Input validation:  More robust checks
             if (string.IsNullOrEmpty(folderName))
             {
                 MessageBox.Show("Folder name cannot be empty.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
-            // Ensure the logged-in user's ID is available
-            if (Session.CurrentUserId == 0)  // Assuming 0 means no logged-in user
+            //Sanitize the folder name to prevent directory traversal vulnerabilities.
+            folderName = Path.GetInvalidFileNameChars().Aggregate(folderName, (current, c) => current.Replace(c, '_'));
+
+
+            //Check for invalid characters in folder name.  This prevents security vulnerabilities.
+
+            if (System.IO.Path.GetInvalidPathChars().Any(folderName.Contains))
+            {
+                MessageBox.Show("Folder name contains invalid characters.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+
+            // User authentication:  Consider a more secure approach than Session variable.
+            int userId = Session.CurrentUserId;
+            if (userId == 0)
             {
                 MessageBox.Show("User is not logged in. Please log in again.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
-            string connectionString = "server=localhost; user=root; Database=docsmanagement; password=";
-            string query = "INSERT INTO category (categoryName, userId) VALUES (@categoryName, @userId)";  // Using userId
+            // Database connection: Use parameterized queries to prevent SQL injection.
+            string connectionString = "server=localhost; user=root; Database=docsmanagement; password="; // **Never hardcode passwords in production! Use configuration files.**
+            string query = "INSERT INTO category (categoryName, parentCategoryId, userId) VALUES (@categoryName, NULL, @userId)";
+
+            string physicalPath = Path.Combine(@"C:\Your\Base\Folder\Path", folderName); //Specify your base path here.
 
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
                 MySqlCommand command = new MySqlCommand(query, connection);
                 command.Parameters.AddWithValue("@categoryName", folderName);
-                command.Parameters.AddWithValue("@userId", Session.CurrentUserId);  // Assign logged-in user's ID
+                command.Parameters.AddWithValue("@userId", userId);
 
                 try
                 {
                     connection.Open();
                     command.ExecuteNonQuery();
-                    MessageBox.Show("Folder created successfully.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
+                    // Create the physical folder after successful database insertion.
+                    Directory.CreateDirectory(physicalPath);
+
+                    MessageBox.Show("Folder created successfully.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     this.DialogResult = DialogResult.OK;
                     this.Close();
                 }
+                catch (MySqlException ex)
+                {
+                    // More specific error handling
+                    if (ex.Number == 1062) // Duplicate entry error
+                    {
+                        MessageBox.Show("A folder with that name already exists.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                    else if (ex.Number == 1451) // Foreign key constraint error
+                    {
+                        MessageBox.Show("Error creating folder. Please check database constraints.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                    else
+                    {
+                        MessageBox.Show("An error occurred while creating the folder in the database: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+
+                }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("An error occurred while creating the folder: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("An error occurred while creating the folder on the file system: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
         }
