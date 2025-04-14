@@ -41,9 +41,7 @@
             action = new DataGridViewComboBoxColumn();
             docuName = new DataGridViewLinkColumn();
             category = new DataGridViewTextBoxColumn();
-            subCategory = new DataGridViewTextBoxColumn();
             dateCreated = new DataGridViewTextBoxColumn();
-            createdBy = new DataGridViewTextBoxColumn();
             button1 = new Button();
             panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
@@ -52,12 +50,13 @@
             // label1
             // 
             label1.AutoSize = true;
-            label1.Font = new Font("Segoe UI Semibold", 12F, FontStyle.Bold);
-            label1.Location = new Point(22, 37);
+            label1.Font = new Font("Georgia", 12F);
+            label1.Location = new Point(21, 40);
+            label1.Margin = new Padding(2, 0, 2, 0);
             label1.Name = "label1";
-            label1.Size = new Size(267, 32);
+            label1.Size = new Size(185, 24);
             label1.TabIndex = 0;
-            label1.Text = "MANAGE DOCUMENTS";
+            label1.Text = "Manage documents";
             label1.Click += label1_Click;
             // 
             // panel1
@@ -68,45 +67,49 @@
             panel1.Controls.Add(textBox1);
             panel1.Controls.Add(label2);
             panel1.Controls.Add(dataGridView1);
-            panel1.Location = new Point(22, 93);
+            panel1.Location = new Point(18, 74);
             panel1.Margin = new Padding(2);
             panel1.Name = "panel1";
-            panel1.Size = new Size(899, 527);
+            panel1.Size = new Size(719, 422);
             panel1.TabIndex = 1;
             panel1.Paint += panel1_Paint;
             // 
             // comboBox1
             // 
             comboBox1.FormattingEnabled = true;
-            comboBox1.Location = new Point(690, 44);
+            comboBox1.Location = new Point(552, 35);
+            comboBox1.Margin = new Padding(2);
             comboBox1.Name = "comboBox1";
-            comboBox1.Size = new Size(182, 33);
+            comboBox1.Size = new Size(146, 28);
             comboBox1.TabIndex = 5;
             comboBox1.SelectedIndexChanged += comboBox1_SelectedIndexChanged;
             // 
             // label3
             // 
             label3.AutoSize = true;
-            label3.Location = new Point(690, 16);
+            label3.Location = new Point(552, 13);
+            label3.Margin = new Padding(2, 0, 2, 0);
             label3.Name = "label3";
-            label3.Size = new Size(135, 25);
+            label3.Size = new Size(113, 20);
             label3.TabIndex = 3;
             label3.Text = "Select Category";
             // 
             // textBox1
             // 
-            textBox1.Location = new Point(26, 44);
+            textBox1.Location = new Point(21, 35);
+            textBox1.Margin = new Padding(2);
             textBox1.Name = "textBox1";
-            textBox1.Size = new Size(549, 31);
+            textBox1.Size = new Size(440, 27);
             textBox1.TabIndex = 2;
             textBox1.TextChanged += textBox1_TextChanged;
             // 
             // label2
             // 
             label2.AutoSize = true;
-            label2.Location = new Point(26, 16);
+            label2.Location = new Point(21, 13);
+            label2.Margin = new Padding(2, 0, 2, 0);
             label2.Name = "label2";
-            label2.Size = new Size(138, 25);
+            label2.Size = new Size(114, 20);
             label2.TabIndex = 1;
             label2.Text = "Search by name";
             // 
@@ -126,7 +129,7 @@
             dataGridViewCellStyle1.WrapMode = DataGridViewTriState.True;
             dataGridView1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             dataGridView1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridView1.Columns.AddRange(new DataGridViewColumn[] { fileId, action, docuName, category, subCategory, dateCreated, createdBy });
+            dataGridView1.Columns.AddRange(new DataGridViewColumn[] { fileId, action, docuName, category, dateCreated });
             dataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle2.BackColor = SystemColors.Window;
             dataGridViewCellStyle2.Font = new Font("Segoe UI", 9F);
@@ -135,12 +138,12 @@
             dataGridViewCellStyle2.SelectionForeColor = SystemColors.HighlightText;
             dataGridViewCellStyle2.WrapMode = DataGridViewTriState.False;
             dataGridView1.DefaultCellStyle = dataGridViewCellStyle2;
-            dataGridView1.Location = new Point(26, 79);
+            dataGridView1.Location = new Point(21, 63);
             dataGridView1.Margin = new Padding(2);
             dataGridView1.Name = "dataGridView1";
             dataGridView1.RowHeadersVisible = false;
             dataGridView1.RowHeadersWidth = 62;
-            dataGridView1.Size = new Size(845, 424);
+            dataGridView1.Size = new Size(676, 339);
             dataGridView1.TabIndex = 0;
             dataGridView1.CellClick += dataGridView1_CellClick;
             dataGridView1.CellContentClick += dataGridView1_CellContentClick;
@@ -178,14 +181,6 @@
             category.Name = "category";
             category.Width = 129;
             // 
-            // subCategory
-            // 
-            subCategory.FillWeight = 92.89742F;
-            subCategory.HeaderText = "SubCategory";
-            subCategory.MinimumWidth = 8;
-            subCategory.Name = "subCategory";
-            subCategory.Width = 130;
-            // 
             // dateCreated
             // 
             dateCreated.FillWeight = 99.87594F;
@@ -194,19 +189,12 @@
             dateCreated.Name = "dateCreated";
             dateCreated.Width = 141;
             // 
-            // createdBy
-            // 
-            createdBy.FillWeight = 112.137321F;
-            createdBy.HeaderText = "Created By";
-            createdBy.MinimumWidth = 8;
-            createdBy.Name = "createdBy";
-            createdBy.Width = 158;
-            // 
             // button1
             // 
-            button1.Location = new Point(740, 37);
+            button1.Location = new Point(592, 30);
+            button1.Margin = new Padding(2);
             button1.Name = "button1";
-            button1.Size = new Size(181, 34);
+            button1.Size = new Size(145, 27);
             button1.TabIndex = 2;
             button1.Text = "Add Document";
             button1.UseVisualStyleBackColor = true;
@@ -214,15 +202,16 @@
             // 
             // manageDocs
             // 
-            AutoScaleDimensions = new SizeF(10F, 25F);
+            AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            BackColor = Color.FromArgb(224, 224, 224);
-            ClientSize = new Size(954, 650);
+            BackColor = Color.FromArgb(255, 255, 192);
+            ClientSize = new Size(763, 520);
             Controls.Add(button1);
             Controls.Add(panel1);
             Controls.Add(label1);
             Font = new Font("Segoe UI", 9F);
             FormBorderStyle = FormBorderStyle.None;
+            Margin = new Padding(2);
             Name = "manageDocs";
             Text = "manageDocs";
             Load += manageDocs_Load;
@@ -247,8 +236,6 @@
         private DataGridViewComboBoxColumn action;
         private DataGridViewLinkColumn docuName;
         private DataGridViewTextBoxColumn category;
-        private DataGridViewTextBoxColumn subCategory;
         private DataGridViewTextBoxColumn dateCreated;
-        private DataGridViewTextBoxColumn createdBy;
     }
 }

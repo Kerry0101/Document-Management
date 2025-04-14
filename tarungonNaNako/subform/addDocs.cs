@@ -18,8 +18,6 @@ namespace tarungonNaNako.subform
 {
     public partial class addDocs : Form
     {
-        // Initialize OpenFileDialog
-        OpenFileDialog openFileDialog = new OpenFileDialog();
 
         private string selectedFilePath = ""; // To store the selected file path
         private readonly string connectionString = "server=localhost;user=root;database=docsmanagement;password="; // DB connection
@@ -59,9 +57,11 @@ namespace tarungonNaNako.subform
                 {
                     conn.Open();
                     string query = @"
-                        SELECT categoryName AS name FROM category WHERE categoryName LIKE @searchText AND userId = @userId
-                        UNION
-                        SELECT subcategoryName AS name FROM subcategory WHERE subcategoryName LIKE @searchText AND userId = @userId";
+                        SELECT categoryName AS name 
+                        FROM category 
+                        WHERE categoryName LIKE @searchText 
+                        AND userId = @userId
+                        AND is_archived = 0";
 
                     using (var cmd = new MySqlCommand(query, conn))
                     {
@@ -170,7 +170,6 @@ namespace tarungonNaNako.subform
             // Extract category and subcategory from searchBar
             string selectedCategory = searchBar.Text.Trim();
             int categoryId = 0;
-            int subcategoryId = 0;
             int roleId = 0;
 
             try
@@ -178,11 +177,10 @@ namespace tarungonNaNako.subform
                 using (var conn = new MySqlConnection(connectionString))
                 {
                     conn.Open();
-                    // Fetch categoryId and subcategoryId based on the selectedCategory
+                    // Fetch categoryId based on the selectedCategory
                     string query = @"
-            SELECT categoryId FROM category WHERE categoryName = @selectedCategory AND userId = @userId
-            UNION
-            SELECT subcategoryId FROM subcategory WHERE subcategoryName = @selectedCategory AND userId = @userId";
+                        SELECT categoryId FROM category 
+                        WHERE categoryName = @selectedCategory AND userId = @userId";
 
                     using (var cmd = new MySqlCommand(query, conn))
                     {
@@ -193,10 +191,6 @@ namespace tarungonNaNako.subform
                             if (reader.Read())
                             {
                                 categoryId = reader.GetInt32(0);
-                                if (reader.NextResult() && reader.Read())
-                                {
-                                    subcategoryId = reader.GetInt32(0);
-                                }
                             }
                         }
                     }
@@ -223,15 +217,14 @@ namespace tarungonNaNako.subform
                 using (MySqlConnection conn = new MySqlConnection(connectionString))
                 {
                     conn.Open();
-                    string query = "INSERT INTO files (fileName, filePath, categoryId, subcategoryId, uploadedBy, userId, uploadDate, fileType, fileSize) " +
-                                   "VALUES (@fileName, @filePath, @categoryId, @subcategoryId, @uploadedBy, @userId, CURRENT_TIMESTAMP, @fileType, @fileSize)";
+                    string query = "INSERT INTO files (fileName, filePath, categoryId, uploadedBy, userId, uploadDate, fileType, fileSize) " +
+                                   "VALUES (@fileName, @filePath, @categoryId, @uploadedBy, @userId, CURRENT_TIMESTAMP, @fileType, @fileSize)";
 
                     using (MySqlCommand cmd = new MySqlCommand(query, conn))
                     {
                         cmd.Parameters.AddWithValue("@fileName", fileName);
                         cmd.Parameters.AddWithValue("@filePath", filePath);
                         cmd.Parameters.AddWithValue("@categoryId", categoryId);
-                        cmd.Parameters.AddWithValue("@subcategoryId", subcategoryId == 0 ? DBNull.Value : subcategoryId);
                         cmd.Parameters.AddWithValue("@uploadedBy", roleId);
                         cmd.Parameters.AddWithValue("@userId", userId);
                         cmd.Parameters.AddWithValue("@fileType", fileType);
@@ -240,15 +233,14 @@ namespace tarungonNaNako.subform
                     }
                 }
 
-
                 using (MySqlConnection conn = new MySqlConnection(connectionString))
                 {
                     conn.Open();
                     string insertVersionQuery = @"
-            INSERT INTO file_versions (fileId, version, versionFilePath, uploadedBy, uploadDate)
-            SELECT fileId, 1, @filePath, @uploadedBy, CURRENT_TIMESTAMP
-            FROM files
-            WHERE fileName = @fileName";
+                        INSERT INTO file_versions (fileId, version, versionFilePath, uploadedBy, uploadDate)
+                        SELECT fileId, 1, @filePath, @uploadedBy, CURRENT_TIMESTAMP
+                        FROM files
+                        WHERE fileName = @fileName";
 
                     using (MySqlCommand cmd = new MySqlCommand(insertVersionQuery, conn))
                     {
@@ -279,138 +271,6 @@ namespace tarungonNaNako.subform
 
 
 
-        //private void button2_Click(object sender, EventArgs e)
-        //{
-        //    if (string.IsNullOrEmpty(selectedFilePath))
-        //    {
-        //        MessageBox.Show("File path is empty. Please select a file first.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-        //        return;
-        //    }
-
-        //    // Use the new file name from textBox1, but make sure it's not empty
-        //    string newFileName = textBox1.Text.Trim();
-        //    if (string.IsNullOrEmpty(newFileName))
-        //    {
-        //        MessageBox.Show("Please enter a new file name.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-        //        return;
-        //    }
-
-        //    // Ensure the file extension is retained
-        //    string fileExtension = Path.GetExtension(selectedFilePath);
-        //    string fileName = newFileName + fileExtension; // Create the new file name with the original extension
-        //    string filePath = Path.Combine("C:\\DocsManagement", fileName);
-        //    int userId = Session.CurrentUserId; // Use the logged-in user's ID
-        //    string fileType = fileExtension;
-        //    long fileSize = new FileInfo(selectedFilePath).Length;
-
-        //    // Extract category and subcategory from searchBar
-        //    string selectedCategory = searchBar.Text.Trim();
-        //    int categoryId = 0;
-        //    int subcategoryId = 0;
-        //    int roleId = 0;
-
-        //    try
-        //    {
-        //        using (var conn = new MySqlConnection(connectionString))
-        //        {
-        //            conn.Open();
-        //            // Fetch categoryId and subcategoryId based on the selectedCategory
-        //            string query = @"
-        //        SELECT categoryId FROM category WHERE categoryName = @selectedCategory AND userId = @userId
-        //        UNION
-        //        SELECT subcategoryId FROM subcategory WHERE subcategoryName = @selectedCategory AND userId = @userId";
-
-        //            using (var cmd = new MySqlCommand(query, conn))
-        //            {
-        //                cmd.Parameters.AddWithValue("@selectedCategory", selectedCategory);
-        //                cmd.Parameters.AddWithValue("@userId", userId);
-        //                using (var reader = cmd.ExecuteReader())
-        //                {
-        //                    if (reader.Read())
-        //                    {
-        //                        categoryId = reader.GetInt32(0);
-        //                        if (reader.NextResult() && reader.Read())
-        //                        {
-        //                            subcategoryId = reader.GetInt32(0);
-        //                        }
-        //                    }
-        //                }
-        //            }
-
-        //            // Fetch roleId based on the userId
-        //            string roleQuery = "SELECT roleId FROM users WHERE userId = @userId";
-        //            using (var roleCmd = new MySqlCommand(roleQuery, conn))
-        //            {
-        //                roleCmd.Parameters.AddWithValue("@userId", userId);
-        //                roleId = Convert.ToInt32(roleCmd.ExecuteScalar());
-        //            }
-        //        }
-
-        //        // Ensure the destination directory exists
-        //        if (!Directory.Exists("C:\\DocsManagement"))
-        //        {
-        //            Directory.CreateDirectory("C:\\DocsManagement");
-        //        }
-
-        //        // Copy the file to the destination with the new name
-        //        File.Copy(selectedFilePath, filePath, true);
-        //        MessageBox.Show($"File uploaded successfully!");
-        //            var teacherDashboard = Application.OpenForms["teacherDashboard"] as teacherDashboard;
-        //            if (teacherDashboard != null)
-        //            {
-        //                teacherDashboard.LoadFormInPanel(new homepage());
-        //            }
-        //            else
-        //            {
-        //                MessageBox.Show("teacherDashboard form is not open.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-        //            }
-
-        //        // Step 1: Insert the file data into the `files` table
-        //        using (MySqlConnection conn = new MySqlConnection(connectionString))
-        //        {
-        //            conn.Open();
-        //            string query = "INSERT INTO files (fileName, filePath, categoryId, subcategoryId, uploadedBy, userId, uploadDate, fileType, fileSize) " +
-        //                           "VALUES (@fileName, @filePath, @categoryId, @subcategoryId, @uploadedBy, @userId, CURRENT_TIMESTAMP, @fileType, @fileSize)";
-
-        //            using (MySqlCommand cmd = new MySqlCommand(query, conn))
-        //            {
-        //                cmd.Parameters.AddWithValue("@fileName", fileName);
-        //                cmd.Parameters.AddWithValue("@filePath", filePath);
-        //                cmd.Parameters.AddWithValue("@categoryId", categoryId);
-        //                cmd.Parameters.AddWithValue("@subcategoryId", subcategoryId == 0 ? DBNull.Value : subcategoryId);
-        //                cmd.Parameters.AddWithValue("@uploadedBy", roleId);
-        //                cmd.Parameters.AddWithValue("@userId", userId);
-        //                cmd.Parameters.AddWithValue("@fileType", fileType);
-        //                cmd.Parameters.AddWithValue("@fileSize", fileSize);
-        //                int rowsAffected = cmd.ExecuteNonQuery();
-        //            }
-        //        }
-
-        //        // Step 2: Insert the initial version into the `file_versions` table
-        //        using (MySqlConnection conn = new MySqlConnection(connectionString))
-        //        {
-        //            conn.Open();
-        //            string insertVersionQuery = @"
-        //        INSERT INTO file_versions (fileId, version, versionFilePath, uploadedBy, uploadDate)
-        //        SELECT fileId, 1, @filePath, @uploadedBy, CURRENT_TIMESTAMP
-        //        FROM files
-        //        WHERE fileName = @fileName";
-
-        //            using (MySqlCommand cmd = new MySqlCommand(insertVersionQuery, conn))
-        //            {
-        //                cmd.Parameters.AddWithValue("@filePath", filePath);
-        //                cmd.Parameters.AddWithValue("@uploadedBy", roleId);
-        //                cmd.Parameters.AddWithValue("@fileName", fileName);
-        //                cmd.ExecuteNonQuery();
-        //            }
-        //        }
-
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        MessageBox.Show($"Error during file upload or database insertion: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-        //    }
-        //}
 
 
 
@@ -481,7 +341,17 @@ namespace tarungonNaNako.subform
 
         private void btnCancel_Click(object sender, EventArgs e)
         {
-
+            // Hide the current form
+            this.Hide();
+            var teacherDashboard = Application.OpenForms["teacherDashboard"] as teacherDashboard;
+            if (teacherDashboard != null)
+            {
+                teacherDashboard.LoadFormInPanel(new homepage());
+            }
+            else
+            {
+                MessageBox.Show("teacherDashboard form is not open.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
     }
 }

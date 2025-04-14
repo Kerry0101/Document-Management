@@ -884,48 +884,7 @@ namespace tarungonNaNako.subform
         }
 
 
-        //private void EditCategory(string categoryName)
-        //{
-        //    // Prompt user for new category name
-        //    string newCategoryName = Microsoft.VisualBasic.Interaction.InputBox(
-        //        "Enter new category name:",
-        //        "Edit Category",
-        //        categoryName
-        //    );
 
-        //    if (string.IsNullOrWhiteSpace(newCategoryName))
-        //    {
-        //        MessageBox.Show("Category name cannot be empty.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-        //        return;
-        //    }
-
-        //    try
-        //    {
-        //        using (MySqlConnection conn = new MySqlConnection(connectionString))
-        //        {
-        //            conn.Open();
-        //            string query = "UPDATE category SET categoryName = @newCategoryName WHERE categoryName = @categoryName";
-        //            using (MySqlCommand cmd = new MySqlCommand(query, conn))
-        //            {
-        //                cmd.Parameters.AddWithValue("@newCategoryName", newCategoryName);
-        //                cmd.Parameters.AddWithValue("@categoryName", categoryName);
-        //                int rowsAffected = cmd.ExecuteNonQuery();
-        //                if (rowsAffected > 0)
-        //                {
-        //                    MessageBox.Show($"Category '{categoryName}' renamed to '{newCategoryName}' successfully.");
-        //                }
-        //                else
-        //                {
-        //                    MessageBox.Show($"Category '{categoryName}' not found.");
-        //                }
-        //            }
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        MessageBox.Show($"Error renaming category: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-        //    }
-        //}
 
         private void RemoveCategory(string categoryName)
         {

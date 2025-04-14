@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Guna.UI2.WinForms;
 using MySql.Data.MySqlClient;
+using MySqlX.XDevAPI.Common;
 using Org.BouncyCastle.Asn1.X509;
 
 namespace tarungonNaNako.subform
@@ -31,12 +32,13 @@ namespace tarungonNaNako.subform
         string ThreeDotMenu = Path.Combine(Application.StartupPath, "Assets (images)", "menu-dots-vertical.png");
         string FolderIcon = Path.Combine(Application.StartupPath, "Assets (images)", "folder.png");
         string DocumentIcon = Path.Combine(Application.StartupPath, "Assets (images)", "document.png");
-        string ZippedFolderIcon = Path.Combine(Application.StartupPath, "Assets (images)", "zip (1).png");
+        string ZippedFolderIcon = Path.Combine(Application.StartupPath, "Assets (images)", "zip-file-format.png");
         string HorizontalThreeDotMenu = Path.Combine(Application.StartupPath, "Assets (images)", "menu.png");
         private int selectedCategoryId; // Add this line to declare the variable
         private int parentCategoryId; // Add this line to declare the variable
         private string parentCategoryName; // Add this line to declare the variable
         private int breadcrumbItemsCount = 0; // Add this line to declare the variable
+        string folderPath = @"C:\DocsManagement\";
 
         public fetchDocuments(int categoryId, string categoryName, string parentCategoryName)
         {
@@ -153,12 +155,18 @@ namespace tarungonNaNako.subform
 
         private void MoreButtonClick(object sender, EventArgs e, List<Tuple<string, int>> hiddenItems)
         {
-            ContextMenuStrip contextMenu = new ContextMenuStrip();
+            ContextMenuStrip contextMenu = new ContextMenuStrip
+            {
+                BackColor = Color.LightYellow
+            };
 
             foreach (var item in hiddenItems)
             {
-                ToolStripMenuItem menuItem = new ToolStripMenuItem(item.Item1);
-                menuItem.Tag = item.Item2;
+                ToolStripMenuItem menuItem = new ToolStripMenuItem(item.Item1)
+                {
+                    Tag = item.Item2,
+                    BackColor = Color.LightYellow // Set the background color of each item to a light color
+                };
                 menuItem.Click += (s, ev) =>
                 {
                     int id = (int)((ToolStripMenuItem)s).Tag;
@@ -169,15 +177,6 @@ namespace tarungonNaNako.subform
                 contextMenu.Items.Add(menuItem);
             }
             contextMenu.Show(Cursor.Position);
-        }
-
-
-        private List<Tuple<string, int>> GetAllBreadcrumbs(int categoryId)
-        {
-            List<Tuple<string, int>> breadcrumbs = new List<Tuple<string, int>>();
-            GetBreadcrumbItemsRecursive(categoryId, ref breadcrumbs);
-            breadcrumbs.Reverse();
-            return breadcrumbs;
         }
 
 
@@ -216,7 +215,7 @@ namespace tarungonNaNako.subform
             }
         }
 
-        
+
         private string GetCategoryName(int categoryId)
         {
             string categoryName = "";
@@ -416,6 +415,7 @@ namespace tarungonNaNako.subform
 
                                 actionButton.Click += (s, e) =>
                                 {
+                                    popupPanel.Hide();
                                     ShowPanel(type, name, categoryName, actionButton); // Show panel with file or folder-related options
                                 };
 
@@ -602,7 +602,7 @@ namespace tarungonNaNako.subform
 
             // ===== Adjust Panel Position to Keep it Inside the Form =====
             Point btnScreenLocation = btn.Parent.PointToScreen(btn.Location);
-            Point panelLocation = this.PointToClient(new Point(btnScreenLocation.X, btnScreenLocation.Y + btn.Height + -25));
+            Point panelLocation = panel5.PointToClient(new Point(btnScreenLocation.X, btnScreenLocation.Y + btn.Height + 5));
 
             int panelX = panelLocation.X;
             int panelY = panelLocation.Y;
@@ -610,15 +610,15 @@ namespace tarungonNaNako.subform
             int panelHeight = guna2Panel2.Height;
 
             // Ensure panel doesn't go beyond the right boundary
-            if (panelX + panelWidth > this.ClientSize.Width)
+            if (panelX + panelWidth > panel5.ClientSize.Width)
             {
-                panelX = this.ClientSize.Width - panelWidth - 40;
+                panelX = panel5.ClientSize.Width - panelWidth - 40;
             }
 
             // Ensure panel doesn't go beyond the bottom boundary
-            if (panelY + panelHeight > this.ClientSize.Height)
+            if (panelY + panelHeight > panel5.ClientSize.Height)
             {
-                panelY = this.ClientSize.Height - panelHeight - 50;
+                panelY = panel5.ClientSize.Height - panelHeight - 50;
             }
 
             // Apply final position
@@ -977,7 +977,7 @@ namespace tarungonNaNako.subform
                 MessageBox.Show($"Error archiving category: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-        private void RefreshPanel5()
+        public void RefreshPanel5()
         {
             // Reload files into the panel
             LoadFilesAndFoldersIntoTablePanel();
@@ -1024,7 +1024,7 @@ namespace tarungonNaNako.subform
             popupPanel.BringToFront();
             popupPanel.Font = new Font("Segoe UI", 9);
             popupPanel.ForeColor = Color.Black;
-            popupPanel.Location = new Point(277, 125);
+            popupPanel.Location = new Point(277, 110);
 
             // Create buttons
             Guna.UI2.WinForms.Guna2Button btnNewFolder = new Guna.UI2.WinForms.Guna2Button
@@ -1086,14 +1086,21 @@ namespace tarungonNaNako.subform
             };
             btnFileUpload.Click += (s, e) =>
             {
-                UPLOAD_FILE_INSIDE_CHILD_FOLDER btnFileUpload = new UPLOAD_FILE_INSIDE_CHILD_FOLDER();
+                UPLOAD_FILE_INSIDE_CHILD_FOLDER btnFileUpload = new UPLOAD_FILE_INSIDE_CHILD_FOLDER (folderPath)
+                {
+                    ParentCategoryId = selectedCategoryId // Pass the current category ID
+                };
                 btnFileUpload.StartPosition = FormStartPosition.CenterScreen;
                 btnFileUpload.TopMost = true; // Ensure the form appears on top
                 btnFileUpload.FormBorderStyle = FormBorderStyle.FixedDialog; // Set the form border style
                 btnFileUpload.MinimizeBox = false; // Remove minimize button
                 btnFileUpload.MaximizeBox = false; // Remove maximize button
-                btnFileUpload.ShowDialog(this); // Show the form as a dialog
+                DialogResult result = btnFileUpload.ShowDialog(this); // Show the form as a dialog
                 popupPanel.Hide();
+                if (result == DialogResult.OK)
+                {
+                    LoadFilesAndFoldersIntoTablePanel(); // Call the refresh function after the dialog is closed
+                }
             };
 
             Guna.UI2.WinForms.Guna2Button btnFolderUpload = new Guna.UI2.WinForms.Guna2Button
@@ -1115,14 +1122,21 @@ namespace tarungonNaNako.subform
             };
             btnFolderUpload.Click += (s, e) =>
             {
-                UPLOAD_FILE_INSIDE_CHILD_FOLDER btnFolderUpload = new UPLOAD_FILE_INSIDE_CHILD_FOLDER();
+                UPLOAD_FILE_INSIDE_CHILD_FOLDER btnFolderUpload = new UPLOAD_FILE_INSIDE_CHILD_FOLDER(folderPath)
+                {
+                    ParentCategoryId = selectedCategoryId // Pass the current category ID
+                };
                 btnFolderUpload.StartPosition = FormStartPosition.CenterScreen;
                 btnFolderUpload.TopMost = true; // Ensure the form appears on top
                 btnFolderUpload.FormBorderStyle = FormBorderStyle.FixedDialog; // Set the form border style
                 btnFolderUpload.MinimizeBox = false; // Remove minimize button
                 btnFolderUpload.MaximizeBox = false; // Remove maximize button
-                btnFolderUpload.ShowDialog(this); // Show the form as a dialog
+                DialogResult result = btnFolderUpload.ShowDialog(this);
                 popupPanel.Hide();
+                if (result == DialogResult.OK)
+                {
+                    LoadFilesAndFoldersIntoTablePanel(); // Call the refresh function after the dialog is closed
+                }
             };
 
             // Add buttons to the panel
@@ -1139,6 +1153,7 @@ namespace tarungonNaNako.subform
         private void panel5_Scroll(object sender, ScrollEventArgs e)
         {
             guna2Panel2.Hide();
+            popupPanel.Hide();
         }
 
         private void panel3_Click(object sender, EventArgs e)
@@ -1147,6 +1162,31 @@ namespace tarungonNaNako.subform
             guna2Panel2.Hide();
         }
 
+        private void fetchDocumentPanel_Paint(object sender, PaintEventArgs e)
+        {
 
+        }
+
+        private void fetchDocumentPanel_Click(object sender, EventArgs e)
+        {
+            popupPanel.Hide();
+            guna2Panel2.Hide();
+        }
+
+        private void breadcrumbPanel_Click(object sender, EventArgs e)
+        {
+            popupPanel.Hide();
+            guna2Panel2.Hide();
+        }
+
+        private void guna2Panel2_Click(object sender, EventArgs e)
+        {
+            popupPanel.Hide();
+        }
+
+        private void panel5_Click(object sender, EventArgs e)
+        {
+            popupPanel.Hide(); guna2Panel2.Hide();
+        }
     }
 }

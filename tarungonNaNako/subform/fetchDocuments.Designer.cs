@@ -47,10 +47,10 @@
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges14 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges17 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges18 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges21 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges22 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges19 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges20 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges21 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges22 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             panel5 = new Panel();
             label2 = new Label();
             tableLayoutPanel1 = new TableLayoutPanel();
@@ -68,14 +68,14 @@
             Newbtn = new Guna.UI2.WinForms.Guna2Button();
             breadcrumbPanel = new FlowLayoutPanel();
             panel3 = new Panel();
-            breadcrumbContainer = new Guna.UI2.WinForms.Guna2Panel();
             fetchDocumentPanel = new Guna.UI2.WinForms.Guna2Panel();
+            breadcrumbContainer = new Guna.UI2.WinForms.Guna2Panel();
             panel5.SuspendLayout();
             guna2Panel2.SuspendLayout();
             popupPanel.SuspendLayout();
             panel3.SuspendLayout();
-            breadcrumbContainer.SuspendLayout();
             fetchDocumentPanel.SuspendLayout();
+            breadcrumbContainer.SuspendLayout();
             SuspendLayout();
             // 
             // panel5
@@ -87,18 +87,20 @@
             panel5.Controls.Add(label6);
             panel5.Controls.Add(label5);
             panel5.Controls.Add(label4);
-            panel5.Location = new Point(12, 48);
+            panel5.Dock = DockStyle.Fill;
+            panel5.Location = new Point(0, 0);
             panel5.Name = "panel5";
             panel5.Padding = new Padding(0, 0, 0, 100);
-            panel5.Size = new Size(730, 390);
+            panel5.Size = new Size(770, 468);
             panel5.TabIndex = 16;
             panel5.Scroll += panel5_Scroll;
+            panel5.Click += panel5_Click;
             // 
             // label2
             // 
             label2.AutoSize = true;
             label2.Font = new Font("Microsoft Sans Serif", 10.2F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            label2.Location = new Point(624, 9);
+            label2.Location = new Point(650, 9);
             label2.Name = "label2";
             label2.Size = new Size(62, 20);
             label2.TabIndex = 11;
@@ -116,7 +118,7 @@
             tableLayoutPanel1.Name = "tableLayoutPanel1";
             tableLayoutPanel1.RowCount = 1;
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tableLayoutPanel1.Size = new Size(707, 51);
+            tableLayoutPanel1.Size = new Size(748, 51);
             tableLayoutPanel1.TabIndex = 9;
             // 
             // label6
@@ -155,12 +157,13 @@
             guna2Panel2.Controls.Add(guna2Button5);
             guna2Panel2.Controls.Add(button1);
             guna2Panel2.CustomizableEdges = customizableEdges7;
-            guna2Panel2.Location = new Point(542, 33);
+            guna2Panel2.Location = new Point(460, 131);
             guna2Panel2.Name = "guna2Panel2";
             guna2Panel2.ShadowDecoration.CustomizableEdges = customizableEdges8;
             guna2Panel2.Size = new Size(181, 132);
             guna2Panel2.TabIndex = 18;
             guna2Panel2.Visible = false;
+            guna2Panel2.Click += guna2Panel2_Click;
             // 
             // guna2Button6
             // 
@@ -327,7 +330,7 @@
             Newbtn.ImageAlign = HorizontalAlignment.Left;
             Newbtn.ImageOffset = new Point(-2, 0);
             Newbtn.ImageSize = new Size(30, 30);
-            Newbtn.Location = new Point(300, 2);
+            Newbtn.Location = new Point(299, 10);
             Newbtn.Margin = new Padding(10, 3, 5, 3);
             Newbtn.Name = "Newbtn";
             Newbtn.Padding = new Padding(20, 0, 0, 0);
@@ -348,9 +351,11 @@
             breadcrumbPanel.Name = "breadcrumbPanel";
             breadcrumbPanel.Size = new Size(785, 49);
             breadcrumbPanel.TabIndex = 20;
+            breadcrumbPanel.Click += breadcrumbPanel_Click;
             // 
             // panel3
             // 
+            panel3.Controls.Add(Newbtn);
             panel3.Controls.Add(fetchDocumentPanel);
             panel3.Controls.Add(breadcrumbContainer);
             panel3.Dock = DockStyle.Fill;
@@ -359,6 +364,20 @@
             panel3.Size = new Size(785, 529);
             panel3.TabIndex = 22;
             panel3.Click += panel3_Click;
+            // 
+            // fetchDocumentPanel
+            // 
+            fetchDocumentPanel.Controls.Add(guna2Panel2);
+            fetchDocumentPanel.Controls.Add(popupPanel);
+            fetchDocumentPanel.Controls.Add(panel5);
+            fetchDocumentPanel.CustomizableEdges = customizableEdges19;
+            fetchDocumentPanel.Location = new Point(12, 55);
+            fetchDocumentPanel.Name = "fetchDocumentPanel";
+            fetchDocumentPanel.ShadowDecoration.CustomizableEdges = customizableEdges20;
+            fetchDocumentPanel.Size = new Size(770, 468);
+            fetchDocumentPanel.TabIndex = 23;
+            fetchDocumentPanel.Click += fetchDocumentPanel_Click;
+            fetchDocumentPanel.Paint += fetchDocumentPanel_Paint;
             // 
             // breadcrumbContainer
             // 
@@ -371,19 +390,6 @@
             breadcrumbContainer.ShadowDecoration.CustomizableEdges = customizableEdges22;
             breadcrumbContainer.Size = new Size(785, 49);
             breadcrumbContainer.TabIndex = 22;
-            // 
-            // fetchDocumentPanel
-            // 
-            fetchDocumentPanel.Controls.Add(popupPanel);
-            fetchDocumentPanel.Controls.Add(Newbtn);
-            fetchDocumentPanel.Controls.Add(guna2Panel2);
-            fetchDocumentPanel.Controls.Add(panel5);
-            fetchDocumentPanel.CustomizableEdges = customizableEdges19;
-            fetchDocumentPanel.Location = new Point(10, 68);
-            fetchDocumentPanel.Name = "fetchDocumentPanel";
-            fetchDocumentPanel.ShadowDecoration.CustomizableEdges = customizableEdges20;
-            fetchDocumentPanel.Size = new Size(763, 455);
-            fetchDocumentPanel.TabIndex = 23;
             // 
             // fetchDocuments
             // 
@@ -400,8 +406,8 @@
             guna2Panel2.ResumeLayout(false);
             popupPanel.ResumeLayout(false);
             panel3.ResumeLayout(false);
-            breadcrumbContainer.ResumeLayout(false);
             fetchDocumentPanel.ResumeLayout(false);
+            breadcrumbContainer.ResumeLayout(false);
             ResumeLayout(false);
         }
 
