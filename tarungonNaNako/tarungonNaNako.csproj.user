@@ -40,9 +40,6 @@
     <Compile Update="subform\addRole.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Update="subform\addSubCategory.cs">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Update="subform\addUser.cs">
       <SubType>Form</SubType>
     </Compile>

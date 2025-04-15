@@ -67,6 +67,9 @@
     <None Update="Assets %28images%29\pencil.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="Assets %28images%29\progress.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Assets %28images%29\trash.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

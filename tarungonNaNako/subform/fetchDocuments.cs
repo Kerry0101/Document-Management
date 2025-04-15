@@ -1186,7 +1186,8 @@ namespace tarungonNaNako.subform
 
         private void panel5_Click(object sender, EventArgs e)
         {
-            popupPanel.Hide(); guna2Panel2.Hide();
+            popupPanel.Hide(); 
+            guna2Panel2.Hide();
         }
     }
 }

@@ -67,7 +67,7 @@ namespace tarungonNaNako.subform
                                 Panel rowPanel = new Panel
                                 {
                                     Dock = DockStyle.Fill,
-                                    BackColor = Color.White,
+                                    BackColor = ColorTranslator.FromHtml("#ffe261"),
                                     Height = fixedRowHeight,
                                     Tag = subcategoryId // Store subcategoryId for events
                                 };
@@ -185,15 +185,6 @@ namespace tarungonNaNako.subform
 
         }
 
-        private void button2_Click(object sender, EventArgs e)
-        {
-
-            // Load addSubCategory form and pass the categoryId and categoryName
-            //LoadFormInPanel(new addSubCategory(_categoryId, _categoryName));
-            addSubCategory addSubCategoryForm = new addSubCategory(_categoryId, _categoryName);
-            addSubCategoryForm.Show();
-
-        }
 
         private void tableLayoutPanel1_Paint(object sender, PaintEventArgs e)
         {
