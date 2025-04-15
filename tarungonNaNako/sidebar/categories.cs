@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using tarungonNaNako.subform;
 using System.ComponentModel;
+using System.Timers;
 
 
 namespace tarungonNaNako.sidebar
@@ -17,12 +18,39 @@ namespace tarungonNaNako.sidebar
     public partial class categories : Form
     {
         private BackgroundWorker backgroundWorker;
+        private System.Timers.Timer debounceTimer;
 
         public categories()
         {
             InitializeComponent();
             InitializeBackgroundWorker();
             loadingPictureBox.Visible = false;
+            searchBar.TextChanged += SearchBar_TextChanged;
+
+            debounceTimer = new System.Timers.Timer();
+            debounceTimer.Interval = 500; // Set the debounce interval (in milliseconds)
+            debounceTimer.AutoReset = false;
+            debounceTimer.Elapsed += DebounceTimer_Elapsed;
+        }
+
+        private void SearchBar_TextChanged(object sender, EventArgs e)
+        {
+            // Reset the debounce timer
+            debounceTimer.Stop();
+            debounceTimer.Start();
+        }
+
+        private void DebounceTimer_Elapsed(object sender, ElapsedEventArgs e)
+        {
+            // Execute the search on the UI thread
+            Invoke(new Action(() =>
+            {
+                if (!backgroundWorker.IsBusy)
+                {
+                    ShowLoadingAnimation();
+                    backgroundWorker.RunWorkerAsync(searchBar.Text);
+                }
+            }));
         }
 
         private void InitializeBackgroundWorker()
@@ -33,8 +61,8 @@ namespace tarungonNaNako.sidebar
         }
         private void BackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
         {
-            // Load categories in the background
-            LoadCategories();
+            string searchTerm = e.Argument as string;
+            LoadCategories(searchTerm);
         }
 
         private void BackgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
@@ -54,7 +82,7 @@ namespace tarungonNaNako.sidebar
             loadingPictureBox.Visible = false;
         }
 
-        private void LoadCategories()
+        private void LoadCategories(string searchTerm = "")
         {
             string connectionString = "server=localhost; user=root; Database=docsmanagement; password=";
 
@@ -71,16 +99,25 @@ namespace tarungonNaNako.sidebar
                     }
 
                     string query = "SELECT categoryId, categoryName FROM category WHERE userId = @userId AND is_archived = 0";
+                    if (!string.IsNullOrEmpty(searchTerm))
+                    {
+                        query += " AND categoryName LIKE @searchTerm";
+                    }
 
                     using (MySqlCommand cmd = new MySqlCommand(query, conn))
                     {
                         cmd.Parameters.AddWithValue("@userId", Session.CurrentUserId);
+                        if (!string.IsNullOrEmpty(searchTerm))
+                        {
+                            cmd.Parameters.AddWithValue("@searchTerm", "%" + searchTerm + "%");
+                        }
 
                         using (MySqlDataReader reader = cmd.ExecuteReader())
                         {
                             // Clear existing controls and reset row styles
                             Invoke(new Action(() =>
                             {
+                                tableLayoutPanel1.Controls.Clear();
                                 tableLayoutPanel1.RowCount = 0;
                                 tableLayoutPanel1.RowStyles.Clear();
                             }));
@@ -190,6 +227,7 @@ namespace tarungonNaNako.sidebar
                 }
             }
         }
+
 
 
         // Event handler for Edit button

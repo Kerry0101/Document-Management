@@ -40,7 +40,7 @@
             panel1 = new Guna.UI2.WinForms.Guna2Panel();
             loadingPictureBox = new Guna.UI2.WinForms.Guna2PictureBox();
             pictureBox1 = new PictureBox();
-            guna2TextBox1 = new Guna.UI2.WinForms.Guna2TextBox();
+            searchBar = new Guna.UI2.WinForms.Guna2TextBox();
             panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)loadingPictureBox).BeginInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
@@ -113,29 +113,29 @@
             pictureBox1.TabIndex = 16;
             pictureBox1.TabStop = false;
             // 
-            // guna2TextBox1
+            // searchBar
             // 
-            guna2TextBox1.BorderRadius = 5;
-            guna2TextBox1.CustomizableEdges = customizableEdges5;
-            guna2TextBox1.DefaultText = "";
-            guna2TextBox1.DisabledState.BorderColor = Color.FromArgb(208, 208, 208);
-            guna2TextBox1.DisabledState.FillColor = Color.FromArgb(226, 226, 226);
-            guna2TextBox1.DisabledState.ForeColor = Color.FromArgb(138, 138, 138);
-            guna2TextBox1.DisabledState.PlaceholderForeColor = Color.FromArgb(138, 138, 138);
-            guna2TextBox1.FillColor = Color.FromArgb(255, 255, 128);
-            guna2TextBox1.FocusedState.BorderColor = Color.FromArgb(94, 148, 255);
-            guna2TextBox1.Font = new Font("Segoe UI", 9F);
-            guna2TextBox1.ForeColor = Color.Black;
-            guna2TextBox1.HoverState.BorderColor = Color.FromArgb(94, 148, 255);
-            guna2TextBox1.Location = new Point(473, 55);
-            guna2TextBox1.Margin = new Padding(3, 4, 3, 4);
-            guna2TextBox1.Name = "guna2TextBox1";
-            guna2TextBox1.PlaceholderForeColor = Color.DimGray;
-            guna2TextBox1.PlaceholderText = "Search folders . . .";
-            guna2TextBox1.SelectedText = "";
-            guna2TextBox1.ShadowDecoration.CustomizableEdges = customizableEdges6;
-            guna2TextBox1.Size = new Size(268, 40);
-            guna2TextBox1.TabIndex = 15;
+            searchBar.BorderRadius = 5;
+            searchBar.CustomizableEdges = customizableEdges5;
+            searchBar.DefaultText = "";
+            searchBar.DisabledState.BorderColor = Color.FromArgb(208, 208, 208);
+            searchBar.DisabledState.FillColor = Color.FromArgb(226, 226, 226);
+            searchBar.DisabledState.ForeColor = Color.FromArgb(138, 138, 138);
+            searchBar.DisabledState.PlaceholderForeColor = Color.FromArgb(138, 138, 138);
+            searchBar.FillColor = Color.FromArgb(255, 255, 128);
+            searchBar.FocusedState.BorderColor = Color.FromArgb(94, 148, 255);
+            searchBar.Font = new Font("Segoe UI", 9F);
+            searchBar.ForeColor = Color.Black;
+            searchBar.HoverState.BorderColor = Color.FromArgb(94, 148, 255);
+            searchBar.Location = new Point(473, 55);
+            searchBar.Margin = new Padding(3, 4, 3, 4);
+            searchBar.Name = "searchBar";
+            searchBar.PlaceholderForeColor = Color.DimGray;
+            searchBar.PlaceholderText = "Search folders . . .";
+            searchBar.SelectedText = "";
+            searchBar.ShadowDecoration.CustomizableEdges = customizableEdges6;
+            searchBar.Size = new Size(268, 40);
+            searchBar.TabIndex = 15;
             // 
             // categories
             // 
@@ -145,7 +145,7 @@
             ClientSize = new Size(763, 520);
             Controls.Add(loadingPictureBox);
             Controls.Add(pictureBox1);
-            Controls.Add(guna2TextBox1);
+            Controls.Add(searchBar);
             Controls.Add(panel1);
             Controls.Add(label2);
             ForeColor = SystemColors.ActiveCaptionText;
@@ -167,7 +167,7 @@
         private Label label2;
         private Guna.UI2.WinForms.Guna2Panel panel1;
         private PictureBox pictureBox1;
-        private Guna.UI2.WinForms.Guna2TextBox guna2TextBox1;
+        private Guna.UI2.WinForms.Guna2TextBox searchBar;
         private Guna.UI2.WinForms.Guna2PictureBox loadingPictureBox;
     }
 }
