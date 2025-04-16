@@ -277,6 +277,7 @@ namespace tarungonNaNako.subform
             int buttonHeight = 60; // Adjust as needed
             int spacing = 10;
             int xPosition = 0;
+            int categoryCount = 0; // Counter for categories
 
             try
             {
@@ -293,12 +294,12 @@ namespace tarungonNaNako.subform
 
                     // Updated Query: Fetch categories based on parentCategoryId
                     string query = @"
-                SELECT categoryId, categoryName 
-                FROM category 
-                WHERE is_archived = 0 
-                AND userId = @userId 
-                AND (parentCategoryId = @parentCategoryId OR (@parentCategoryId IS NULL AND parentCategoryId IS NULL))
-                ORDER BY updated_at DESC";
+                    SELECT categoryId, categoryName 
+                    FROM category 
+                    WHERE is_archived = 0 
+                    AND userId = @userId 
+                    AND (parentCategoryId = @parentCategoryId OR (@parentCategoryId IS NULL AND parentCategoryId IS NULL))
+                    ORDER BY updated_at DESC";
 
                     using (MySqlCommand cmd = new MySqlCommand(query, conn))
                     {
@@ -307,7 +308,7 @@ namespace tarungonNaNako.subform
 
                         using (MySqlDataReader reader = cmd.ExecuteReader())
                         {
-                            while (reader.Read())
+                            while (reader.Read() && categoryCount < 5) // Limit to 10 categories
                             {
                                 int categoryId = Convert.ToInt32(reader["categoryId"]);
                                 string categoryName = reader["categoryName"].ToString();
@@ -338,7 +339,6 @@ namespace tarungonNaNako.subform
                                     LoadFormInPanel(new fetchDocuments(categoryId, categoryName, "")); // Loads the fetchDocuments form
                                 };
 
-
                                 // ✅ Create Three-Dot Menu Button
                                 Guna.UI2.WinForms.Guna2CircleButton menuButton = new Guna.UI2.WinForms.Guna2CircleButton
                                 {
@@ -368,6 +368,7 @@ namespace tarungonNaNako.subform
                                 Guna2Panel1.Controls.Add(categoryButton);
 
                                 xPosition += buttonWidth + spacing;
+                                categoryCount++; // Increment category counter
                             }
                         }
                     }

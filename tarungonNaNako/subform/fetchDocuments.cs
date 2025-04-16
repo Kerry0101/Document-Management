@@ -8,6 +8,7 @@ using System.Linq;
 using System.Reflection.Metadata;
 using System.Text;
 using System.Threading.Tasks;
+using System.Timers;
 using System.Windows.Forms;
 using Guna.UI2.WinForms;
 using MySql.Data.MySqlClient;
@@ -39,6 +40,8 @@ namespace tarungonNaNako.subform
         private string parentCategoryName; // Add this line to declare the variable
         private int breadcrumbItemsCount = 0; // Add this line to declare the variable
         string folderPath = @"C:\DocsManagement\";
+        private BackgroundWorker backgroundWorker;
+        private System.Timers.Timer debounceTimer;
 
         public fetchDocuments(int categoryId, string categoryName, string parentCategoryName)
         {
@@ -47,12 +50,85 @@ namespace tarungonNaNako.subform
             selectedCategoryName = categoryName; // Store the categoryName to display in the UI
             this.parentCategoryName = parentCategoryName; // Store the parentCategoryName to use later
             InitializeComponent();
-            // Add FlowLayoutPanel for breadcrumbs
+            InitializeBackgroundWorker();
+            InitializeDebounceTimer();
 
             this.Controls.Add(breadcrumbPanel);
             LoadFilesAndFoldersIntoTablePanel(); // Load files and folders specific to the selected category
             UpdateBreadcrumbs();
         }
+
+        private void InitializeBackgroundWorker()
+        {
+            backgroundWorker = new BackgroundWorker();
+            backgroundWorker.DoWork += BackgroundWorker_DoWork;
+            backgroundWorker.RunWorkerCompleted += BackgroundWorker_RunWorkerCompleted;
+        }
+
+        private void InitializeDebounceTimer()
+        {
+            debounceTimer = new System.Timers.Timer();
+            debounceTimer.Interval = 500; // Set the debounce interval (in milliseconds)
+            debounceTimer.AutoReset = false;
+            debounceTimer.Elapsed += DebounceTimer_Elapsed;
+        }
+
+        private void DebounceTimer_Elapsed(object sender, ElapsedEventArgs e)
+        {
+            // Execute the operation on the UI thread
+            if (InvokeRequired)
+            {
+                Invoke(new Action(() =>
+                {
+                    if (!backgroundWorker.IsBusy)
+                    {
+                        ShowLoadingAnimation();
+                        backgroundWorker.RunWorkerAsync();
+                    }
+                }));
+            }
+            else
+            {
+                if (!backgroundWorker.IsBusy)
+                {
+                    ShowLoadingAnimation();
+                    backgroundWorker.RunWorkerAsync();
+                }
+            }
+        }
+
+        private void BackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
+        {
+            LoadFilesAndFoldersIntoTablePanelInternal();
+        }
+
+        private void BackgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            if (InvokeRequired)
+            {
+                Invoke(new Action(() =>
+                {
+                    HideLoadingAnimation();
+                }));
+            }
+            else
+            {
+                HideLoadingAnimation();
+            }
+        }
+
+        private void ShowLoadingAnimation()
+        {
+            // Show a loading animation (e.g., a ProgressBar or a PictureBox with a GIF)
+            // Implement this method based on your UI design
+        }
+
+        private void HideLoadingAnimation()
+        {
+            // Hide the loading animation
+            // Implement this method based on your UI design
+        }
+
 
         public int GetCurrentCategoryId()
         {
@@ -62,24 +138,51 @@ namespace tarungonNaNako.subform
 
         public void UpdateBreadcrumbs()
         {
-            breadcrumbPanel.Controls.Clear();
-            breadcrumbPanel.AutoSize = true;
-            breadcrumbPanel.Padding = new Padding(10);
-            breadcrumbPanel.BackColor = Color.FromArgb(255, 255, 192);
+            if (InvokeRequired)
+            {
+                Invoke(new Action(() =>
+                {
+                    breadcrumbPanel.Controls.Clear();
+                    breadcrumbPanel.AutoSize = true;
+                    breadcrumbPanel.Padding = new Padding(10);
+                    breadcrumbPanel.BackColor = Color.FromArgb(255, 255, 192);
 
-            if (selectedCategoryId == -1) return;
+                    if (selectedCategoryId == -1) return;
 
-            BuildBreadcrumbTrail(selectedCategoryId);
+                    BuildBreadcrumbTrail(selectedCategoryId);
 
-            Panel breadcrumbContainer = new Panel();
-            breadcrumbContainer.AutoSize = true;
-            breadcrumbContainer.Dock = DockStyle.Top;
-            breadcrumbContainer.Margin = new Padding(0, 50, 0, 0);
-            breadcrumbContainer.Padding = new Padding(0);
+                    Panel breadcrumbContainer = new Panel();
+                    breadcrumbContainer.AutoSize = true;
+                    breadcrumbContainer.Dock = DockStyle.Top;
+                    breadcrumbContainer.Margin = new Padding(0, 50, 0, 0);
+                    breadcrumbContainer.Padding = new Padding(0);
 
-            breadcrumbContainer.Controls.Add(breadcrumbPanel);
-            this.Controls.Add(breadcrumbContainer);
+                    breadcrumbContainer.Controls.Add(breadcrumbPanel);
+                    this.Controls.Add(breadcrumbContainer);
+                }));
+            }
+            else
+            {
+                breadcrumbPanel.Controls.Clear();
+                breadcrumbPanel.AutoSize = true;
+                breadcrumbPanel.Padding = new Padding(10);
+                breadcrumbPanel.BackColor = Color.FromArgb(255, 255, 192);
+
+                if (selectedCategoryId == -1) return;
+
+                BuildBreadcrumbTrail(selectedCategoryId);
+
+                Panel breadcrumbContainer = new Panel();
+                breadcrumbContainer.AutoSize = true;
+                breadcrumbContainer.Dock = DockStyle.Top;
+                breadcrumbContainer.Margin = new Padding(0, 50, 0, 0);
+                breadcrumbContainer.Padding = new Padding(0);
+
+                breadcrumbContainer.Controls.Add(breadcrumbPanel);
+                this.Controls.Add(breadcrumbContainer);
+            }
         }
+
 
 
         private void BuildBreadcrumbTrail(int categoryId)
@@ -188,11 +291,18 @@ namespace tarungonNaNako.subform
             breadcrumbItems.Add(new Tuple<string, int>(categoryName, categoryId));
 
             int parentCategoryId = GetParentCategoryId(categoryId);
-            if (parentCategoryId != -1)
+            if (parentCategoryId != -1 && parentCategoryId != categoryId)
             {
+                // Check for circular reference
+                if (breadcrumbItems.Any(item => item.Item2 == parentCategoryId))
+                {
+                    MessageBox.Show("Circular reference detected in category hierarchy.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
                 GetBreadcrumbItemsRecursive(parentCategoryId, ref breadcrumbItems);
             }
         }
+
 
 
 
@@ -283,7 +393,7 @@ namespace tarungonNaNako.subform
         }
 
 
-        public void LoadFilesAndFoldersIntoTablePanel()
+        private void LoadFilesAndFoldersIntoTablePanelInternal()
         {
             int buttonWidth = 177; // Adjust as needed
             int buttonHeight = 60; // Adjust as needed
@@ -305,17 +415,29 @@ namespace tarungonNaNako.subform
                     LEFT JOIN category pc ON c.parentCategoryId = pc.categoryId
                     WHERE c.is_archived = 0 AND c.parentCategoryId = @categoryId";
 
-
                     using (MySqlCommand cmd = new MySqlCommand(query, conn))
                     {
                         cmd.Parameters.AddWithValue("@categoryId", selectedCategoryId);
                         using (MySqlDataReader reader = cmd.ExecuteReader())
                         {
                             // Clear existing rows
-                            tableLayoutPanel1.Controls.Clear();
-                            tableLayoutPanel1.RowCount = 0;
-                            tableLayoutPanel1.Padding = new Padding(0, 0, 0, 20);
-                            tableLayoutPanel1.RowStyles.Clear();
+                            if (InvokeRequired)
+                            {
+                                Invoke(new Action(() =>
+                                {
+                                    tableLayoutPanel1.Controls.Clear();
+                                    tableLayoutPanel1.RowCount = 0;
+                                    tableLayoutPanel1.Padding = new Padding(0, 0, 0, 20);
+                                    tableLayoutPanel1.RowStyles.Clear();
+                                }));
+                            }
+                            else
+                            {
+                                tableLayoutPanel1.Controls.Clear();
+                                tableLayoutPanel1.RowCount = 0;
+                                tableLayoutPanel1.Padding = new Padding(0, 0, 0, 20);
+                                tableLayoutPanel1.RowStyles.Clear();
+                            }
 
                             int rowIndex = 0;
 
@@ -360,7 +482,6 @@ namespace tarungonNaNako.subform
                                     icon = Image.FromFile(FolderIcon); // Use folder icon
                                 }
 
-
                                 // Create Labels (aligned properly)
                                 Label nameLabel = new Label
                                 {
@@ -383,8 +504,6 @@ namespace tarungonNaNako.subform
                                     Font = new Font("Microsoft Sans Serif", 10),
                                     BackColor = Color.Transparent
                                 };
-
-
 
                                 Label categoryLabel = new Label
                                 {
@@ -412,7 +531,6 @@ namespace tarungonNaNako.subform
                                     PressedDepth = 10
                                 };
 
-
                                 actionButton.Click += (s, e) =>
                                 {
                                     popupPanel.Hide();
@@ -422,6 +540,34 @@ namespace tarungonNaNako.subform
                                 if (type == "category")
                                 {
                                     nameLabel.DoubleClick += (s, e) =>
+                                    {
+                                        int categoryId = GetCategoryIdByName(name);
+                                        if (categoryId != -1)
+                                        {
+                                            selectedCategoryId = categoryId;
+                                            LoadFilesAndFoldersIntoTablePanel();
+                                            UpdateBreadcrumbs();
+                                        }
+                                        else
+                                        {
+                                            MessageBox.Show("Error: Category not found.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                        }
+                                    };
+                                    dateLabel.DoubleClick += (s, e) =>
+                                    {
+                                        int categoryId = GetCategoryIdByName(name);
+                                        if (categoryId != -1)
+                                        {
+                                            selectedCategoryId = categoryId;
+                                            LoadFilesAndFoldersIntoTablePanel();
+                                            UpdateBreadcrumbs();
+                                        }
+                                        else
+                                        {
+                                            MessageBox.Show("Error: Category not found.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                        }
+                                    };
+                                    categoryLabel.DoubleClick += (s, e) =>
                                     {
                                         int categoryId = GetCategoryIdByName(name);
                                         if (categoryId != -1)
@@ -479,9 +625,21 @@ namespace tarungonNaNako.subform
                                 rowTable.Controls.Add(actionButton, 4, 0);
 
                                 // Add rowTable to TableLayoutPanel
-                                tableLayoutPanel1.RowCount = rowIndex + 1;
-                                tableLayoutPanel1.Controls.Add(rowTable, 0, rowIndex);
-                                tableLayoutPanel1.SetColumnSpan(rowTable, 3); // Span all columns
+                                if (InvokeRequired)
+                                {
+                                    Invoke(new Action(() =>
+                                    {
+                                        tableLayoutPanel1.RowCount = rowIndex + 1;
+                                        tableLayoutPanel1.Controls.Add(rowTable, 0, rowIndex);
+                                        tableLayoutPanel1.SetColumnSpan(rowTable, 3); // Span all columns
+                                    }));
+                                }
+                                else
+                                {
+                                    tableLayoutPanel1.RowCount = rowIndex + 1;
+                                    tableLayoutPanel1.Controls.Add(rowTable, 0, rowIndex);
+                                    tableLayoutPanel1.SetColumnSpan(rowTable, 3); // Span all columns
+                                }
 
                                 rowIndex++;
                             }
@@ -491,21 +649,42 @@ namespace tarungonNaNako.subform
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Errorss loading files and folders: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                if (InvokeRequired)
+                {
+                    Invoke(new Action(() =>
+                    {
+                        MessageBox.Show($"Error loading files and folders: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }));
+                }
+                else
+                {
+                    MessageBox.Show($"Error loading files and folders: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
         }
 
-
-
-
-        private void FetchSubcategoryDocuments(string subcategoryName)
+        public void LoadFilesAndFoldersIntoTablePanel()
         {
-            selectedCategoryName = subcategoryName;
-            LoadFilesAndFoldersIntoTablePanel(); // Reload files for this subcategory
+            LoadFilesAndFoldersIntoTablePanelInternal();
         }
 
 
         private void ShowPanel(string type, string name, string categoryName, Control btn)
+        {
+            if (InvokeRequired)
+            {
+                Invoke(new Action(() =>
+                {
+                    ShowPanelInternal(type, name, categoryName, btn);
+                }));
+            }
+            else
+            {
+                ShowPanelInternal(type, name, categoryName, btn);
+            }
+        }
+
+        private void ShowPanelInternal(string type, string name, string categoryName, Control btn)
         {
             selectedType = type; // Store what was clicked
             selectedName = name; // Store file or category name
@@ -524,7 +703,7 @@ namespace tarungonNaNako.subform
             guna2Panel2.Visible = true;   // Show the panel
 
             // Set panel properties
-            guna2Panel2.Size = new Size(181, 132); // Adjust size     181, 132
+            guna2Panel2.Size = new Size(181, 132); // Adjust size
             guna2Panel2.BorderRadius = 5;
             guna2Panel2.BackColor = Color.FromArgb(255, 255, 192);
             guna2Panel2.BringToFront();
@@ -540,59 +719,65 @@ namespace tarungonNaNako.subform
             };
 
             // Create buttons
-            Guna.UI2.WinForms.Guna2Button btnDownload = new Guna.UI2.WinForms.Guna2Button();
-            btnDownload.Size = new Size(181, 42);
-            btnDownload.Text = "Download";
-            btnDownload.TextAlign = HorizontalAlignment.Center;
-            btnDownload.TextOffset = new Point(-18, 0);
-            btnDownload.BackColor = Color.FromArgb(255, 255, 192);
-            btnDownload.FillColor = Color.FromArgb(255, 236, 130);
-            btnDownload.Font = new Font("Microsoft Sans Serif", 10);
-            btnDownload.ForeColor = Color.Black;
-            btnDownload.Image = Image.FromFile(download);
-            btnDownload.ImageAlign = HorizontalAlignment.Left;
-            btnDownload.ImageSize = new Size(15, 15);
-            btnDownload.Location = new Point(0, 1);
-            btnDownload.PressedColor = Color.Black;
-            btnDownload.PressedDepth = 10;
+            Guna.UI2.WinForms.Guna2Button btnDownload = new Guna.UI2.WinForms.Guna2Button
+            {
+                Size = new Size(181, 42),
+                Text = "Download",
+                TextAlign = HorizontalAlignment.Center,
+                TextOffset = new Point(-18, 0),
+                BackColor = Color.FromArgb(255, 255, 192),
+                FillColor = Color.FromArgb(255, 236, 130),
+                Font = new Font("Microsoft Sans Serif", 10),
+                ForeColor = Color.Black,
+                Image = Image.FromFile(download),
+                ImageAlign = HorizontalAlignment.Left,
+                ImageSize = new Size(15, 15),
+                Location = new Point(0, 1),
+                PressedColor = Color.Black,
+                PressedDepth = 10
+            };
 
-            // ✅ Attach the event that handles downloading differently
+            // Attach the event that handles downloading differently
             btnDownload.Click += DownloadButton_Click;
 
-            Guna.UI2.WinForms.Guna2Button btnRename = new Guna.UI2.WinForms.Guna2Button();
-            btnRename.Size = new Size(181, 42);
-            btnRename.Text = "Rename";
-            btnRename.TextAlign = HorizontalAlignment.Center;
-            btnRename.TextOffset = new Point(-18, 0);
-            btnRename.BackColor = Color.FromArgb(255, 255, 192);
-            btnRename.FillColor = Color.FromArgb(255, 236, 130);
-            btnRename.Font = new Font("Microsoft Sans Serif", 10);
-            btnRename.ForeColor = Color.Black;
-            btnRename.Image = Image.FromFile(rename);
-            btnRename.ImageAlign = HorizontalAlignment.Left;
-            btnRename.ImageSize = new Size(15, 15);
-            btnRename.Location = new Point(0, 44);
-            btnRename.PressedColor = Color.Black;
-            btnRename.PressedDepth = 10;
+            Guna.UI2.WinForms.Guna2Button btnRename = new Guna.UI2.WinForms.Guna2Button
+            {
+                Size = new Size(181, 42),
+                Text = "Rename",
+                TextAlign = HorizontalAlignment.Center,
+                TextOffset = new Point(-18, 0),
+                BackColor = Color.FromArgb(255, 255, 192),
+                FillColor = Color.FromArgb(255, 236, 130),
+                Font = new Font("Microsoft Sans Serif", 10),
+                ForeColor = Color.Black,
+                Image = Image.FromFile(rename),
+                ImageAlign = HorizontalAlignment.Left,
+                ImageSize = new Size(15, 15),
+                Location = new Point(0, 44),
+                PressedColor = Color.Black,
+                PressedDepth = 10
+            };
 
-            // ✅ Attach the event that handles renaming differently
+            // Attach the event that handles renaming differently
             btnRename.Click += (s, e) => RenameButton_Click();
 
-            Guna.UI2.WinForms.Guna2Button btnDelete = new Guna.UI2.WinForms.Guna2Button();
-            btnDelete.Size = new Size(181, 42);
-            btnDelete.Text = "Move to trash";
-            btnDelete.TextAlign = HorizontalAlignment.Right;
-            btnDelete.TextOffset = new Point(-12, 0);
-            btnDelete.BackColor = Color.FromArgb(255, 255, 192);
-            btnDelete.FillColor = Color.FromArgb(255, 236, 130);
-            btnDelete.Font = new Font("Microsoft Sans Serif", 10);
-            btnDelete.ForeColor = Color.Black;
-            btnDelete.Image = Image.FromFile(remove);
-            btnDelete.ImageAlign = HorizontalAlignment.Left;
-            btnDelete.ImageSize = new Size(15, 15);
-            btnDelete.Location = new Point(0, 87);
-            btnDelete.PressedColor = Color.Black;
-            btnDelete.PressedDepth = 10;
+            Guna.UI2.WinForms.Guna2Button btnDelete = new Guna.UI2.WinForms.Guna2Button
+            {
+                Size = new Size(181, 42),
+                Text = "Move to trash",
+                TextAlign = HorizontalAlignment.Right,
+                TextOffset = new Point(-12, 0),
+                BackColor = Color.FromArgb(255, 255, 192),
+                FillColor = Color.FromArgb(255, 236, 130),
+                Font = new Font("Microsoft Sans Serif", 10),
+                ForeColor = Color.Black,
+                Image = Image.FromFile(remove),
+                ImageAlign = HorizontalAlignment.Left,
+                ImageSize = new Size(15, 15),
+                Location = new Point(0, 87),
+                PressedColor = Color.Black,
+                PressedDepth = 10
+            };
             btnDelete.Click += (s, e) => RemoveButton_Click();
 
             // Add buttons to panel
@@ -600,7 +785,7 @@ namespace tarungonNaNako.subform
             guna2Panel2.Controls.Add(btnRename);
             guna2Panel2.Controls.Add(btnDelete);
 
-            // ===== Adjust Panel Position to Keep it Inside the Form =====
+            // Adjust Panel Position to Keep it Inside the Form
             Point btnScreenLocation = btn.Parent.PointToScreen(btn.Location);
             Point panelLocation = panel5.PointToClient(new Point(btnScreenLocation.X, btnScreenLocation.Y + btn.Height + 5));
 
@@ -625,6 +810,8 @@ namespace tarungonNaNako.subform
             guna2Panel2.Location = new Point(panelX, panelY);
             guna2Panel2.Visible = true;
         }
+
+
         private void label2_Click(object sender, EventArgs e)
         {
 
@@ -730,11 +917,31 @@ namespace tarungonNaNako.subform
             string sourceFilePath = Path.Combine(storagePath, fileName);
 
             // Debugging: Show the path to confirm it's correct
-            MessageBox.Show($"Checking file path: {sourceFilePath}", "Debug Info");
+            if (InvokeRequired)
+            {
+                Invoke(new Action(() =>
+                {
+                    MessageBox.Show($"Checking file path: {sourceFilePath}", "Debug Info");
+                }));
+            }
+            else
+            {
+                MessageBox.Show($"Checking file path: {sourceFilePath}", "Debug Info");
+            }
 
             if (!File.Exists(sourceFilePath))
             {
-                MessageBox.Show("File not found!\nPath: " + sourceFilePath, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                if (InvokeRequired)
+                {
+                    Invoke(new Action(() =>
+                    {
+                        MessageBox.Show("File not found!\nPath: " + sourceFilePath, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }));
+                }
+                else
+                {
+                    MessageBox.Show("File not found!\nPath: " + sourceFilePath, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
                 return;
             }
 
@@ -747,10 +954,22 @@ namespace tarungonNaNako.subform
                 {
                     string destinationPath = saveFileDialog.FileName;
                     File.Copy(sourceFilePath, destinationPath, true);
-                    MessageBox.Show("File downloaded successfully!", "Download Complete", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                    if (InvokeRequired)
+                    {
+                        Invoke(new Action(() =>
+                        {
+                            MessageBox.Show("File downloaded successfully!", "Download Complete", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        }));
+                    }
+                    else
+                    {
+                        MessageBox.Show("File downloaded successfully!", "Download Complete", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
                 }
             }
         }
+
 
 
 
@@ -764,7 +983,17 @@ namespace tarungonNaNako.subform
             ).Trim();
             if (string.IsNullOrWhiteSpace(newFileName))
             {
-                MessageBox.Show("File name cannot be empty.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                if (InvokeRequired)
+                {
+                    Invoke(new Action(() =>
+                    {
+                        MessageBox.Show("File name cannot be empty.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }));
+                }
+                else
+                {
+                    MessageBox.Show("File name cannot be empty.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
                 return;
             }
             // Ensure the new file name includes the correct extension
@@ -776,8 +1005,19 @@ namespace tarungonNaNako.subform
             // Prevent duplicate file names
             if (IsFileNameExists(newFileName))
             {
-                MessageBox.Show("A file with this name already exists. Please choose a different name.",
-                                "Duplicate File", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                if (InvokeRequired)
+                {
+                    Invoke(new Action(() =>
+                    {
+                        MessageBox.Show("A file with this name already exists. Please choose a different name.",
+                                        "Duplicate File", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    }));
+                }
+                else
+                {
+                    MessageBox.Show("A file with this name already exists. Please choose a different name.",
+                                    "Duplicate File", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
                 return;
             }
             try
@@ -804,26 +1044,69 @@ namespace tarungonNaNako.subform
                             }
                             else
                             {
-                                MessageBox.Show("File not found in storage path.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                if (InvokeRequired)
+                                {
+                                    Invoke(new Action(() =>
+                                    {
+                                        MessageBox.Show("File not found in storage path.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                    }));
+                                }
+                                else
+                                {
+                                    MessageBox.Show("File not found in storage path.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                }
                                 return;
                             }
 
-                            guna2Panel2.Visible = false;
-                            MessageBox.Show($"File renamed to '{newFileName}' successfully.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                            RefreshPanel5();
+                            if (InvokeRequired)
+                            {
+                                Invoke(new Action(() =>
+                                {
+                                    guna2Panel2.Visible = false;
+                                    MessageBox.Show($"File renamed to '{newFileName}' successfully.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                                    RefreshPanel5();
+                                }));
+                            }
+                            else
+                            {
+                                guna2Panel2.Visible = false;
+                                MessageBox.Show($"File renamed to '{newFileName}' successfully.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                                RefreshPanel5();
+                            }
                         }
                         else
                         {
-                            MessageBox.Show("File not found in database.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            if (InvokeRequired)
+                            {
+                                Invoke(new Action(() =>
+                                {
+                                    MessageBox.Show("File not found in database.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                }));
+                            }
+                            else
+                            {
+                                MessageBox.Show("File not found in database.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            }
                         }
                     }
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error renaming file: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                if (InvokeRequired)
+                {
+                    Invoke(new Action(() =>
+                    {
+                        MessageBox.Show($"Error renaming file: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }));
+                }
+                else
+                {
+                    MessageBox.Show($"Error renaming file: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
         }
+
 
 
 
@@ -841,22 +1124,55 @@ namespace tarungonNaNako.subform
                         int rowsAffected = cmd.ExecuteNonQuery();
                         if (rowsAffected > 0)
                         {
-                            guna2Panel2.Visible = false;
-                            MessageBox.Show($"File '{fileName}' removed successfully.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                            LoadFilesAndFoldersIntoTablePanel(); // Refresh the panel after removing the file
+                            if (InvokeRequired)
+                            {
+                                Invoke(new Action(() =>
+                                {
+                                    guna2Panel2.Visible = false;
+                                    MessageBox.Show($"File '{fileName}' removed successfully.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                                    LoadFilesAndFoldersIntoTablePanel(); // Refresh the panel after removing the file
+                                }));
+                            }
+                            else
+                            {
+                                guna2Panel2.Visible = false;
+                                MessageBox.Show($"File '{fileName}' removed successfully.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                                LoadFilesAndFoldersIntoTablePanel(); // Refresh the panel after removing the file
+                            }
                         }
                         else
                         {
-                            MessageBox.Show("File not found.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            if (InvokeRequired)
+                            {
+                                Invoke(new Action(() =>
+                                {
+                                    MessageBox.Show("File not found.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                }));
+                            }
+                            else
+                            {
+                                MessageBox.Show("File not found.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            }
                         }
                     }
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error removing file: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                if (InvokeRequired)
+                {
+                    Invoke(new Action(() =>
+                    {
+                        MessageBox.Show($"Error removing file: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }));
+                }
+                else
+                {
+                    MessageBox.Show($"Error removing file: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
         }
+
 
 
         private void DownloadCategory(string categoryName)
@@ -865,11 +1181,31 @@ namespace tarungonNaNako.subform
             string categoryPath = Path.Combine(storagePath, categoryName);
 
             // Debugging: Show the path to confirm it's correct
-            MessageBox.Show($"Checking category path: {categoryPath}", "Debug Info");
+            if (InvokeRequired)
+            {
+                Invoke(new Action(() =>
+                {
+                    MessageBox.Show($"Checking category path: {categoryPath}", "Debug Info");
+                }));
+            }
+            else
+            {
+                MessageBox.Show($"Checking category path: {categoryPath}", "Debug Info");
+            }
 
             if (!Directory.Exists(categoryPath))
             {
-                MessageBox.Show("Category folder not found!\nPath: " + categoryPath, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                if (InvokeRequired)
+                {
+                    Invoke(new Action(() =>
+                    {
+                        MessageBox.Show("Category folder not found!\nPath: " + categoryPath, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }));
+                }
+                else
+                {
+                    MessageBox.Show("Category folder not found!\nPath: " + categoryPath, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
                 return;
             }
 
@@ -886,7 +1222,18 @@ namespace tarungonNaNako.subform
                         File.Delete(zipPath); // Ensure no conflict
 
                     ZipFile.CreateFromDirectory(categoryPath, zipPath);
-                    MessageBox.Show("Category downloaded successfully as ZIP!", "Download Complete", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                    if (InvokeRequired)
+                    {
+                        Invoke(new Action(() =>
+                        {
+                            MessageBox.Show("Category downloaded successfully as ZIP!", "Download Complete", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        }));
+                    }
+                    else
+                    {
+                        MessageBox.Show("Category downloaded successfully as ZIP!", "Download Complete", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
                 }
             }
         }
@@ -903,15 +1250,36 @@ namespace tarungonNaNako.subform
 
             if (string.IsNullOrWhiteSpace(newCategoryName))
             {
-                MessageBox.Show("Category name cannot be empty.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                if (InvokeRequired)
+                {
+                    Invoke(new Action(() =>
+                    {
+                        MessageBox.Show("Category name cannot be empty.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }));
+                }
+                else
+                {
+                    MessageBox.Show("Category name cannot be empty.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
                 return;
             }
 
             // Prevent duplicate category names
             if (IsCategoryNameExists(newCategoryName))
             {
-                MessageBox.Show("A category with this name already exists. Please choose a different name.",
-                                "Duplicate Category", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                if (InvokeRequired)
+                {
+                    Invoke(new Action(() =>
+                    {
+                        MessageBox.Show("A category with this name already exists. Please choose a different name.",
+                                        "Duplicate Category", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    }));
+                }
+                else
+                {
+                    MessageBox.Show("A category with this name already exists. Please choose a different name.",
+                                    "Duplicate Category", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
                 return;
             }
 
@@ -929,21 +1297,54 @@ namespace tarungonNaNako.subform
                         int rowsAffected = cmd.ExecuteNonQuery();
                         if (rowsAffected > 0)
                         {
-                            guna2Panel2.Visible = false;
-                            MessageBox.Show($"Category renamed to '{newCategoryName}' successfully.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                            RefreshPanel5();
-                            LoadFilesAndFoldersIntoTablePanel();
+                            if (InvokeRequired)
+                            {
+                                Invoke(new Action(() =>
+                                {
+                                    guna2Panel2.Visible = false;
+                                    MessageBox.Show($"Category renamed to '{newCategoryName}' successfully.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                                    RefreshPanel5();
+                                    LoadFilesAndFoldersIntoTablePanel();
+                                }));
+                            }
+                            else
+                            {
+                                guna2Panel2.Visible = false;
+                                MessageBox.Show($"Category renamed to '{newCategoryName}' successfully.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                                RefreshPanel5();
+                                LoadFilesAndFoldersIntoTablePanel();
+                            }
                         }
                         else
                         {
-                            MessageBox.Show("Category not found.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            if (InvokeRequired)
+                            {
+                                Invoke(new Action(() =>
+                                {
+                                    MessageBox.Show("Category not found.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                }));
+                            }
+                            else
+                            {
+                                MessageBox.Show("Category not found.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            }
                         }
                     }
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error renaming category: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                if (InvokeRequired)
+                {
+                    Invoke(new Action(() =>
+                    {
+                        MessageBox.Show($"Error renaming category: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }));
+                }
+                else
+                {
+                    MessageBox.Show($"Error renaming category: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
         }
 
@@ -961,22 +1362,55 @@ namespace tarungonNaNako.subform
                         int rowsAffected = cmd.ExecuteNonQuery();
                         if (rowsAffected > 0)
                         {
-                            guna2Panel2.Visible = false;
-                            MessageBox.Show($"Category '{categoryName}' removed successfully.");
-                            RefreshPanel5(); // Refresh panel5 after removing the category
+                            if (InvokeRequired)
+                            {
+                                Invoke(new Action(() =>
+                                {
+                                    guna2Panel2.Visible = false;
+                                    MessageBox.Show($"Category '{categoryName}' removed successfully.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                                    RefreshPanel5(); // Refresh panel5 after removing the category
+                                }));
+                            }
+                            else
+                            {
+                                guna2Panel2.Visible = false;
+                                MessageBox.Show($"Category '{categoryName}' removed successfully.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                                RefreshPanel5(); // Refresh panel5 after removing the category
+                            }
                         }
                         else
                         {
-                            MessageBox.Show($"Category '{categoryName}' not found.");
+                            if (InvokeRequired)
+                            {
+                                Invoke(new Action(() =>
+                                {
+                                    MessageBox.Show($"Category '{categoryName}' not found.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                }));
+                            }
+                            else
+                            {
+                                MessageBox.Show($"Category '{categoryName}' not found.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            }
                         }
                     }
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error archiving category: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                if (InvokeRequired)
+                {
+                    Invoke(new Action(() =>
+                    {
+                        MessageBox.Show($"Error archiving category: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }));
+                }
+                else
+                {
+                    MessageBox.Show($"Error archiving category: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
         }
+
         public void RefreshPanel5()
         {
             // Reload files into the panel
