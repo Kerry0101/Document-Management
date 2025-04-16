@@ -132,7 +132,7 @@
             suggestionListBox.FormattingEnabled = true;
             suggestionListBox.Location = new Point(19, 268);
             suggestionListBox.Name = "suggestionListBox";
-            suggestionListBox.Size = new Size(186, 104);
+            suggestionListBox.Size = new Size(267, 104);
             suggestionListBox.TabIndex = 15;
             suggestionListBox.Visible = false;
             suggestionListBox.Click += suggestionListBox_Click;
@@ -141,7 +141,7 @@
             // 
             pictureBox1.BackColor = Color.FromArgb(255, 255, 128);
             pictureBox1.Image = (Image)resources.GetObject("pictureBox1.Image");
-            pictureBox1.Location = new Point(168, 237);
+            pictureBox1.Location = new Point(248, 237);
             pictureBox1.Name = "pictureBox1";
             pictureBox1.Size = new Size(30, 20);
             pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
@@ -192,7 +192,7 @@
             searchBar.PlaceholderText = "Search folders. . .";
             searchBar.SelectedText = "";
             searchBar.ShadowDecoration.CustomizableEdges = customizableEdges6;
-            searchBar.Size = new Size(186, 40);
+            searchBar.Size = new Size(267, 40);
             searchBar.TabIndex = 3;
             // 
             // btnSave
