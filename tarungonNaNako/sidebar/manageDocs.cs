@@ -275,11 +275,20 @@ namespace tarungonNaNako.sidebar
 
         private void btnFileUpload_Click(object sender, EventArgs e)
         {
+            var addDocsForm = new addDocs(this);
+            addDocsForm.StartPosition = FormStartPosition.CenterScreen;
+            addDocsForm.TopMost = true; // Ensure the form appears on top
+            addDocsForm.FormBorderStyle = FormBorderStyle.FixedDialog; // Set the form border style
+            addDocsForm.MinimizeBox = false; // Remove minimize button
+            addDocsForm.MaximizeBox = false; // Remove maximize button
+            DialogResult result = addDocsForm.ShowDialog(this); // Show the form as a dialog
             popupPanel.Hide();
-            LoadFormInPanel(new addDocs());
         }
     }
 }
-        
 
-    
+
+
+
+
+

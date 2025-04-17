@@ -33,10 +33,12 @@
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges2 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges3 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges4 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges7 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges8 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges9 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges10 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges5 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges6 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges7 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges8 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             label1 = new Label();
             panel1 = new Panel();
             panel5 = new Panel();
@@ -51,6 +53,7 @@
             label3 = new Label();
             Newbtn = new Guna.UI2.WinForms.Guna2Button();
             popupPanel = new Guna.UI2.WinForms.Guna2Panel();
+            loadFromA_Z = new Guna.UI2.WinForms.Guna2Button();
             btnFileUpload = new Guna.UI2.WinForms.Guna2Button();
             panel3 = new Panel();
             panel1.SuspendLayout();
@@ -244,22 +247,46 @@
             popupPanel.BorderColor = Color.Black;
             popupPanel.BorderRadius = 3;
             popupPanel.BorderThickness = 1;
+            popupPanel.Controls.Add(loadFromA_Z);
             popupPanel.Controls.Add(btnFileUpload);
             popupPanel.Controls.Add(comboBox1);
             popupPanel.Controls.Add(label3);
-            popupPanel.CustomizableEdges = customizableEdges7;
+            popupPanel.CustomizableEdges = customizableEdges9;
             popupPanel.Location = new Point(498, 65);
             popupPanel.Name = "popupPanel";
-            popupPanel.ShadowDecoration.CustomizableEdges = customizableEdges8;
+            popupPanel.ShadowDecoration.CustomizableEdges = customizableEdges10;
             popupPanel.Size = new Size(224, 170);
             popupPanel.TabIndex = 20;
+            // 
+            // loadFromA_Z
+            // 
+            loadFromA_Z.Cursor = Cursors.Hand;
+            loadFromA_Z.CustomBorderColor = Color.Black;
+            loadFromA_Z.CustomBorderThickness = new Padding(1);
+            loadFromA_Z.CustomizableEdges = customizableEdges5;
+            loadFromA_Z.DisabledState.BorderColor = Color.DarkGray;
+            loadFromA_Z.DisabledState.CustomBorderColor = Color.DarkGray;
+            loadFromA_Z.DisabledState.FillColor = Color.FromArgb(169, 169, 169);
+            loadFromA_Z.DisabledState.ForeColor = Color.FromArgb(141, 141, 141);
+            loadFromA_Z.FillColor = Color.FromArgb(255, 236, 130);
+            loadFromA_Z.Font = new Font("Microsoft Sans Serif", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            loadFromA_Z.ForeColor = Color.Black;
+            loadFromA_Z.ImageAlign = HorizontalAlignment.Left;
+            loadFromA_Z.ImageSize = new Size(15, 15);
+            loadFromA_Z.Location = new Point(19, 118);
+            loadFromA_Z.Name = "loadFromA_Z";
+            loadFromA_Z.PressedDepth = 10;
+            loadFromA_Z.ShadowDecoration.CustomizableEdges = customizableEdges6;
+            loadFromA_Z.Size = new Size(186, 38);
+            loadFromA_Z.TabIndex = 7;
+            loadFromA_Z.Text = "Load documents (A-Z)";
             // 
             // btnFileUpload
             // 
             btnFileUpload.Cursor = Cursors.Hand;
             btnFileUpload.CustomBorderColor = Color.Black;
             btnFileUpload.CustomBorderThickness = new Padding(1);
-            btnFileUpload.CustomizableEdges = customizableEdges5;
+            btnFileUpload.CustomizableEdges = customizableEdges7;
             btnFileUpload.DisabledState.BorderColor = Color.DarkGray;
             btnFileUpload.DisabledState.CustomBorderColor = Color.DarkGray;
             btnFileUpload.DisabledState.FillColor = Color.FromArgb(169, 169, 169);
@@ -270,10 +297,10 @@
             btnFileUpload.Image = (Image)resources.GetObject("btnFileUpload.Image");
             btnFileUpload.ImageAlign = HorizontalAlignment.Left;
             btnFileUpload.ImageSize = new Size(15, 15);
-            btnFileUpload.Location = new Point(19, 66);
+            btnFileUpload.Location = new Point(19, 72);
             btnFileUpload.Name = "btnFileUpload";
             btnFileUpload.PressedDepth = 10;
-            btnFileUpload.ShadowDecoration.CustomizableEdges = customizableEdges6;
+            btnFileUpload.ShadowDecoration.CustomizableEdges = customizableEdges8;
             btnFileUpload.Size = new Size(186, 38);
             btnFileUpload.TabIndex = 6;
             btnFileUpload.Text = "Upload document";
@@ -336,5 +363,6 @@
         private Guna.UI2.WinForms.Guna2Panel popupPanel;
         private Guna.UI2.WinForms.Guna2Button btnFileUpload;
         private Panel panel3;
+        private Guna.UI2.WinForms.Guna2Button loadFromA_Z;
     }
 }

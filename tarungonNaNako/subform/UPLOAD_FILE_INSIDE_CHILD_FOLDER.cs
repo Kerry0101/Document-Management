@@ -40,12 +40,6 @@ namespace tarungonNaNako.subform
             fadeTimer.Tick += FadeIn;
         }
 
-        private void addDocs_Load(object sender, EventArgs e)
-        {
-            // Usage example:
-            guna2PictureBox1.Image = SetImageOpacity(guna2PictureBox1.Image, 0.9f); // 50% opacity
-        }
-
         private void FadeIn(object sender, EventArgs e)
         {
             if (this.Opacity < 1)
@@ -221,7 +215,8 @@ namespace tarungonNaNako.subform
 
         private void UPLOAD_FILE_INSIDE_CHILD_FOLDER_Load(object sender, EventArgs e)
         {
-
+            // Usage example:
+            guna2PictureBox1.Image = SetImageOpacity(guna2PictureBox1.Image, 0.9f); // 50% opacity
         }
     }
 }

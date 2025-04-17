@@ -96,7 +96,8 @@ namespace tarungonNaNako.subform
                     JOIN category c ON f.categoryId = c.categoryId
                     WHERE f.isArchived = 0 
                     AND f.userId = @userId
-                    ORDER BY f.updated_at DESC"; // Filter by logged-in user and order by updated_at
+                    ORDER BY f.updated_at DESC
+                    LIMIT 10"; // Filter by logged-in user and order by updated_at
 
                     using (MySqlCommand cmd = new MySqlCommand(query, conn))
                     {
@@ -298,7 +299,6 @@ namespace tarungonNaNako.subform
                     FROM category 
                     WHERE is_archived = 0 
                     AND userId = @userId 
-                    AND (parentCategoryId = @parentCategoryId OR (@parentCategoryId IS NULL AND parentCategoryId IS NULL))
                     ORDER BY updated_at DESC";
 
                     using (MySqlCommand cmd = new MySqlCommand(query, conn))
@@ -308,7 +308,7 @@ namespace tarungonNaNako.subform
 
                         using (MySqlDataReader reader = cmd.ExecuteReader())
                         {
-                            while (reader.Read() && categoryCount < 5) // Limit to 10 categories
+                            while (reader.Read() && categoryCount < 10) // Limit to 10 categories
                             {
                                 int categoryId = Convert.ToInt32(reader["categoryId"]);
                                 string categoryName = reader["categoryName"].ToString();
@@ -854,7 +854,6 @@ namespace tarungonNaNako.subform
                             guna2Panel2.Visible = false;
                             MessageBox.Show($"Category renamed to '{newCategoryName}' successfully.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
                             RefreshCategoriesPanel();
-                            LoadFilesIntoTablePanel();
                         }
                         else
                         {
@@ -1049,8 +1048,14 @@ namespace tarungonNaNako.subform
                 PressedDepth = 10,
             };
             btnFileUpload.Click += (s, e) => {
+                var addDocsForm = new addDocs(this);
+                addDocsForm.StartPosition = FormStartPosition.CenterScreen;
+                addDocsForm.TopMost = true; // Ensure the form appears on top
+                addDocsForm.FormBorderStyle = FormBorderStyle.FixedDialog; // Set the form border style
+                addDocsForm.MinimizeBox = false; // Remove minimize button
+                addDocsForm.MaximizeBox = false; // Remove maximize button
+                DialogResult result = addDocsForm.ShowDialog(this); // Show the form as a dialog
                 popupPanel.Hide();
-                LoadFormInPanel(new addDocs());
             };
 
             Guna.UI2.WinForms.Guna2Button btnFolderUpload = new Guna.UI2.WinForms.Guna2Button
@@ -1071,8 +1076,14 @@ namespace tarungonNaNako.subform
                 PressedDepth = 10,
             };
             btnFolderUpload.Click += (s, e) => {
+                var addDocsForm = new addDocs(this);
+                addDocsForm.StartPosition = FormStartPosition.CenterScreen;
+                addDocsForm.TopMost = true; // Ensure the form appears on top
+                addDocsForm.FormBorderStyle = FormBorderStyle.FixedDialog; // Set the form border style
+                addDocsForm.MinimizeBox = false; // Remove minimize button
+                addDocsForm.MaximizeBox = false; // Remove maximize button
+                DialogResult result = addDocsForm.ShowDialog(this); // Show the form as a dialog
                 popupPanel.Hide();
-                LoadFormInPanel(new addDocs());
             };
 
             // Add buttons to the panel

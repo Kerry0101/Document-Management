@@ -39,7 +39,6 @@
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges8 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges9 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges10 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges11 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             label1 = new Label();
             panel1 = new Panel();
             label5 = new Label();
@@ -55,7 +54,6 @@
             guna2PictureBox1 = new Guna.UI2.WinForms.Guna2PictureBox();
             btnCancel = new Button();
             openFileDialog1 = new OpenFileDialog();
-            btnBack = new Guna.UI2.WinForms.Guna2CircleButton();
             panel3 = new Guna.UI2.WinForms.Guna2Panel();
             panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)guna2PictureBox2).BeginInit();
@@ -105,9 +103,9 @@
             label5.Location = new Point(21, 201);
             label5.Margin = new Padding(2, 0, 2, 0);
             label5.Name = "label5";
-            label5.Size = new Size(156, 23);
+            label5.Size = new Size(204, 23);
             label5.TabIndex = 12;
-            label5.Text = "Location of the file:";
+            label5.Text = "Folder location of the file:";
             // 
             // guna2PictureBox2
             // 
@@ -271,36 +269,14 @@
             openFileDialog1.FileName = "openFileDialog1";
             openFileDialog1.FileOk += openFileDialog1_FileOk;
             // 
-            // btnBack
-            // 
-            btnBack.DisabledState.BorderColor = Color.DarkGray;
-            btnBack.DisabledState.CustomBorderColor = Color.DarkGray;
-            btnBack.DisabledState.FillColor = Color.FromArgb(169, 169, 169);
-            btnBack.DisabledState.ForeColor = Color.FromArgb(141, 141, 141);
-            btnBack.FillColor = Color.FromArgb(255, 255, 192);
-            btnBack.Font = new Font("Segoe UI", 9F);
-            btnBack.ForeColor = Color.White;
-            btnBack.Image = (Image)resources.GetObject("btnBack.Image");
-            btnBack.ImageOffset = new Point(1, 0);
-            btnBack.ImageSize = new Size(40, 40);
-            btnBack.Location = new Point(684, 7);
-            btnBack.Name = "btnBack";
-            btnBack.PressedDepth = 10;
-            btnBack.ShadowDecoration.CustomizableEdges = customizableEdges9;
-            btnBack.ShadowDecoration.Mode = Guna.UI2.WinForms.Enums.ShadowMode.Circle;
-            btnBack.Size = new Size(48, 46);
-            btnBack.TabIndex = 6;
-            btnBack.Click += btnBack_Click;
-            // 
             // panel3
             // 
-            panel3.Controls.Add(btnBack);
             panel3.Controls.Add(panel1);
             panel3.Controls.Add(label1);
-            panel3.CustomizableEdges = customizableEdges10;
+            panel3.CustomizableEdges = customizableEdges9;
             panel3.Location = new Point(3, 3);
             panel3.Name = "panel3";
-            panel3.ShadowDecoration.CustomizableEdges = customizableEdges11;
+            panel3.ShadowDecoration.CustomizableEdges = customizableEdges10;
             panel3.Size = new Size(758, 514);
             panel3.TabIndex = 4;
             // 
@@ -311,10 +287,11 @@
             BackColor = Color.FromArgb(255, 255, 192);
             ClientSize = new Size(763, 520);
             Controls.Add(panel3);
-            FormBorderStyle = FormBorderStyle.None;
+            FormBorderStyle = FormBorderStyle.FixedDialog;
             Margin = new Padding(2);
             Name = "addDocs";
-            Text = "addDocs";
+            StartPosition = FormStartPosition.CenterScreen;
+            Text = "Upload document";
             Load += addDocs_Load;
             panel1.ResumeLayout(false);
             panel1.PerformLayout();
@@ -343,7 +320,6 @@
         private ListBox suggestionListBox;
         private Guna.UI2.WinForms.Guna2PictureBox guna2PictureBox1;
         private Guna.UI2.WinForms.Guna2PictureBox guna2PictureBox2;
-        private Guna.UI2.WinForms.Guna2CircleButton btnBack;
         private Guna.UI2.WinForms.Guna2Panel panel3;
     }
 }

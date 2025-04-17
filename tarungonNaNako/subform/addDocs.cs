@@ -18,21 +18,36 @@ namespace tarungonNaNako.subform
 {
     public partial class addDocs : Form
     {
-
+        private System.Windows.Forms.Timer fadeTimer;
         private string selectedFilePath = ""; // To store the selected file path
         private readonly string connectionString = "server=localhost;user=root;database=docsmanagement;password="; // DB connection
+        private Form previousForm;
 
-        public addDocs()
+        public addDocs(Form previousForm)
         {
             InitializeComponent();
+            this.previousForm = previousForm;
             LoadCategories(); // Load categories into comboBox1
             searchBar.TextChanged += searchBar_TextChanged; // Add event handler for searchBar
+            this.Opacity = 10; // Start invisible
+            fadeTimer = new System.Windows.Forms.Timer();
+            fadeTimer.Interval = 50; // Speed of transition
+            fadeTimer.Tick += FadeIn;
         }
+
+        private void FadeIn(object sender, EventArgs e)
+        {
+            if (this.Opacity < 1)
+                this.Opacity += 0.05; // Increase opacity
+            else
+                fadeTimer.Stop(); // Stop when fully visible
+        }
+
         private void addDocs_Load(object sender, EventArgs e)
         {
             // Usage example:
             guna2PictureBox1.Image = SetImageOpacity(guna2PictureBox1.Image, 0.9f); // 50% opacity
-            btnBack.Image = SetImageOpacity(btnBack.Image, 0.5f); // 50% opacity
+            //btnBack.Image = SetImageOpacity(btnBack.Image, 0.5f); // 50% opacity
 
         }
 
@@ -256,17 +271,8 @@ namespace tarungonNaNako.subform
             {
                 MessageBox.Show($"Error during file upload or database insertion: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-
-            // Show the existing instance of teacherDashboard
-            var teacherDashboard = Application.OpenForms["teacherDashboard"] as teacherDashboard;
-            if (teacherDashboard != null)
-            {
-                teacherDashboard.LoadFormInPanel(new homepage());
-            }
-            else
-            {
-                MessageBox.Show("teacherDashboard form is not open.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
+            this.DialogResult = DialogResult.OK;
+            this.Close();
         }
 
 
@@ -324,34 +330,45 @@ namespace tarungonNaNako.subform
 
         }
 
-        private async void btnBack_Click(object sender, EventArgs e)
-        {
-            // Hide the current form
-            this.Hide();
-            var teacherDashboard = Application.OpenForms["teacherDashboard"] as teacherDashboard;
-            if (teacherDashboard != null)
-            {
-                teacherDashboard.LoadFormInPanel(new homepage());
-            }
-            else
-            {
-                MessageBox.Show("teacherDashboard form is not open.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
+        //private async void btnBack_Click(object sender, EventArgs e)
+        //{
+        //    // Hide the current form
+        //    this.Hide();
+
+        //    // Show the previous form
+        //    if (previousForm != null)
+        //    {
+        //        previousForm.Show();
+        //    }
+        //    else
+        //    {
+        //        var teacherDashboard = Application.OpenForms["teacherDashboard"] as teacherDashboard;
+        //        if (teacherDashboard != null)
+        //        {
+        //            teacherDashboard.LoadFormInPanel(new homepage());
+        //        }
+        //        else
+        //        {
+        //            MessageBox.Show("teacherDashboard form is not open.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        //        }
+        //    }
+        //}
+
 
         private void btnCancel_Click(object sender, EventArgs e)
         {
             // Hide the current form
-            this.Hide();
-            var teacherDashboard = Application.OpenForms["teacherDashboard"] as teacherDashboard;
-            if (teacherDashboard != null)
-            {
-                teacherDashboard.LoadFormInPanel(new homepage());
-            }
-            else
-            {
-                MessageBox.Show("teacherDashboard form is not open.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
+            this.DialogResult = DialogResult.Cancel;
+            this.Close();
+            //var teacherDashboard = Application.OpenForms["teacherDashboard"] as teacherDashboard;
+            //if (teacherDashboard != null)
+            //{
+            //    teacherDashboard.LoadFormInPanel(new homepage());
+            //}
+            //else
+            //{
+            //    MessageBox.Show("teacherDashboard form is not open.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            //}
         }
     }
 }

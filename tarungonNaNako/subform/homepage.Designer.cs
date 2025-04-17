@@ -292,7 +292,7 @@
             // pictureBox3
             // 
             pictureBox3.BackgroundImageLayout = ImageLayout.Stretch;
-            pictureBox3.Location = new Point(277, 138);
+            pictureBox3.Location = new Point(269, 138);
             pictureBox3.Name = "pictureBox3";
             pictureBox3.Size = new Size(25, 22);
             pictureBox3.TabIndex = 13;
@@ -305,9 +305,9 @@
             label3.Font = new Font("Microsoft Sans Serif", 10.2F, FontStyle.Bold, GraphicsUnit.Point, 0);
             label3.Location = new Point(16, 138);
             label3.Name = "label3";
-            label3.Size = new Size(260, 20);
+            label3.Size = new Size(246, 20);
             label3.TabIndex = 12;
-            label3.Text = "Recently modified Documents";
+            label3.Text = "Recent modified Documents";
             // 
             // pictureBox2
             // 

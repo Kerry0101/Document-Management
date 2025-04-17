@@ -31,29 +31,38 @@
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges1 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(fetchDocuments));
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges2 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges19 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges20 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges9 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges10 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges3 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges4 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges5 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges6 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges3 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges4 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges7 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges8 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges17 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges18 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges25 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges26 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges15 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges16 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges9 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges10 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges11 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges12 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges13 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges14 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges15 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges16 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges23 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges24 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges17 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges18 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges19 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges20 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges21 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges22 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges27 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges28 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Newbtn = new Guna.UI2.WinForms.Guna2Button();
             breadcrumbPanel = new FlowLayoutPanel();
             panel3 = new Panel();
+            searchBarPanel = new Guna.UI2.WinForms.Guna2Panel();
+            searchBar = new Guna.UI2.WinForms.Guna2TextBox();
+            searchBarBtn = new Guna.UI2.WinForms.Guna2Button();
             fetchDocumentPanel = new Guna.UI2.WinForms.Guna2Panel();
             panel5 = new Panel();
             popupPanel = new Guna.UI2.WinForms.Guna2Panel();
@@ -71,6 +80,7 @@
             label4 = new Label();
             breadcrumbContainer = new Guna.UI2.WinForms.Guna2Panel();
             panel3.SuspendLayout();
+            searchBarPanel.SuspendLayout();
             fetchDocumentPanel.SuspendLayout();
             panel5.SuspendLayout();
             popupPanel.SuspendLayout();
@@ -121,6 +131,8 @@
             // 
             // panel3
             // 
+            panel3.Controls.Add(searchBarPanel);
+            panel3.Controls.Add(searchBarBtn);
             panel3.Controls.Add(fetchDocumentPanel);
             panel3.Controls.Add(Newbtn);
             panel3.Controls.Add(breadcrumbContainer);
@@ -131,13 +143,83 @@
             panel3.TabIndex = 22;
             panel3.Click += panel3_Click;
             // 
+            // searchBarPanel
+            // 
+            searchBarPanel.BackColor = Color.FromArgb(255, 255, 192);
+            searchBarPanel.BorderColor = Color.Black;
+            searchBarPanel.BorderRadius = 3;
+            searchBarPanel.BorderThickness = 1;
+            searchBarPanel.Controls.Add(searchBar);
+            searchBarPanel.CustomizableEdges = customizableEdges5;
+            searchBarPanel.Location = new Point(470, 50);
+            searchBarPanel.Name = "searchBarPanel";
+            searchBarPanel.ShadowDecoration.CustomizableEdges = customizableEdges6;
+            searchBarPanel.Size = new Size(280, 66);
+            searchBarPanel.TabIndex = 0;
+            // 
+            // searchBar
+            // 
+            searchBar.BorderRadius = 5;
+            searchBar.CustomizableEdges = customizableEdges3;
+            searchBar.DefaultText = "";
+            searchBar.DisabledState.BorderColor = Color.FromArgb(208, 208, 208);
+            searchBar.DisabledState.FillColor = Color.FromArgb(226, 226, 226);
+            searchBar.DisabledState.ForeColor = Color.FromArgb(138, 138, 138);
+            searchBar.DisabledState.PlaceholderForeColor = Color.FromArgb(138, 138, 138);
+            searchBar.FillColor = Color.FromArgb(255, 255, 128);
+            searchBar.FocusedState.BorderColor = Color.FromArgb(94, 148, 255);
+            searchBar.Font = new Font("Segoe UI", 9F);
+            searchBar.ForeColor = Color.Black;
+            searchBar.HoverState.BorderColor = Color.FromArgb(94, 148, 255);
+            searchBar.Location = new Point(6, 13);
+            searchBar.Margin = new Padding(3, 4, 3, 4);
+            searchBar.Name = "searchBar";
+            searchBar.PlaceholderForeColor = Color.DimGray;
+            searchBar.PlaceholderText = "Search folders. . .";
+            searchBar.SelectedText = "";
+            searchBar.ShadowDecoration.CustomizableEdges = customizableEdges4;
+            searchBar.Size = new Size(267, 40);
+            searchBar.TabIndex = 4;
+            searchBar.TextChanged += searchBar_TextChanged;
+            // 
+            // searchBarBtn
+            // 
+            searchBarBtn.BorderColor = Color.FromArgb(255, 255, 192);
+            searchBarBtn.BorderRadius = 15;
+            searchBarBtn.BorderThickness = 1;
+            searchBarBtn.Cursor = Cursors.Hand;
+            searchBarBtn.CustomizableEdges = customizableEdges7;
+            searchBarBtn.DisabledState.BorderColor = Color.DarkGray;
+            searchBarBtn.DisabledState.CustomBorderColor = Color.DarkGray;
+            searchBarBtn.DisabledState.FillColor = Color.FromArgb(169, 169, 169);
+            searchBarBtn.DisabledState.ForeColor = Color.FromArgb(141, 141, 141);
+            searchBarBtn.FillColor = Color.FromArgb(255, 226, 97);
+            searchBarBtn.Font = new Font("Arial Rounded MT Bold", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            searchBarBtn.ForeColor = Color.Black;
+            searchBarBtn.Image = (Image)resources.GetObject("searchBarBtn.Image");
+            searchBarBtn.ImageAlign = HorizontalAlignment.Right;
+            searchBarBtn.ImageSize = new Size(25, 25);
+            searchBarBtn.Location = new Point(560, 10);
+            searchBarBtn.Margin = new Padding(10, 3, 5, 3);
+            searchBarBtn.Name = "searchBarBtn";
+            searchBarBtn.Padding = new Padding(20, 0, 0, 0);
+            searchBarBtn.PressedDepth = 10;
+            searchBarBtn.ShadowDecoration.CustomizableEdges = customizableEdges8;
+            searchBarBtn.Size = new Size(190, 36);
+            searchBarBtn.TabIndex = 24;
+            searchBarBtn.Text = "Toggle searchbar";
+            searchBarBtn.TextAlign = HorizontalAlignment.Left;
+            searchBarBtn.TextFormatNoPrefix = true;
+            searchBarBtn.TextOffset = new Point(-15, 1);
+            searchBarBtn.Click += searchBarBtn_Click;
+            // 
             // fetchDocumentPanel
             // 
             fetchDocumentPanel.Controls.Add(panel5);
-            fetchDocumentPanel.CustomizableEdges = customizableEdges19;
+            fetchDocumentPanel.CustomizableEdges = customizableEdges25;
             fetchDocumentPanel.Location = new Point(4, 53);
             fetchDocumentPanel.Name = "fetchDocumentPanel";
-            fetchDocumentPanel.ShadowDecoration.CustomizableEdges = customizableEdges20;
+            fetchDocumentPanel.ShadowDecoration.CustomizableEdges = customizableEdges26;
             fetchDocumentPanel.Size = new Size(769, 468);
             fetchDocumentPanel.TabIndex = 23;
             // 
@@ -166,17 +248,17 @@
             popupPanel.Controls.Add(btnFolderUpload);
             popupPanel.Controls.Add(btnFileUpload);
             popupPanel.Controls.Add(btnNewFolder);
-            popupPanel.CustomizableEdges = customizableEdges9;
+            popupPanel.CustomizableEdges = customizableEdges15;
             popupPanel.Location = new Point(268, 36);
             popupPanel.Name = "popupPanel";
-            popupPanel.ShadowDecoration.CustomizableEdges = customizableEdges10;
+            popupPanel.ShadowDecoration.CustomizableEdges = customizableEdges16;
             popupPanel.Size = new Size(181, 132);
             popupPanel.TabIndex = 21;
             popupPanel.Visible = false;
             // 
             // btnFolderUpload
             // 
-            btnFolderUpload.CustomizableEdges = customizableEdges3;
+            btnFolderUpload.CustomizableEdges = customizableEdges9;
             btnFolderUpload.DisabledState.BorderColor = Color.DarkGray;
             btnFolderUpload.DisabledState.CustomBorderColor = Color.DarkGray;
             btnFolderUpload.DisabledState.FillColor = Color.FromArgb(169, 169, 169);
@@ -190,7 +272,7 @@
             btnFolderUpload.Location = new Point(0, 87);
             btnFolderUpload.Name = "btnFolderUpload";
             btnFolderUpload.PressedDepth = 10;
-            btnFolderUpload.ShadowDecoration.CustomizableEdges = customizableEdges4;
+            btnFolderUpload.ShadowDecoration.CustomizableEdges = customizableEdges10;
             btnFolderUpload.Size = new Size(181, 42);
             btnFolderUpload.TabIndex = 3;
             btnFolderUpload.Text = "Move to trash";
@@ -199,7 +281,7 @@
             // 
             // btnFileUpload
             // 
-            btnFileUpload.CustomizableEdges = customizableEdges5;
+            btnFileUpload.CustomizableEdges = customizableEdges11;
             btnFileUpload.DisabledState.BorderColor = Color.DarkGray;
             btnFileUpload.DisabledState.CustomBorderColor = Color.DarkGray;
             btnFileUpload.DisabledState.FillColor = Color.FromArgb(169, 169, 169);
@@ -213,7 +295,7 @@
             btnFileUpload.Location = new Point(0, 44);
             btnFileUpload.Name = "btnFileUpload";
             btnFileUpload.PressedDepth = 10;
-            btnFileUpload.ShadowDecoration.CustomizableEdges = customizableEdges6;
+            btnFileUpload.ShadowDecoration.CustomizableEdges = customizableEdges12;
             btnFileUpload.Size = new Size(181, 42);
             btnFileUpload.TabIndex = 2;
             btnFileUpload.Text = "Rename";
@@ -221,7 +303,7 @@
             // 
             // btnNewFolder
             // 
-            btnNewFolder.CustomizableEdges = customizableEdges7;
+            btnNewFolder.CustomizableEdges = customizableEdges13;
             btnNewFolder.DisabledState.BorderColor = Color.DarkGray;
             btnNewFolder.DisabledState.CustomBorderColor = Color.DarkGray;
             btnNewFolder.DisabledState.FillColor = Color.FromArgb(169, 169, 169);
@@ -235,7 +317,7 @@
             btnNewFolder.Location = new Point(0, 1);
             btnNewFolder.Name = "btnNewFolder";
             btnNewFolder.PressedDepth = 10;
-            btnNewFolder.ShadowDecoration.CustomizableEdges = customizableEdges8;
+            btnNewFolder.ShadowDecoration.CustomizableEdges = customizableEdges14;
             btnNewFolder.Size = new Size(181, 42);
             btnNewFolder.TabIndex = 1;
             btnNewFolder.Text = "Download";
@@ -246,10 +328,10 @@
             guna2Panel2.Controls.Add(guna2Button6);
             guna2Panel2.Controls.Add(guna2Button5);
             guna2Panel2.Controls.Add(button1);
-            guna2Panel2.CustomizableEdges = customizableEdges17;
+            guna2Panel2.CustomizableEdges = customizableEdges23;
             guna2Panel2.Location = new Point(460, 131);
             guna2Panel2.Name = "guna2Panel2";
-            guna2Panel2.ShadowDecoration.CustomizableEdges = customizableEdges18;
+            guna2Panel2.ShadowDecoration.CustomizableEdges = customizableEdges24;
             guna2Panel2.Size = new Size(181, 132);
             guna2Panel2.TabIndex = 18;
             guna2Panel2.Visible = false;
@@ -257,7 +339,7 @@
             // 
             // guna2Button6
             // 
-            guna2Button6.CustomizableEdges = customizableEdges11;
+            guna2Button6.CustomizableEdges = customizableEdges17;
             guna2Button6.DisabledState.BorderColor = Color.DarkGray;
             guna2Button6.DisabledState.CustomBorderColor = Color.DarkGray;
             guna2Button6.DisabledState.FillColor = Color.FromArgb(169, 169, 169);
@@ -271,7 +353,7 @@
             guna2Button6.Location = new Point(0, 87);
             guna2Button6.Name = "guna2Button6";
             guna2Button6.PressedDepth = 10;
-            guna2Button6.ShadowDecoration.CustomizableEdges = customizableEdges12;
+            guna2Button6.ShadowDecoration.CustomizableEdges = customizableEdges18;
             guna2Button6.Size = new Size(181, 42);
             guna2Button6.TabIndex = 3;
             guna2Button6.Text = "Move to trash";
@@ -280,7 +362,7 @@
             // 
             // guna2Button5
             // 
-            guna2Button5.CustomizableEdges = customizableEdges13;
+            guna2Button5.CustomizableEdges = customizableEdges19;
             guna2Button5.DisabledState.BorderColor = Color.DarkGray;
             guna2Button5.DisabledState.CustomBorderColor = Color.DarkGray;
             guna2Button5.DisabledState.FillColor = Color.FromArgb(169, 169, 169);
@@ -294,7 +376,7 @@
             guna2Button5.Location = new Point(0, 44);
             guna2Button5.Name = "guna2Button5";
             guna2Button5.PressedDepth = 10;
-            guna2Button5.ShadowDecoration.CustomizableEdges = customizableEdges14;
+            guna2Button5.ShadowDecoration.CustomizableEdges = customizableEdges20;
             guna2Button5.Size = new Size(181, 42);
             guna2Button5.TabIndex = 2;
             guna2Button5.Text = "Rename";
@@ -302,7 +384,7 @@
             // 
             // button1
             // 
-            button1.CustomizableEdges = customizableEdges15;
+            button1.CustomizableEdges = customizableEdges21;
             button1.DisabledState.BorderColor = Color.DarkGray;
             button1.DisabledState.CustomBorderColor = Color.DarkGray;
             button1.DisabledState.FillColor = Color.FromArgb(169, 169, 169);
@@ -316,7 +398,7 @@
             button1.Location = new Point(0, 1);
             button1.Name = "button1";
             button1.PressedDepth = 10;
-            button1.ShadowDecoration.CustomizableEdges = customizableEdges16;
+            button1.ShadowDecoration.CustomizableEdges = customizableEdges22;
             button1.Size = new Size(181, 42);
             button1.TabIndex = 1;
             button1.Text = "Download";
@@ -380,12 +462,12 @@
             // breadcrumbContainer
             // 
             breadcrumbContainer.Controls.Add(breadcrumbPanel);
-            breadcrumbContainer.CustomizableEdges = customizableEdges21;
+            breadcrumbContainer.CustomizableEdges = customizableEdges27;
             breadcrumbContainer.Dock = DockStyle.Top;
             breadcrumbContainer.Location = new Point(0, 0);
             breadcrumbContainer.Margin = new Padding(3, 10, 3, 3);
             breadcrumbContainer.Name = "breadcrumbContainer";
-            breadcrumbContainer.ShadowDecoration.CustomizableEdges = customizableEdges22;
+            breadcrumbContainer.ShadowDecoration.CustomizableEdges = customizableEdges28;
             breadcrumbContainer.Size = new Size(785, 49);
             breadcrumbContainer.TabIndex = 22;
             // 
@@ -400,6 +482,7 @@
             Name = "fetchDocuments";
             Text = "fetchDocuments";
             panel3.ResumeLayout(false);
+            searchBarPanel.ResumeLayout(false);
             fetchDocumentPanel.ResumeLayout(false);
             panel5.ResumeLayout(false);
             panel5.PerformLayout();
@@ -429,5 +512,8 @@
         private Guna.UI2.WinForms.Guna2Button guna2Button5;
         private Guna.UI2.WinForms.Guna2Button button1;
         private Guna.UI2.WinForms.Guna2Panel fetchDocumentPanel;
+        private Guna.UI2.WinForms.Guna2Button searchBarBtn;
+        private Guna.UI2.WinForms.Guna2Panel searchBarPanel;
+        private Guna.UI2.WinForms.Guna2TextBox searchBar;
     }
 }

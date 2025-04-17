@@ -56,6 +56,7 @@ namespace tarungonNaNako.subform
             this.Controls.Add(breadcrumbPanel);
             LoadFilesAndFoldersIntoTablePanel(); // Load files and folders specific to the selected category
             UpdateBreadcrumbs();
+            searchBarPanel.Visible = false;
         }
 
         private void InitializeBackgroundWorker()
@@ -1420,7 +1421,7 @@ namespace tarungonNaNako.subform
         private void Newbtn_Click(object sender, EventArgs e)
         {
             guna2Panel2.Hide();
-            CREATE_FOLDER_AND_FILE_PANEL();
+            CREATE_FOLDER_AND_UPLOAD_FILE_PANEL();
         }
 
         public void LoadFormInPanel(Form form)
@@ -1435,7 +1436,7 @@ namespace tarungonNaNako.subform
             form.Show();
         }
 
-        private void CREATE_FOLDER_AND_FILE_PANEL()
+        private void CREATE_FOLDER_AND_UPLOAD_FILE_PANEL()
         {
             if (popupPanel.Visible)
             {
@@ -1520,7 +1521,7 @@ namespace tarungonNaNako.subform
             };
             btnFileUpload.Click += (s, e) =>
             {
-                UPLOAD_FILE_INSIDE_CHILD_FOLDER btnFileUpload = new UPLOAD_FILE_INSIDE_CHILD_FOLDER (folderPath)
+                UPLOAD_FILE_INSIDE_CHILD_FOLDER btnFileUpload = new UPLOAD_FILE_INSIDE_CHILD_FOLDER(folderPath)
                 {
                     ParentCategoryId = selectedCategoryId // Pass the current category ID
                 };
@@ -1620,8 +1621,18 @@ namespace tarungonNaNako.subform
 
         private void panel5_Click(object sender, EventArgs e)
         {
-            popupPanel.Hide(); 
+            popupPanel.Hide();
             guna2Panel2.Hide();
+        }
+
+        private void searchBarBtn_Click(object sender, EventArgs e)
+        {
+            searchBarPanel.Visible = !searchBarPanel.Visible;
+        }
+
+        private void searchBar_TextChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }
