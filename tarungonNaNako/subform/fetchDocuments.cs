@@ -52,11 +52,29 @@ namespace tarungonNaNako.subform
             InitializeComponent();
             InitializeBackgroundWorker();
             InitializeDebounceTimer();
-
+            searchBar.TextChanged += searchBar_TextChanged;
             this.Controls.Add(breadcrumbPanel);
             LoadFilesAndFoldersIntoTablePanel(); // Load files and folders specific to the selected category
             UpdateBreadcrumbs();
             searchBarPanel.Visible = false;
+        }
+
+        private void searchBarBtn_Click(object sender, EventArgs e)
+        {
+            searchBarPanel.Visible = !searchBarPanel.Visible;
+        }
+
+        private void searchBar_TextChanged(object sender, EventArgs e)
+        {
+            // Reset the debounce timer
+            debounceTimer.Stop();
+            debounceTimer.Start();
+        }
+        private void tableLayoutPanel1_Click(object sender, EventArgs e)
+        {
+            searchBarPanel.Hide();
+            popupPanel.Hide();
+            guna2Panel2.Hide();
         }
 
         private void InitializeBackgroundWorker()
@@ -84,7 +102,7 @@ namespace tarungonNaNako.subform
                     if (!backgroundWorker.IsBusy)
                     {
                         ShowLoadingAnimation();
-                        backgroundWorker.RunWorkerAsync();
+                        backgroundWorker.RunWorkerAsync(searchBar.Text.Trim()); // Pass search term
                     }
                 }));
             }
@@ -93,15 +111,18 @@ namespace tarungonNaNako.subform
                 if (!backgroundWorker.IsBusy)
                 {
                     ShowLoadingAnimation();
-                    backgroundWorker.RunWorkerAsync();
+                    backgroundWorker.RunWorkerAsync(searchBar.Text.Trim()); // Pass search term
                 }
             }
         }
 
+
         private void BackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
         {
-            LoadFilesAndFoldersIntoTablePanelInternal();
+            string searchTerm = e.Argument as string; // Retrieve search term
+            LoadFilesAndFoldersIntoTablePanelInternal(searchTerm);
         }
+
 
         private void BackgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
@@ -305,9 +326,6 @@ namespace tarungonNaNako.subform
         }
 
 
-
-
-
         private void BreadcrumbItem_Click(object sender, EventArgs e)
         {
             Guna2Button clickedBreadcrumb = sender as Guna2Button;
@@ -393,8 +411,12 @@ namespace tarungonNaNako.subform
             }
         }
 
+        public void LoadFilesAndFoldersIntoTablePanel()
+        {
+            LoadFilesAndFoldersIntoTablePanelInternal();
+        }
 
-        private void LoadFilesAndFoldersIntoTablePanelInternal()
+        private void LoadFilesAndFoldersIntoTablePanelInternal(string searchTerm = "")
         {
             int buttonWidth = 177; // Adjust as needed
             int buttonHeight = 60; // Adjust as needed
@@ -410,15 +432,17 @@ namespace tarungonNaNako.subform
                     FROM files f
                     JOIN category c ON f.categoryId = c.categoryId
                     WHERE f.isArchived = 0 AND f.categoryId = @categoryId
+                        AND (@searchTerm IS NULL OR f.fileName LIKE @searchTerm)
                     UNION
                     SELECT 'category' AS type, c.categoryName AS name, c.updated_at, pc.categoryName AS parentCategoryName
                     FROM category c
                     LEFT JOIN category pc ON c.parentCategoryId = pc.categoryId
-                    WHERE c.is_archived = 0 AND c.parentCategoryId = @categoryId";
-
+                    WHERE c.is_archived = 0 AND c.parentCategoryId = @categoryId
+                        AND (@searchTerm IS NULL OR c.categoryName LIKE @searchTerm)";
                     using (MySqlCommand cmd = new MySqlCommand(query, conn))
                     {
                         cmd.Parameters.AddWithValue("@categoryId", selectedCategoryId);
+                        cmd.Parameters.AddWithValue("@searchTerm", string.IsNullOrEmpty(searchTerm) ? null : "%" + searchTerm + "%");
                         using (MySqlDataReader reader = cmd.ExecuteReader())
                         {
                             // Clear existing rows
@@ -664,10 +688,7 @@ namespace tarungonNaNako.subform
             }
         }
 
-        public void LoadFilesAndFoldersIntoTablePanel()
-        {
-            LoadFilesAndFoldersIntoTablePanelInternal();
-        }
+
 
 
         private void ShowPanel(string type, string name, string categoryName, Control btn)
@@ -1624,15 +1645,5 @@ namespace tarungonNaNako.subform
             popupPanel.Hide();
             guna2Panel2.Hide();
         }
-
-        private void searchBarBtn_Click(object sender, EventArgs e)
-        {
-            searchBarPanel.Visible = !searchBarPanel.Visible;
-        }
-
-        private void searchBar_TextChanged(object sender, EventArgs e)
-        {
-
-        }
     }
-}
+}       

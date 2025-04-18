@@ -39,14 +39,9 @@
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges6 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges7 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges8 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges11 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges12 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             label1 = new Label();
-            panel1 = new Panel();
-            panel5 = new Panel();
-            label4 = new Label();
-            tableLayoutPanel1 = new TableLayoutPanel();
-            label6 = new Label();
-            label5 = new Label();
-            label7 = new Label();
             pictureBox1 = new PictureBox();
             searchBar = new Guna.UI2.WinForms.Guna2TextBox();
             comboBox1 = new ComboBox();
@@ -56,11 +51,18 @@
             loadFromA_Z = new Guna.UI2.WinForms.Guna2Button();
             btnFileUpload = new Guna.UI2.WinForms.Guna2Button();
             panel3 = new Panel();
-            panel1.SuspendLayout();
-            panel5.SuspendLayout();
+            loadingPictureBox = new Guna.UI2.WinForms.Guna2PictureBox();
+            panel5 = new Panel();
+            tableLayoutPanel1 = new TableLayoutPanel();
+            label4 = new Label();
+            label6 = new Label();
+            label5 = new Label();
+            label7 = new Label();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             popupPanel.SuspendLayout();
             panel3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)loadingPictureBox).BeginInit();
+            panel5.SuspendLayout();
             SuspendLayout();
             // 
             // label1
@@ -74,86 +76,6 @@
             label1.TabIndex = 0;
             label1.Text = "Manage documents";
             label1.Click += label1_Click;
-            // 
-            // panel1
-            // 
-            panel1.BackColor = Color.FromArgb(255, 207, 64);
-            panel1.Controls.Add(panel5);
-            panel1.Location = new Point(16, 71);
-            panel1.Margin = new Padding(2);
-            panel1.Name = "panel1";
-            panel1.Size = new Size(719, 422);
-            panel1.TabIndex = 1;
-            panel1.Paint += panel1_Paint;
-            // 
-            // panel5
-            // 
-            panel5.AutoScroll = true;
-            panel5.BackColor = Color.FromArgb(255, 207, 64);
-            panel5.Controls.Add(label4);
-            panel5.Controls.Add(tableLayoutPanel1);
-            panel5.Controls.Add(label6);
-            panel5.Controls.Add(label5);
-            panel5.Controls.Add(label7);
-            panel5.Location = new Point(21, 12);
-            panel5.Name = "panel5";
-            panel5.Padding = new Padding(0, 0, 0, 100);
-            panel5.Size = new Size(676, 400);
-            panel5.TabIndex = 20;
-            // 
-            // label4
-            // 
-            label4.AutoSize = true;
-            label4.Font = new Font("Microsoft Sans Serif", 10.2F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            label4.Location = new Point(601, 9);
-            label4.Name = "label4";
-            label4.Size = new Size(62, 20);
-            label4.TabIndex = 10;
-            label4.Text = "Action";
-            // 
-            // tableLayoutPanel1
-            // 
-            tableLayoutPanel1.AutoSize = true;
-            tableLayoutPanel1.ColumnCount = 1;
-            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 56.7615662F));
-            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 20F));
-            tableLayoutPanel1.Cursor = Cursors.Hand;
-            tableLayoutPanel1.Location = new Point(10, 33);
-            tableLayoutPanel1.Name = "tableLayoutPanel1";
-            tableLayoutPanel1.RowCount = 1;
-            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tableLayoutPanel1.Size = new Size(656, 51);
-            tableLayoutPanel1.TabIndex = 9;
-            // 
-            // label6
-            // 
-            label6.AutoSize = true;
-            label6.Font = new Font("Microsoft Sans Serif", 10.2F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            label6.Location = new Point(444, 9);
-            label6.Name = "label6";
-            label6.Size = new Size(81, 20);
-            label6.TabIndex = 8;
-            label6.Text = "Location";
-            // 
-            // label5
-            // 
-            label5.AutoSize = true;
-            label5.Font = new Font("Microsoft Sans Serif", 10.2F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            label5.Location = new Point(265, 9);
-            label5.Name = "label5";
-            label5.Size = new Size(158, 20);
-            label5.TabIndex = 7;
-            label5.Text = "Modification Time";
-            // 
-            // label7
-            // 
-            label7.AutoSize = true;
-            label7.Font = new Font("Microsoft Sans Serif", 10.2F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            label7.Location = new Point(13, 9);
-            label7.Name = "label7";
-            label7.Size = new Size(57, 20);
-            label7.TabIndex = 6;
-            label7.Text = "Name";
             // 
             // pictureBox1
             // 
@@ -189,6 +111,7 @@
             searchBar.ShadowDecoration.CustomizableEdges = customizableEdges2;
             searchBar.Size = new Size(268, 40);
             searchBar.TabIndex = 17;
+            searchBar.TextChanged += SearchBar_TextChanged;
             // 
             // comboBox1
             // 
@@ -310,16 +233,101 @@
             // 
             // panel3
             // 
-            panel3.Controls.Add(pictureBox1);
+            panel3.Controls.Add(loadingPictureBox);
             panel3.Controls.Add(popupPanel);
+            panel3.Controls.Add(panel5);
+            panel3.Controls.Add(pictureBox1);
             panel3.Controls.Add(Newbtn);
             panel3.Controls.Add(searchBar);
-            panel3.Controls.Add(panel1);
             panel3.Controls.Add(label1);
             panel3.Location = new Point(0, 0);
             panel3.Name = "panel3";
             panel3.Size = new Size(763, 520);
             panel3.TabIndex = 21;
+            // 
+            // loadingPictureBox
+            // 
+            loadingPictureBox.BackColor = Color.FromArgb(255, 255, 192);
+            loadingPictureBox.CustomizableEdges = customizableEdges11;
+            loadingPictureBox.FillColor = Color.FromArgb(255, 255, 192);
+            loadingPictureBox.Image = (Image)resources.GetObject("loadingPictureBox.Image");
+            loadingPictureBox.ImageRotate = 0F;
+            loadingPictureBox.Location = new Point(342, 1);
+            loadingPictureBox.Name = "loadingPictureBox";
+            loadingPictureBox.ShadowDecoration.CustomizableEdges = customizableEdges12;
+            loadingPictureBox.Size = new Size(56, 54);
+            loadingPictureBox.SizeMode = PictureBoxSizeMode.StretchImage;
+            loadingPictureBox.TabIndex = 21;
+            loadingPictureBox.TabStop = false;
+            // 
+            // panel5
+            // 
+            panel5.AutoScroll = true;
+            panel5.BackColor = Color.FromArgb(255, 207, 64);
+            panel5.Controls.Add(tableLayoutPanel1);
+            panel5.Controls.Add(label4);
+            panel5.Controls.Add(label6);
+            panel5.Controls.Add(label5);
+            panel5.Controls.Add(label7);
+            panel5.Location = new Point(16, 71);
+            panel5.Name = "panel5";
+            panel5.Padding = new Padding(0, 0, 0, 100);
+            panel5.Size = new Size(719, 422);
+            panel5.TabIndex = 20;
+            // 
+            // tableLayoutPanel1
+            // 
+            tableLayoutPanel1.AutoSize = true;
+            tableLayoutPanel1.ColumnCount = 1;
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 56.7615662F));
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 20F));
+            tableLayoutPanel1.Cursor = Cursors.Hand;
+            tableLayoutPanel1.Location = new Point(8, 33);
+            tableLayoutPanel1.Name = "tableLayoutPanel1";
+            tableLayoutPanel1.RowCount = 1;
+            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            tableLayoutPanel1.Size = new Size(687, 51);
+            tableLayoutPanel1.TabIndex = 11;
+            // 
+            // label4
+            // 
+            label4.AutoSize = true;
+            label4.Font = new Font("Microsoft Sans Serif", 10.2F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            label4.Location = new Point(617, 9);
+            label4.Name = "label4";
+            label4.Size = new Size(62, 20);
+            label4.TabIndex = 10;
+            label4.Text = "Action";
+            // 
+            // label6
+            // 
+            label6.AutoSize = true;
+            label6.Font = new Font("Microsoft Sans Serif", 10.2F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            label6.Location = new Point(444, 9);
+            label6.Name = "label6";
+            label6.Size = new Size(81, 20);
+            label6.TabIndex = 8;
+            label6.Text = "Location";
+            // 
+            // label5
+            // 
+            label5.AutoSize = true;
+            label5.Font = new Font("Microsoft Sans Serif", 10.2F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            label5.Location = new Point(265, 9);
+            label5.Name = "label5";
+            label5.Size = new Size(118, 20);
+            label5.TabIndex = 7;
+            label5.Text = "Date created";
+            // 
+            // label7
+            // 
+            label7.AutoSize = true;
+            label7.Font = new Font("Microsoft Sans Serif", 10.2F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            label7.Location = new Point(13, 9);
+            label7.Name = "label7";
+            label7.Size = new Size(91, 20);
+            label7.TabIndex = 6;
+            label7.Text = "File name";
             // 
             // manageDocs
             // 
@@ -334,35 +342,35 @@
             Name = "manageDocs";
             Text = "manageDocs";
             Load += manageDocs_Load;
-            panel1.ResumeLayout(false);
-            panel5.ResumeLayout(false);
-            panel5.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             popupPanel.ResumeLayout(false);
             popupPanel.PerformLayout();
             panel3.ResumeLayout(false);
             panel3.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)loadingPictureBox).EndInit();
+            panel5.ResumeLayout(false);
+            panel5.PerformLayout();
             ResumeLayout(false);
         }
 
         #endregion
 
         private Label label1;
-        private Panel panel1;
         private ComboBox comboBox1;
         private Label label3;
         private Guna.UI2.WinForms.Guna2Button Newbtn;
-        private Panel panel5;
-        private Label label4;
-        private TableLayoutPanel tableLayoutPanel1;
-        private Label label6;
-        private Label label5;
-        private Label label7;
         private PictureBox pictureBox1;
         private Guna.UI2.WinForms.Guna2TextBox searchBar;
         private Guna.UI2.WinForms.Guna2Panel popupPanel;
         private Guna.UI2.WinForms.Guna2Button btnFileUpload;
         private Panel panel3;
         private Guna.UI2.WinForms.Guna2Button loadFromA_Z;
+        private Panel panel5;
+        private Label label4;
+        private Label label6;
+        private Label label5;
+        private Label label7;
+        private TableLayoutPanel tableLayoutPanel1;
+        private Guna.UI2.WinForms.Guna2PictureBox loadingPictureBox;
     }
 }

@@ -175,12 +175,11 @@
             searchBar.Margin = new Padding(3, 4, 3, 4);
             searchBar.Name = "searchBar";
             searchBar.PlaceholderForeColor = Color.DimGray;
-            searchBar.PlaceholderText = "Search folders. . .";
+            searchBar.PlaceholderText = "Search items. . .";
             searchBar.SelectedText = "";
             searchBar.ShadowDecoration.CustomizableEdges = customizableEdges4;
             searchBar.Size = new Size(267, 40);
             searchBar.TabIndex = 4;
-            searchBar.TextChanged += searchBar_TextChanged;
             // 
             // searchBarBtn
             // 
@@ -235,10 +234,10 @@
             panel5.Controls.Add(label6);
             panel5.Controls.Add(label5);
             panel5.Controls.Add(label4);
-            panel5.Location = new Point(0, 0);
+            panel5.Location = new Point(10, 0);
             panel5.Name = "panel5";
             panel5.Padding = new Padding(0, 0, 0, 100);
-            panel5.Size = new Size(758, 425);
+            panel5.Size = new Size(743, 425);
             panel5.TabIndex = 16;
             panel5.Scroll += panel5_Scroll;
             panel5.Click += panel5_Click;
@@ -417,17 +416,19 @@
             // 
             // tableLayoutPanel1
             // 
+            tableLayoutPanel1.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             tableLayoutPanel1.AutoSize = true;
             tableLayoutPanel1.ColumnCount = 1;
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 56.7615662F));
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 20F));
             tableLayoutPanel1.Cursor = Cursors.Hand;
-            tableLayoutPanel1.Location = new Point(5, 33);
+            tableLayoutPanel1.Location = new Point(3, 33);
             tableLayoutPanel1.Name = "tableLayoutPanel1";
             tableLayoutPanel1.RowCount = 1;
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tableLayoutPanel1.Size = new Size(729, 51);
+            tableLayoutPanel1.Size = new Size(735, 51);
             tableLayoutPanel1.TabIndex = 9;
+            tableLayoutPanel1.Click += tableLayoutPanel1_Click;
             // 
             // label6
             // 

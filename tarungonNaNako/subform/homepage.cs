@@ -993,7 +993,7 @@ namespace tarungonNaNako.subform
             // Set panel properties
             popupPanel.Size = new Size(200, 150); // Adjust size     181, 132
             popupPanel.BorderRadius = 5;
-            popupPanel.Padding = new Padding(0,0,0,0);
+            popupPanel.Padding = new Padding(0, 0, 0, 0);
             popupPanel.BackColor = Color.FromArgb(255, 255, 192);
             popupPanel.BringToFront();
             popupPanel.Font = new Font("Segoe UI", 9);
@@ -1047,7 +1047,8 @@ namespace tarungonNaNako.subform
                 PressedColor = Color.Black,
                 PressedDepth = 10,
             };
-            btnFileUpload.Click += (s, e) => {
+            btnFileUpload.Click += (s, e) =>
+            {
                 var addDocsForm = new addDocs(this);
                 addDocsForm.StartPosition = FormStartPosition.CenterScreen;
                 addDocsForm.TopMost = true; // Ensure the form appears on top
@@ -1075,7 +1076,8 @@ namespace tarungonNaNako.subform
                 PressedColor = Color.Black,
                 PressedDepth = 10,
             };
-            btnFolderUpload.Click += (s, e) => {
+            btnFolderUpload.Click += (s, e) =>
+            {
                 var addDocsForm = new addDocs(this);
                 addDocsForm.StartPosition = FormStartPosition.CenterScreen;
                 addDocsForm.TopMost = true; // Ensure the form appears on top
@@ -1097,6 +1099,11 @@ namespace tarungonNaNako.subform
         }
 
         private void Guna2Panel1_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void tableLayoutPanel1_Paint_1(object sender, PaintEventArgs e)
         {
 
         }
