@@ -215,7 +215,7 @@ namespace tarungonNaNako.subform
             breadcrumbPanel.Controls.Clear();
 
             breadcrumbItems.Reverse();
-            if (breadcrumbItems.Count > 4)
+            if (breadcrumbItems.Count > 8)
             {
                 Guna2CircleButton moreButton = CreateMoreButton(breadcrumbItems.Take(breadcrumbItems.Count - 4).ToList());
                 breadcrumbPanel.Controls.Add(moreButton);
@@ -421,7 +421,7 @@ namespace tarungonNaNako.subform
             int buttonWidth = 177; // Adjust as needed
             int buttonHeight = 60; // Adjust as needed
             int spacing = 10;
-            int xPosition = 0;
+            //int xPosition = 0;
             try
             {
                 using (MySqlConnection conn = new MySqlConnection(connectionString))
@@ -431,13 +431,13 @@ namespace tarungonNaNako.subform
                     SELECT 'file' AS type, f.fileName AS name, f.updated_at, c.categoryName
                     FROM files f
                     JOIN category c ON f.categoryId = c.categoryId
-                    WHERE f.isArchived = 0 AND f.categoryId = @categoryId
+                    WHERE f.isArchived = 0 AND f.is_hidden = 0 AND f.categoryId = @categoryId
                         AND (@searchTerm IS NULL OR f.fileName LIKE @searchTerm)
                     UNION
                     SELECT 'category' AS type, c.categoryName AS name, c.updated_at, pc.categoryName AS parentCategoryName
                     FROM category c
                     LEFT JOIN category pc ON c.parentCategoryId = pc.categoryId
-                    WHERE c.is_archived = 0 AND c.parentCategoryId = @categoryId
+                    WHERE c.is_archived = 0 AND c.is_hidden = 0 AND c.parentCategoryId = @categoryId
                         AND (@searchTerm IS NULL OR c.categoryName LIKE @searchTerm)";
                     using (MySqlCommand cmd = new MySqlCommand(query, conn))
                     {
@@ -570,6 +570,7 @@ namespace tarungonNaNako.subform
                                         if (categoryId != -1)
                                         {
                                             selectedCategoryId = categoryId;
+                                            guna2Panel2.Hide();
                                             LoadFilesAndFoldersIntoTablePanel();
                                             UpdateBreadcrumbs();
                                         }
@@ -584,6 +585,7 @@ namespace tarungonNaNako.subform
                                         if (categoryId != -1)
                                         {
                                             selectedCategoryId = categoryId;
+                                            guna2Panel2.Hide();
                                             LoadFilesAndFoldersIntoTablePanel();
                                             UpdateBreadcrumbs();
                                         }
@@ -598,6 +600,7 @@ namespace tarungonNaNako.subform
                                         if (categoryId != -1)
                                         {
                                             selectedCategoryId = categoryId;
+                                            guna2Panel2.Hide();
                                             LoadFilesAndFoldersIntoTablePanel();
                                             UpdateBreadcrumbs();
                                         }
@@ -725,9 +728,11 @@ namespace tarungonNaNako.subform
             guna2Panel2.Visible = true;   // Show the panel
 
             // Set panel properties
-            guna2Panel2.Size = new Size(181, 132); // Adjust size
+            guna2Panel2.Size = new Size(181, 132); // Adjust size  
             guna2Panel2.BorderRadius = 5;
-            guna2Panel2.BackColor = Color.FromArgb(255, 255, 192);
+            guna2Panel2.BorderThickness = 1;
+            guna2Panel2.BorderColor = Color.Black;
+            guna2Panel2.BackColor = ColorTranslator.FromHtml("#ffe261");
             guna2Panel2.BringToFront();
             guna2Panel2.Font = new Font("Segoe UI", 9);
             guna2Panel2.ForeColor = Color.Black;
@@ -741,65 +746,62 @@ namespace tarungonNaNako.subform
             };
 
             // Create buttons
-            Guna.UI2.WinForms.Guna2Button btnDownload = new Guna.UI2.WinForms.Guna2Button
-            {
-                Size = new Size(181, 42),
-                Text = "Download",
-                TextAlign = HorizontalAlignment.Center,
-                TextOffset = new Point(-18, 0),
-                BackColor = Color.FromArgb(255, 255, 192),
-                FillColor = Color.FromArgb(255, 236, 130),
-                Font = new Font("Microsoft Sans Serif", 10),
-                ForeColor = Color.Black,
-                Image = Image.FromFile(download),
-                ImageAlign = HorizontalAlignment.Left,
-                ImageSize = new Size(15, 15),
-                Location = new Point(0, 1),
-                PressedColor = Color.Black,
-                PressedDepth = 10
-            };
+            Guna.UI2.WinForms.Guna2Button btnDownload = new Guna.UI2.WinForms.Guna2Button();
+            btnDownload.Size = new Size(177, 42);
+            btnDownload.Text = "Download";
+            btnDownload.TextAlign = HorizontalAlignment.Center;
+            btnDownload.TextOffset = new Point(-18, 0);
+            btnDownload.BackColor = Color.FromArgb(255, 236, 130);
+            btnDownload.FillColor = Color.FromArgb(255, 236, 130);
+            btnDownload.Font = new Font("Microsoft Sans Serif", 10);
+            btnDownload.ForeColor = Color.Black;
+            btnDownload.Image = Image.FromFile(download);
+            btnDownload.ImageAlign = HorizontalAlignment.Left;
+            btnDownload.ImageSize = new Size(15, 15);
+            btnDownload.Location = new Point(2, 2);
+            btnDownload.PressedColor = Color.Black;
+            btnDownload.PressedDepth = 10;
+            btnDownload.BorderRadius = 5;
 
             // Attach the event that handles downloading differently
             btnDownload.Click += DownloadButton_Click;
 
-            Guna.UI2.WinForms.Guna2Button btnRename = new Guna.UI2.WinForms.Guna2Button
-            {
-                Size = new Size(181, 42),
-                Text = "Rename",
-                TextAlign = HorizontalAlignment.Center,
-                TextOffset = new Point(-18, 0),
-                BackColor = Color.FromArgb(255, 255, 192),
-                FillColor = Color.FromArgb(255, 236, 130),
-                Font = new Font("Microsoft Sans Serif", 10),
-                ForeColor = Color.Black,
-                Image = Image.FromFile(rename),
-                ImageAlign = HorizontalAlignment.Left,
-                ImageSize = new Size(15, 15),
-                Location = new Point(0, 44),
-                PressedColor = Color.Black,
-                PressedDepth = 10
-            };
+            Guna.UI2.WinForms.Guna2Button btnRename = new Guna.UI2.WinForms.Guna2Button();
+            btnRename.Size = new Size(177, 42);
+            btnRename.Text = "Rename";
+            btnRename.TextAlign = HorizontalAlignment.Center;
+            btnRename.TextOffset = new Point(-18, 0);
+            btnRename.BackColor = Color.FromArgb(255, 236, 130);
+            btnRename.FillColor = Color.FromArgb(255, 236, 130);
+            btnRename.Font = new Font("Microsoft Sans Serif", 10);
+            btnRename.ForeColor = Color.Black;
+            btnRename.Image = Image.FromFile(rename);
+            btnRename.ImageAlign = HorizontalAlignment.Left;
+            btnRename.ImageSize = new Size(15, 15);
+            btnRename.Location = new Point(2, 44);
+            btnRename.PressedColor = Color.Black;
+            btnRename.PressedDepth = 10;
+            btnRename.BorderRadius = 5;
 
             // Attach the event that handles renaming differently
             btnRename.Click += (s, e) => RenameButton_Click();
 
-            Guna.UI2.WinForms.Guna2Button btnDelete = new Guna.UI2.WinForms.Guna2Button
-            {
-                Size = new Size(181, 42),
-                Text = "Move to trash",
-                TextAlign = HorizontalAlignment.Right,
-                TextOffset = new Point(-12, 0),
-                BackColor = Color.FromArgb(255, 255, 192),
-                FillColor = Color.FromArgb(255, 236, 130),
-                Font = new Font("Microsoft Sans Serif", 10),
-                ForeColor = Color.Black,
-                Image = Image.FromFile(remove),
-                ImageAlign = HorizontalAlignment.Left,
-                ImageSize = new Size(15, 15),
-                Location = new Point(0, 87),
-                PressedColor = Color.Black,
-                PressedDepth = 10
-            };
+            Guna.UI2.WinForms.Guna2Button btnDelete = new Guna.UI2.WinForms.Guna2Button();
+            btnDelete.Size = new Size(177, 44);
+            btnDelete.Text = "Move to trash";
+            btnDelete.TextAlign = HorizontalAlignment.Right;
+            btnDelete.TextOffset = new Point(-12, 0);
+            btnDelete.BackColor = Color.FromArgb(255, 236, 130);
+            btnDelete.FillColor = Color.FromArgb(255, 236, 130);
+            btnDelete.Font = new Font("Microsoft Sans Serif", 10);
+            btnDelete.ForeColor = Color.Black;
+            btnDelete.Image = Image.FromFile(remove);
+            btnDelete.ImageAlign = HorizontalAlignment.Left;
+            btnDelete.ImageSize = new Size(15, 15);
+            btnDelete.Location = new Point(2, 86);
+            btnDelete.PressedColor = Color.Black;
+            btnDelete.PressedDepth = 10;
+            btnDelete.BorderRadius = 5;
             btnDelete.Click += (s, e) => RemoveButton_Click();
 
             // Add buttons to panel
@@ -935,61 +937,110 @@ namespace tarungonNaNako.subform
 
         private void DownloadFile(string fileName)
         {
-            string storagePath = @"C:\\DocsManagement\\"; // Ensure this path is correct
-            string sourceFilePath = Path.Combine(storagePath, fileName);
-
-            // Debugging: Show the path to confirm it's correct
-            if (InvokeRequired)
+            try
             {
-                Invoke(new Action(() =>
+                // Step 1: Retrieve the file path from the database
+                string sourceFilePath = GetFilePathByFileName(fileName);
+
+                if (string.IsNullOrEmpty(sourceFilePath) || !File.Exists(sourceFilePath))
                 {
-                    MessageBox.Show($"Checking file path: {sourceFilePath}", "Debug Info");
-                }));
-            }
-            else
-            {
-                MessageBox.Show($"Checking file path: {sourceFilePath}", "Debug Info");
-            }
+                    if (InvokeRequired)
+                    {
+                        Invoke(new Action(() =>
+                        {
+                            MessageBox.Show("File not found!\nPath: " + sourceFilePath, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }));
+                    }
+                    else
+                    {
+                        MessageBox.Show("File not found!\nPath: " + sourceFilePath, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                    return;
+                }
 
-            if (!File.Exists(sourceFilePath))
+                // Step 2: Prompt the user to select a save location
+                using (SaveFileDialog saveFileDialog = new SaveFileDialog())
+                {
+                    saveFileDialog.FileName = fileName;
+                    saveFileDialog.Filter = "All Files|*.*";
+
+                    if (saveFileDialog.ShowDialog() == DialogResult.OK)
+                    {
+                        string destinationPath = saveFileDialog.FileName;
+
+                        // Step 3: Copy the file to the selected location
+                        File.Copy(sourceFilePath, destinationPath, true);
+
+                        if (InvokeRequired)
+                        {
+                            Invoke(new Action(() =>
+                            {
+                                MessageBox.Show("File downloaded successfully!", "Download Complete", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            }));
+                        }
+                        else
+                        {
+                            MessageBox.Show("File downloaded successfully!", "Download Complete", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        }
+                    }
+                }
+                guna2Panel2.Hide();
+            }
+            catch (Exception ex)
             {
                 if (InvokeRequired)
                 {
                     Invoke(new Action(() =>
                     {
-                        MessageBox.Show("File not found!\nPath: " + sourceFilePath, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBox.Show($"An error occurred while downloading the file: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }));
                 }
                 else
                 {
-                    MessageBox.Show("File not found!\nPath: " + sourceFilePath, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show($"An error occurred while downloading the file: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
-                return;
             }
+        }
 
-            using (SaveFileDialog saveFileDialog = new SaveFileDialog())
+
+        private string GetFilePathByFileName(string fileName)
+        {
+            string filePath = string.Empty;
+
+            try
             {
-                saveFileDialog.FileName = fileName;
-                saveFileDialog.Filter = "All Files|*.*";
-
-                if (saveFileDialog.ShowDialog() == DialogResult.OK)
+                using (var conn = new MySqlConnection(connectionString))
                 {
-                    string destinationPath = saveFileDialog.FileName;
-                    File.Copy(sourceFilePath, destinationPath, true);
+                    conn.Open();
+                    string query = "SELECT filePath FROM files WHERE fileName = @fileName";
 
-                    if (InvokeRequired)
+                    using (var cmd = new MySqlCommand(query, conn))
                     {
-                        Invoke(new Action(() =>
+                        cmd.Parameters.AddWithValue("@fileName", fileName);
+                        object result = cmd.ExecuteScalar();
+                        if (result != null)
                         {
-                            MessageBox.Show("File downloaded successfully!", "Download Complete", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        }));
-                    }
-                    else
-                    {
-                        MessageBox.Show("File downloaded successfully!", "Download Complete", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            filePath = result.ToString();
+                        }
                     }
                 }
             }
+            catch (Exception ex)
+            {
+                if (InvokeRequired)
+                {
+                    Invoke(new Action(() =>
+                    {
+                        MessageBox.Show($"Error retrieving file path: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }));
+                }
+                else
+                {
+                    MessageBox.Show($"Error retrieving file path: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+
+            return filePath;
         }
 
 
@@ -1003,6 +1054,7 @@ namespace tarungonNaNako.subform
                 "Edit File",
                 selectedName
             ).Trim();
+
             if (string.IsNullOrWhiteSpace(newFileName))
             {
                 if (InvokeRequired)
@@ -1018,12 +1070,14 @@ namespace tarungonNaNako.subform
                 }
                 return;
             }
+
             // Ensure the new file name includes the correct extension
             string fileExtension = Path.GetExtension(selectedName);
             if (!newFileName.EndsWith(fileExtension, StringComparison.OrdinalIgnoreCase))
             {
                 newFileName += fileExtension;
             }
+
             // Prevent duplicate file names
             if (IsFileNameExists(newFileName))
             {
@@ -1042,44 +1096,47 @@ namespace tarungonNaNako.subform
                 }
                 return;
             }
+
             try
             {
+                // Step 1: Retrieve the current file path from the database
+                string currentFilePath = GetFilePathByFileName(selectedName);
+                if (string.IsNullOrEmpty(currentFilePath) || !File.Exists(currentFilePath))
+                {
+                    if (InvokeRequired)
+                    {
+                        Invoke(new Action(() =>
+                        {
+                            MessageBox.Show("File not found in the file system.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }));
+                    }
+                    else
+                    {
+                        MessageBox.Show("File not found in the file system.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                    return;
+                }
+
+                // Step 2: Construct the new file path
+                string newFilePath = Path.Combine(Path.GetDirectoryName(currentFilePath), newFileName);
+
+                // Step 3: Rename the file in the file system
+                File.Move(currentFilePath, newFilePath);
+
+                // Step 4: Update the file name and path in the database
                 using (MySqlConnection conn = new MySqlConnection(connectionString))
                 {
                     conn.Open();
-                    string query = "UPDATE files SET fileName = @newFileName WHERE fileName = @fileName";
+                    string query = "UPDATE files SET fileName = @newFileName, filePath = @newFilePath WHERE fileName = @fileName";
                     using (MySqlCommand cmd = new MySqlCommand(query, conn))
                     {
                         cmd.Parameters.AddWithValue("@newFileName", newFileName);
+                        cmd.Parameters.AddWithValue("@newFilePath", newFilePath);
                         cmd.Parameters.AddWithValue("@fileName", selectedName);
+
                         int rowsAffected = cmd.ExecuteNonQuery();
                         if (rowsAffected > 0)
                         {
-                            // Update the file name in the storage path
-                            string storagePath = @"C:\DocsManagement\";
-                            string oldFilePath = Path.Combine(storagePath, selectedName);
-                            string newFilePath = Path.Combine(storagePath, newFileName);
-
-                            if (File.Exists(oldFilePath))
-                            {
-                                File.Move(oldFilePath, newFilePath);
-                            }
-                            else
-                            {
-                                if (InvokeRequired)
-                                {
-                                    Invoke(new Action(() =>
-                                    {
-                                        MessageBox.Show("File not found in storage path.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                                    }));
-                                }
-                                else
-                                {
-                                    MessageBox.Show("File not found in storage path.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                                }
-                                return;
-                            }
-
                             if (InvokeRequired)
                             {
                                 Invoke(new Action(() =>
@@ -1102,12 +1159,12 @@ namespace tarungonNaNako.subform
                             {
                                 Invoke(new Action(() =>
                                 {
-                                    MessageBox.Show("File not found in database.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                    MessageBox.Show("File not found in the database.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                                 }));
                             }
                             else
                             {
-                                MessageBox.Show("File not found in database.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                MessageBox.Show("File not found in the database.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                             }
                         }
                     }
@@ -1128,6 +1185,7 @@ namespace tarungonNaNako.subform
                 }
             }
         }
+
 
 
 
@@ -1199,66 +1257,236 @@ namespace tarungonNaNako.subform
 
         private void DownloadCategory(string categoryName)
         {
-            string storagePath = @"C:\DocSpace\UploadedFiles\"; // Ensure this is correct
-            string categoryPath = Path.Combine(storagePath, categoryName);
-
-            // Debugging: Show the path to confirm it's correct
-            if (InvokeRequired)
+            try
             {
-                Invoke(new Action(() =>
+                // Step 1: Retrieve the folder path from the database
+                string categoryPath = "";
+                int categoryId = -1;
+                using (MySqlConnection conn = new MySqlConnection(connectionString))
                 {
-                    MessageBox.Show($"Checking category path: {categoryPath}", "Debug Info");
-                }));
-            }
-            else
-            {
-                MessageBox.Show($"Checking category path: {categoryPath}", "Debug Info");
-            }
-
-            if (!Directory.Exists(categoryPath))
-            {
-                if (InvokeRequired)
-                {
-                    Invoke(new Action(() =>
+                    conn.Open();
+                    string query = "SELECT folderPath, categoryId FROM category WHERE categoryName = @categoryName";
+                    using (MySqlCommand cmd = new MySqlCommand(query, conn))
                     {
-                        MessageBox.Show("Category folder not found!\nPath: " + categoryPath, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    }));
-                }
-                else
-                {
-                    MessageBox.Show("Category folder not found!\nPath: " + categoryPath, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-                return;
-            }
-
-            using (SaveFileDialog saveFileDialog = new SaveFileDialog())
-            {
-                saveFileDialog.FileName = $"{categoryName}.zip";
-                saveFileDialog.Filter = "ZIP files|*.zip";
-
-                if (saveFileDialog.ShowDialog() == DialogResult.OK)
-                {
-                    string zipPath = saveFileDialog.FileName;
-
-                    if (File.Exists(zipPath))
-                        File.Delete(zipPath); // Ensure no conflict
-
-                    ZipFile.CreateFromDirectory(categoryPath, zipPath);
-
-                    if (InvokeRequired)
-                    {
-                        Invoke(new Action(() =>
+                        cmd.Parameters.AddWithValue("@categoryName", categoryName);
+                        using (MySqlDataReader reader = cmd.ExecuteReader())
                         {
-                            MessageBox.Show("Category downloaded successfully as ZIP!", "Download Complete", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        }));
+                            if (reader.Read())
+                            {
+                                categoryPath = reader["folderPath"].ToString();
+                                categoryId = Convert.ToInt32(reader["categoryId"]);
+                            }
+                        }
                     }
-                    else
+                }
+
+                // Step 2: Validate the folder path
+                if (string.IsNullOrEmpty(categoryPath) || !Directory.Exists(categoryPath))
+                {
+                    MessageBox.Show("Category folder not found on the file system.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                // Step 3: Retrieve and save documents from the database
+                SaveDocumentsToFolder(categoryId, categoryPath);
+
+                // Step 4: Use a temporary directory to prepare the contents for zipping
+                string tempDirectory = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
+                Directory.CreateDirectory(tempDirectory);
+
+                // Copy the contents of the root folder (excluding the root folder itself) to the temp directory
+                foreach (string dirPath in Directory.GetDirectories(categoryPath, "*", SearchOption.TopDirectoryOnly))
+                {
+                    string destDir = Path.Combine(tempDirectory, Path.GetFileName(dirPath));
+                    DirectoryCopy(dirPath, destDir, true);
+                }
+
+                foreach (string filePath in Directory.GetFiles(categoryPath, "*", SearchOption.TopDirectoryOnly))
+                {
+                    string destFile = Path.Combine(tempDirectory, Path.GetFileName(filePath));
+                    File.Copy(filePath, destFile, true);
+                }
+
+                // Step 5: Use SaveFileDialog to let the user choose where to save the ZIP file
+                using (SaveFileDialog saveFileDialog = new SaveFileDialog())
+                {
+                    saveFileDialog.FileName = $"{categoryName}.zip";
+                    saveFileDialog.Filter = "ZIP files|*.zip";
+
+                    if (saveFileDialog.ShowDialog() == DialogResult.OK)
                     {
+                        string zipPath = saveFileDialog.FileName;
+
+                        // Ensure no conflict by deleting any existing ZIP file at the destination
+                        if (File.Exists(zipPath))
+                        {
+                            File.Delete(zipPath);
+                        }
+
+                        // Step 6: Compress the contents of the temp directory into a ZIP file
+                        ZipFile.CreateFromDirectory(tempDirectory, zipPath);
+
                         MessageBox.Show("Category downloaded successfully as ZIP!", "Download Complete", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                }
+
+                // Step 7: Clean up the temporary directory
+                if (Directory.Exists(tempDirectory))
+                {
+                    Directory.Delete(tempDirectory, true);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error downloading category: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void SaveDocumentsToFolder(int categoryId, string folderPath)
+        {
+            try
+            {
+
+                using (MySqlConnection conn = new MySqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    // Step 1: Retrieve all folders and their paths, excluding the root folder itself
+                    Dictionary<int, string> folderPaths = RetrieveFolderPaths(conn, categoryId, folderPath);
+
+                    // Step 2: Retrieve all files and save them in their respective folders
+                    SaveFilesToFolders(conn, categoryId, folderPaths);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error saving documents to folder: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private Dictionary<int, string> RetrieveFolderPaths(MySqlConnection conn, int categoryId, string rootFolderPath)
+        {
+            string folderQuery = @"
+        WITH RECURSIVE FolderHierarchy AS (
+            SELECT categoryId, parentCategoryId, categoryName
+            FROM category
+            WHERE categoryId = @categoryId
+            UNION ALL
+            SELECT c.categoryId, c.parentCategoryId, c.categoryName
+            FROM category c
+            INNER JOIN FolderHierarchy fh ON c.parentCategoryId = fh.categoryId
+        )
+        SELECT * FROM FolderHierarchy WHERE categoryId != @categoryId";
+
+            Dictionary<int, string> folderPaths = new Dictionary<int, string>();
+
+            using (MySqlCommand folderCmd = new MySqlCommand(folderQuery, conn))
+            {
+                folderCmd.Parameters.AddWithValue("@categoryId", categoryId);
+
+                using (MySqlDataReader folderReader = folderCmd.ExecuteReader())
+                {
+                    while (folderReader.Read())
+                    {
+                        int id = folderReader.GetInt32("categoryId");
+                        string categoryName = folderReader.GetString("categoryName");
+                        int parentCategoryId = folderReader.IsDBNull(folderReader.GetOrdinal("parentCategoryId"))
+                            ? -1
+                            : folderReader.GetInt32("parentCategoryId");
+
+                        // Determine the folder path
+                        string parentPath = parentCategoryId == -1 || !folderPaths.ContainsKey(parentCategoryId)
+                            ? rootFolderPath
+                            : folderPaths[parentCategoryId];
+
+                        string subFolderPath = Path.Combine(parentPath, categoryName);
+
+                        folderPaths[id] = subFolderPath;
+
+                        // Ensure the folder exists on the file system
+                        if (!Directory.Exists(subFolderPath))
+                        {
+                            Directory.CreateDirectory(subFolderPath);
+                        }
+                    }
+                }
+            }
+
+            return folderPaths;
+        }
+
+        private void SaveFilesToFolders(MySqlConnection conn, int categoryId, Dictionary<int, string> folderPaths)
+        {
+            string fileQuery = @"
+        SELECT f.fileName, f.filePath, f.categoryId
+        FROM files f
+        WHERE f.categoryId IN (
+            SELECT categoryId FROM category 
+            WHERE categoryId = @categoryId OR parentCategoryId = @categoryId)";
+
+            using (MySqlCommand fileCmd = new MySqlCommand(fileQuery, conn))
+            {
+                fileCmd.Parameters.AddWithValue("@categoryId", categoryId);
+
+                using (MySqlDataReader fileReader = fileCmd.ExecuteReader())
+                {
+                    while (fileReader.Read())
+                    {
+                        string fileName = fileReader.GetString("fileName");
+                        string filePath = fileReader.GetString("filePath");
+                        int fileCategoryId = fileReader.GetInt32("categoryId");
+
+                        // Ensure the file exists in the database path
+                        if (File.Exists(filePath) && folderPaths.ContainsKey(fileCategoryId))
+                        {
+                            string destinationPath = Path.Combine(folderPaths[fileCategoryId], fileName);
+
+                            // Avoid overwriting existing files
+                            if (!File.Exists(destinationPath))
+                            {
+                                File.Copy(filePath, destinationPath);
+                            }
+                        }
                     }
                 }
             }
         }
+
+
+
+
+        private void DirectoryCopy(string sourceDirName, string destDirName, bool copySubDirs)
+        {
+            DirectoryInfo dir = new DirectoryInfo(sourceDirName);
+
+            if (!dir.Exists)
+            {
+                throw new DirectoryNotFoundException($"Source directory does not exist or could not be found: {sourceDirName}");
+            }
+
+            DirectoryInfo[] dirs = dir.GetDirectories();
+            Directory.CreateDirectory(destDirName);
+
+            // Copy all the files
+            FileInfo[] files = dir.GetFiles();
+            foreach (FileInfo file in files)
+            {
+                string tempPath = Path.Combine(destDirName, file.Name);
+                file.CopyTo(tempPath, false);
+            }
+
+            // If copying subdirectories, copy them and their contents
+            if (copySubDirs)
+            {
+                foreach (DirectoryInfo subdir in dirs)
+                {
+                    string tempPath = Path.Combine(destDirName, subdir.Name);
+                    DirectoryCopy(subdir.FullName, tempPath, true);
+                }
+            }
+        }
+
+
 
 
         private void EditCategory(int categoryId, string categoryName)
@@ -1307,13 +1535,40 @@ namespace tarungonNaNako.subform
 
             try
             {
+                // Step 1: Retrieve the current folder path from the database
+                string currentFolderPath = GetFolderPathByCategoryId(categoryId);
+                if (string.IsNullOrEmpty(currentFolderPath) || !Directory.Exists(currentFolderPath))
+                {
+                    if (InvokeRequired)
+                    {
+                        Invoke(new Action(() =>
+                        {
+                            MessageBox.Show("Category folder not found in the file system.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }));
+                    }
+                    else
+                    {
+                        MessageBox.Show("Category folder not found in the file system.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                    return;
+                }
+
+                // Step 2: Construct the new folder path
+                string parentFolderPath = Path.GetDirectoryName(currentFolderPath);
+                string newFolderPath = Path.Combine(parentFolderPath, newCategoryName);
+
+                // Step 3: Rename the folder in the file system
+                Directory.Move(currentFolderPath, newFolderPath);
+
+                // Step 4: Update the category name and folder path in the database
                 using (MySqlConnection conn = new MySqlConnection(connectionString))
                 {
                     conn.Open();
-                    string query = "UPDATE category SET categoryName = @newCategoryName WHERE categoryid = @categoryId";
+                    string query = "UPDATE category SET categoryName = @newCategoryName, folderPath = @newFolderPath WHERE categoryId = @categoryId";
                     using (MySqlCommand cmd = new MySqlCommand(query, conn))
                     {
                         cmd.Parameters.AddWithValue("@newCategoryName", newCategoryName);
+                        cmd.Parameters.AddWithValue("@newFolderPath", newFolderPath);
                         cmd.Parameters.AddWithValue("@categoryId", categoryId);
 
                         int rowsAffected = cmd.ExecuteNonQuery();
@@ -1343,15 +1598,43 @@ namespace tarungonNaNako.subform
                             {
                                 Invoke(new Action(() =>
                                 {
-                                    MessageBox.Show("Category not found.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                    MessageBox.Show("Category not found in the database.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                                 }));
                             }
                             else
                             {
-                                MessageBox.Show("Category not found.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                MessageBox.Show("Category not found in the database.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                             }
                         }
                     }
+                }
+            }
+            catch (UnauthorizedAccessException)
+            {
+                if (InvokeRequired)
+                {
+                    Invoke(new Action(() =>
+                    {
+                        MessageBox.Show("Access to the folder is denied. Please check folder permissions.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }));
+                }
+                else
+                {
+                    MessageBox.Show("Access to the folder is denied. Please check folder permissions.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+            catch (IOException ioEx)
+            {
+                if (InvokeRequired)
+                {
+                    Invoke(new Action(() =>
+                    {
+                        MessageBox.Show($"An I/O error occurred: {ioEx.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }));
+                }
+                else
+                {
+                    MessageBox.Show($"An I/O error occurred: {ioEx.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
             catch (Exception ex)
@@ -1370,6 +1653,7 @@ namespace tarungonNaNako.subform
             }
         }
 
+
         private void RemoveCategory(string categoryName)
         {
             try
@@ -1377,43 +1661,128 @@ namespace tarungonNaNako.subform
                 using (MySqlConnection conn = new MySqlConnection(connectionString))
                 {
                     conn.Open();
-                    string query = "UPDATE category SET is_archived = 1 WHERE categoryName = @categoryName";
-                    using (MySqlCommand cmd = new MySqlCommand(query, conn))
+
+                    // Step 1: Get the categoryId and folderPath of the parent category
+                    string getCategoryQuery = "SELECT categoryId, folderPath FROM category WHERE categoryName = @categoryName";
+                    int? parentCategoryId = null;
+                    string parentFolderPath = null;
+
+                    using (MySqlCommand getCategoryCmd = new MySqlCommand(getCategoryQuery, conn))
                     {
-                        cmd.Parameters.AddWithValue("@categoryName", categoryName);
-                        int rowsAffected = cmd.ExecuteNonQuery();
-                        if (rowsAffected > 0)
+                        getCategoryCmd.Parameters.AddWithValue("@categoryName", categoryName);
+                        using (MySqlDataReader reader = getCategoryCmd.ExecuteReader())
                         {
-                            if (InvokeRequired)
+                            if (reader.Read())
                             {
-                                Invoke(new Action(() =>
-                                {
-                                    guna2Panel2.Visible = false;
-                                    MessageBox.Show($"Category '{categoryName}' removed successfully.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                                    RefreshPanel5(); // Refresh panel5 after removing the category
-                                }));
-                            }
-                            else
-                            {
-                                guna2Panel2.Visible = false;
-                                MessageBox.Show($"Category '{categoryName}' removed successfully.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                                RefreshPanel5(); // Refresh panel5 after removing the category
-                            }
-                        }
-                        else
-                        {
-                            if (InvokeRequired)
-                            {
-                                Invoke(new Action(() =>
-                                {
-                                    MessageBox.Show($"Category '{categoryName}' not found.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                                }));
+                                parentCategoryId = reader.GetInt32(0);
+                                parentFolderPath = reader.GetString(1);
                             }
                             else
                             {
                                 MessageBox.Show($"Category '{categoryName}' not found.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                return;
                             }
                         }
+                    }
+
+                    // Step 2: Archive all subcategories recursively
+                    string archiveSubcategoriesQuery = @"
+                WITH RECURSIVE Subcategories AS (
+                    SELECT categoryId, folderPath
+                    FROM category
+                    WHERE categoryId = @parentCategoryId
+                    UNION ALL
+                    SELECT c.categoryId, c.folderPath
+                    FROM category c
+                    INNER JOIN Subcategories sc ON c.parentCategoryId = sc.categoryId
+                )
+                SELECT categoryId, folderPath FROM Subcategories";
+
+                    List<int> categoryIds = new List<int>();
+                    List<string> folderPaths = new List<string>();
+
+                    using (MySqlCommand archiveSubcategoriesCmd = new MySqlCommand(archiveSubcategoriesQuery, conn))
+                    {
+                        archiveSubcategoriesCmd.Parameters.AddWithValue("@parentCategoryId", parentCategoryId);
+
+                        using (MySqlDataReader reader = archiveSubcategoriesCmd.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                categoryIds.Add(reader.GetInt32(0));
+                                folderPaths.Add(reader.GetString(1));
+                            }
+                        }
+                    }
+
+                    // Step 3: Update the categories using the fetched IDs
+                    if (categoryIds.Count > 0)
+                    {
+                        string updateCategoriesQuery = "UPDATE category SET is_archived = 1 WHERE categoryId IN (" + string.Join(",", categoryIds) + ")";
+                        using (MySqlCommand updateCategoriesCmd = new MySqlCommand(updateCategoriesQuery, conn))
+                        {
+                            updateCategoriesCmd.ExecuteNonQuery();
+                        }
+                    }
+
+                    // Step 4: Archive all files in the parent category and its subcategories
+                    string archiveFilesQuery = @"
+                UPDATE files
+                SET isArchived = 1
+                WHERE categoryId IN (" + string.Join(",", categoryIds) + ")";
+
+                    using (MySqlCommand archiveFilesCmd = new MySqlCommand(archiveFilesQuery, conn))
+                    {
+                        archiveFilesCmd.ExecuteNonQuery();
+                    }
+
+                    // Step 5: Delete the parent folder and its subfolders from the file system
+                    foreach (string folderPath in folderPaths)
+                    {
+                        if (Directory.Exists(folderPath))
+                        {
+                            try
+                            {
+                                // Debugging: Log the folder path being deleted
+                                Console.WriteLine($"Attempting to delete folder: {folderPath}");
+
+                                Directory.Delete(folderPath, true); // Recursively delete the folder
+                            }
+                            catch (UnauthorizedAccessException ex)
+                            {
+                                MessageBox.Show($"Access denied to folder '{folderPath}'. Please check permissions.\n{ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            }
+                            catch (IOException ex)
+                            {
+                                MessageBox.Show($"Folder '{folderPath}' is in use or cannot be deleted.\n{ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            }
+                            catch (Exception ex)
+                            {
+                                MessageBox.Show($"Error deleting folder '{folderPath}': {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            }
+                        }
+                        else
+                        {
+                            // Debugging: Log if the folder does not exist
+                            Console.WriteLine($"Folder does not exist: {folderPath}");
+                        }
+                    }
+
+                    // Step 6: Notify the user and refresh the UI
+                    if (InvokeRequired)
+                    {
+                        Invoke(new Action(() =>
+                        {
+                            guna2Panel2.Visible = false;
+                            MessageBox.Show($"Category '{categoryName}' and its subfolders and files have been removed successfully.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            RefreshPanel5(); // Refresh the panel after removing the category
+                        }));
+                    }
+                    else
+                    {
+                        guna2Panel2.Visible = false;
+                        MessageBox.Show($"Category '{categoryName}' and its subfolders and files have been removed successfully.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        RefreshPanel5(); // Refresh the panel after removing the category
                     }
                 }
             }
@@ -1423,15 +1792,17 @@ namespace tarungonNaNako.subform
                 {
                     Invoke(new Action(() =>
                     {
-                        MessageBox.Show($"Error archiving category: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBox.Show($"Error removing category: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }));
                 }
                 else
                 {
-                    MessageBox.Show($"Error archiving category: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show($"Error removing category: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
         }
+
+
 
         public void RefreshPanel5()
         {
@@ -1542,7 +1913,17 @@ namespace tarungonNaNako.subform
             };
             btnFileUpload.Click += (s, e) =>
             {
-                UPLOAD_FILE_INSIDE_CHILD_FOLDER btnFileUpload = new UPLOAD_FILE_INSIDE_CHILD_FOLDER(folderPath)
+                // Step 1: Retrieve the folder path for the selected category
+                string selectedFolderPath = GetFolderPathByCategoryId(selectedCategoryId);
+
+                if (string.IsNullOrEmpty(selectedFolderPath) || !Directory.Exists(selectedFolderPath))
+                {
+                    MessageBox.Show("The selected folder does not exist on the file system.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                // Step 2: Pass the correct folder path to the UPLOAD_FILE_INSIDE_CHILD_FOLDER form
+                UPLOAD_FILE_INSIDE_CHILD_FOLDER btnFileUpload = new UPLOAD_FILE_INSIDE_CHILD_FOLDER(selectedFolderPath)
                 {
                     ParentCategoryId = selectedCategoryId // Pass the current category ID
                 };
@@ -1558,6 +1939,7 @@ namespace tarungonNaNako.subform
                     LoadFilesAndFoldersIntoTablePanel(); // Call the refresh function after the dialog is closed
                 }
             };
+
 
             Guna.UI2.WinForms.Guna2Button btnFolderUpload = new Guna.UI2.WinForms.Guna2Button
             {
@@ -1604,6 +1986,29 @@ namespace tarungonNaNako.subform
             this.Controls.Add(popupPanel);
             popupPanel.BringToFront();
         }
+
+        private string GetFolderPathByCategoryId(int categoryId)
+        {
+            string folderPath = string.Empty;
+
+            using (MySqlConnection conn = new MySqlConnection(connectionString))
+            {
+                conn.Open();
+                string query = "SELECT folderPath FROM category WHERE categoryId = @categoryId";
+                using (MySqlCommand cmd = new MySqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@categoryId", categoryId);
+                    object result = cmd.ExecuteScalar();
+                    if (result != null)
+                    {
+                        folderPath = result.ToString();
+                    }
+                }
+            }
+
+            return folderPath;
+        }
+
 
 
         private void panel5_Scroll(object sender, ScrollEventArgs e)

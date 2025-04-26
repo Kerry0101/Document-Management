@@ -382,22 +382,20 @@ namespace tarungonNaNako.subform
 
         private void button1_Click_1(object sender, EventArgs e)
         {
-            adminDashboard parentForm = this.ParentForm as adminDashboard;
-
-            if (parentForm != null)
-            {
-                // Use the LoadFormInPanel method from adminDashboard to load formRole
-                parentForm.LoadFormInPanel(new manageUser());
-                //this.Close(); // Close the current form (optional, depending on behavior)
-            }
-            else
-            {
-                MessageBox.Show("Parent form not found. Please ensure addRole is opened from adminDashboard.");
-            }
-
+            this.Close();
         }
 
         private void panel1_Paint_1(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void FirstName_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label1_Click_1(object sender, EventArgs e)
         {
 
         }

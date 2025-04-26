@@ -40,6 +40,7 @@ namespace tarungonNaNako
             button7.FillColor = Color.Transparent;
             button8.FillColor = Color.Transparent;
             button9.FillColor = Color.Transparent;
+            Shared.FillColor = Color.Transparent;
 
             // Highlight the selected button
             buttonToHighlight.FillColor = Color.FromArgb(219, 195, 0);
@@ -112,11 +113,35 @@ namespace tarungonNaNako
         private void button7_Click(object sender, EventArgs e)
         {
             HighlightButton(button7);
+            LoadFormInPanel(new profile());
         }
 
         private void button8_Click(object sender, EventArgs e)
         {
             HighlightButton(button8);
+            // Show a confirmation dialog
+            DialogResult result = MessageBox.Show(
+                "Are you sure you want to log out?",
+                "Logout Confirmation",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Question
+            );
+
+            if (result == DialogResult.Yes)
+            {
+                // Close the current dashboard
+                this.Close();
+
+                // Show the login page
+                loginPage login = new loginPage();
+                login.Show();
+            }
+        }
+
+        private void Shared_Click(object sender, EventArgs e)
+        {
+            HighlightButton(Shared);
+            LoadFormInPanel(new SharedFiles());
         }
     }
 }

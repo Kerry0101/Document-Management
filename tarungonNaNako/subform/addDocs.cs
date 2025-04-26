@@ -177,104 +177,119 @@ namespace tarungonNaNako.subform
             // Ensure the file extension is retained
             string fileExtension = Path.GetExtension(selectedFilePath);
             string fileName = newFileName + fileExtension; // Create the new file name with the original extension
-            string filePath = Path.Combine("C:\\DocsManagement", fileName);
+
+            // Dynamically determine the folder path based on the selected category
+            string selectedCategory = searchBar.Text.Trim();
+            string folderPath = GetFolderPathByCategory(selectedCategory);
+
+            if (string.IsNullOrEmpty(folderPath))
+            {
+                MessageBox.Show("The selected category does not have a valid folder path. Please select a valid category.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            // Combine the folder path with the file name
+            string filePath = Path.Combine(folderPath, fileName);
+
             int userId = Session.CurrentUserId; // Use the logged-in user's ID
+            int roleId = GetRoleIdFromUserId(userId); // Fetch the roleId based on userId
             string fileType = fileExtension;
             long fileSize = new FileInfo(selectedFilePath).Length;
 
-            // Extract category and subcategory from searchBar
-            string selectedCategory = searchBar.Text.Trim();
-            int categoryId = 0;
+            try
+            {
+                // Ensure the destination directory exists
+                if (!Directory.Exists(folderPath))
+                {
+                    Directory.CreateDirectory(folderPath);
+                }
+
+                // Copy the file to the destination with the new name
+                File.Copy(selectedFilePath, filePath, true);
+
+                // Insert file metadata into the database
+                using (var conn = new MySqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    string insertFileQuery = @"
+                INSERT INTO files (fileName, filePath, categoryId, uploadedBy, userId, uploadDate, fileType, fileSize) 
+                VALUES (@fileName, @filePath, (SELECT categoryId FROM category WHERE categoryName = @selectedCategory AND userId = @userId), 
+                        @uploadedBy, @userId, CURRENT_TIMESTAMP, @fileType, @fileSize)";
+
+                    using (var cmd = new MySqlCommand(insertFileQuery, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@fileName", fileName);
+                        cmd.Parameters.AddWithValue("@filePath", filePath);
+                        cmd.Parameters.AddWithValue("@selectedCategory", selectedCategory);
+                        cmd.Parameters.AddWithValue("@uploadedBy", roleId); // Assuming Session.CurrentRoleId holds the role ID
+                        cmd.Parameters.AddWithValue("@userId", userId);
+                        cmd.Parameters.AddWithValue("@fileType", fileType);
+                        cmd.Parameters.AddWithValue("@fileSize", fileSize);
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+
+                MessageBox.Show("File uploaded successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error during file upload or database insertion: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+
+            this.DialogResult = DialogResult.OK;
+            this.Close();
+        }
+
+
+        private int GetRoleIdFromUserId(int userId)
+        {
+            // Implement this method to fetch the roleId based on userId
+            // This is a placeholder implementation
             int roleId = 0;
+            using (MySqlConnection conn = new MySqlConnection(connectionString))
+            {
+                conn.Open();
+                string query = "SELECT roleId FROM users WHERE userId = @userId";
+                using (MySqlCommand cmd = new MySqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@userId", userId);
+                    roleId = Convert.ToInt32(cmd.ExecuteScalar());
+                }
+            }
+            return roleId;
+        }
+
+        private string GetFolderPathByCategory(string categoryName)
+        {
+            string folderPath = string.Empty;
 
             try
             {
                 using (var conn = new MySqlConnection(connectionString))
                 {
                     conn.Open();
-                    // Fetch categoryId based on the selectedCategory
-                    string query = @"
-                        SELECT categoryId FROM category 
-                        WHERE categoryName = @selectedCategory AND userId = @userId";
+                    string query = "SELECT folderPath FROM category WHERE categoryName = @categoryName AND userId = @userId";
 
                     using (var cmd = new MySqlCommand(query, conn))
                     {
-                        cmd.Parameters.AddWithValue("@selectedCategory", selectedCategory);
-                        cmd.Parameters.AddWithValue("@userId", userId);
-                        using (var reader = cmd.ExecuteReader())
+                        cmd.Parameters.AddWithValue("@categoryName", categoryName);
+                        cmd.Parameters.AddWithValue("@userId", Session.CurrentUserId); // Assuming Session.CurrentUserId holds the logged-in user's ID
+                        object result = cmd.ExecuteScalar();
+                        if (result != null)
                         {
-                            if (reader.Read())
-                            {
-                                categoryId = reader.GetInt32(0);
-                            }
+                            folderPath = result.ToString();
                         }
                     }
-
-                    // Fetch roleId based on the userId
-                    string roleQuery = "SELECT roleId FROM users WHERE userId = @userId";
-                    using (var roleCmd = new MySqlCommand(roleQuery, conn))
-                    {
-                        roleCmd.Parameters.AddWithValue("@userId", userId);
-                        roleId = Convert.ToInt32(roleCmd.ExecuteScalar());
-                    }
                 }
-
-                // Ensure the destination directory exists
-                if (!Directory.Exists("C:\\DocsManagement"))
-                {
-                    Directory.CreateDirectory("C:\\DocsManagement");
-                }
-
-                // Copy the file to the destination with the new name
-                File.Copy(selectedFilePath, filePath, true);
-                MessageBox.Show($"File uploaded successfully!");
-
-                using (MySqlConnection conn = new MySqlConnection(connectionString))
-                {
-                    conn.Open();
-                    string query = "INSERT INTO files (fileName, filePath, categoryId, uploadedBy, userId, uploadDate, fileType, fileSize) " +
-                                   "VALUES (@fileName, @filePath, @categoryId, @uploadedBy, @userId, CURRENT_TIMESTAMP, @fileType, @fileSize)";
-
-                    using (MySqlCommand cmd = new MySqlCommand(query, conn))
-                    {
-                        cmd.Parameters.AddWithValue("@fileName", fileName);
-                        cmd.Parameters.AddWithValue("@filePath", filePath);
-                        cmd.Parameters.AddWithValue("@categoryId", categoryId);
-                        cmd.Parameters.AddWithValue("@uploadedBy", roleId);
-                        cmd.Parameters.AddWithValue("@userId", userId);
-                        cmd.Parameters.AddWithValue("@fileType", fileType);
-                        cmd.Parameters.AddWithValue("@fileSize", fileSize);
-                        int rowsAffected = cmd.ExecuteNonQuery();
-                    }
-                }
-
-                using (MySqlConnection conn = new MySqlConnection(connectionString))
-                {
-                    conn.Open();
-                    string insertVersionQuery = @"
-                        INSERT INTO file_versions (fileId, version, versionFilePath, uploadedBy, uploadDate)
-                        SELECT fileId, 1, @filePath, @uploadedBy, CURRENT_TIMESTAMP
-                        FROM files
-                        WHERE fileName = @fileName";
-
-                    using (MySqlCommand cmd = new MySqlCommand(insertVersionQuery, conn))
-                    {
-                        cmd.Parameters.AddWithValue("@filePath", filePath);
-                        cmd.Parameters.AddWithValue("@uploadedBy", roleId);
-                        cmd.Parameters.AddWithValue("@fileName", fileName);
-                        cmd.ExecuteNonQuery();
-                    }
-                }
-
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error during file upload or database insertion: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Error retrieving folder path: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-            this.DialogResult = DialogResult.OK;
-            this.Close();
-        }
 
+            return folderPath;
+        }
 
 
 

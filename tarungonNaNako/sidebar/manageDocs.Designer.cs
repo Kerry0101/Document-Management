@@ -41,11 +41,17 @@
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges8 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges11 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges12 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges19 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges20 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges13 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges14 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges15 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges16 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges17 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges18 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             label1 = new Label();
             pictureBox1 = new PictureBox();
             searchBar = new Guna.UI2.WinForms.Guna2TextBox();
-            comboBox1 = new ComboBox();
-            label3 = new Label();
             Newbtn = new Guna.UI2.WinForms.Guna2Button();
             popupPanel = new Guna.UI2.WinForms.Guna2Panel();
             loadFromA_Z = new Guna.UI2.WinForms.Guna2Button();
@@ -53,6 +59,10 @@
             panel3 = new Panel();
             loadingPictureBox = new Guna.UI2.WinForms.Guna2PictureBox();
             panel5 = new Panel();
+            guna2Panel2 = new Guna.UI2.WinForms.Guna2Panel();
+            guna2Button6 = new Guna.UI2.WinForms.Guna2Button();
+            guna2Button5 = new Guna.UI2.WinForms.Guna2Button();
+            button1 = new Guna.UI2.WinForms.Guna2Button();
             tableLayoutPanel1 = new TableLayoutPanel();
             label4 = new Label();
             label6 = new Label();
@@ -63,6 +73,7 @@
             panel3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)loadingPictureBox).BeginInit();
             panel5.SuspendLayout();
+            guna2Panel2.SuspendLayout();
             SuspendLayout();
             // 
             // label1
@@ -79,9 +90,10 @@
             // 
             // pictureBox1
             // 
+            pictureBox1.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             pictureBox1.BackColor = Color.FromArgb(255, 255, 128);
             pictureBox1.Image = (Image)resources.GetObject("pictureBox1.Image");
-            pictureBox1.Location = new Point(653, 37);
+            pictureBox1.Location = new Point(851, 37);
             pictureBox1.Name = "pictureBox1";
             pictureBox1.Size = new Size(30, 20);
             pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
@@ -90,6 +102,7 @@
             // 
             // searchBar
             // 
+            searchBar.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             searchBar.BorderRadius = 5;
             searchBar.CustomizableEdges = customizableEdges1;
             searchBar.DefaultText = "";
@@ -102,7 +115,7 @@
             searchBar.Font = new Font("Segoe UI", 9F);
             searchBar.ForeColor = Color.Black;
             searchBar.HoverState.BorderColor = Color.FromArgb(94, 148, 255);
-            searchBar.Location = new Point(423, 26);
+            searchBar.Location = new Point(621, 26);
             searchBar.Margin = new Padding(3, 4, 3, 4);
             searchBar.Name = "searchBar";
             searchBar.PlaceholderForeColor = Color.DimGray;
@@ -113,30 +126,9 @@
             searchBar.TabIndex = 17;
             searchBar.TextChanged += SearchBar_TextChanged;
             // 
-            // comboBox1
-            // 
-            comboBox1.BackColor = Color.FromArgb(255, 255, 128);
-            comboBox1.FormattingEnabled = true;
-            comboBox1.Location = new Point(19, 34);
-            comboBox1.Margin = new Padding(2);
-            comboBox1.Name = "comboBox1";
-            comboBox1.Size = new Size(186, 28);
-            comboBox1.TabIndex = 5;
-            comboBox1.SelectedIndexChanged += comboBox1_SelectedIndexChanged;
-            // 
-            // label3
-            // 
-            label3.AutoSize = true;
-            label3.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            label3.Location = new Point(16, 10);
-            label3.Margin = new Padding(2, 0, 2, 0);
-            label3.Name = "label3";
-            label3.Size = new Size(192, 20);
-            label3.TabIndex = 3;
-            label3.Text = "Sort documents by folder:";
-            // 
             // Newbtn
             // 
+            Newbtn.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             Newbtn.BackColor = Color.Transparent;
             Newbtn.BorderColor = Color.FromArgb(255, 255, 192);
             Newbtn.BorderRadius = 5;
@@ -152,7 +144,7 @@
             Newbtn.ForeColor = Color.Black;
             Newbtn.Image = (Image)resources.GetObject("Newbtn.Image");
             Newbtn.ImageSize = new Size(15, 15);
-            Newbtn.Location = new Point(697, 26);
+            Newbtn.Location = new Point(895, 26);
             Newbtn.Margin = new Padding(0);
             Newbtn.Name = "Newbtn";
             Newbtn.PressedDepth = 10;
@@ -165,6 +157,7 @@
             // 
             // popupPanel
             // 
+            popupPanel.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             popupPanel.AutoScroll = true;
             popupPanel.BackColor = Color.Transparent;
             popupPanel.BorderColor = Color.Black;
@@ -172,17 +165,16 @@
             popupPanel.BorderThickness = 1;
             popupPanel.Controls.Add(loadFromA_Z);
             popupPanel.Controls.Add(btnFileUpload);
-            popupPanel.Controls.Add(comboBox1);
-            popupPanel.Controls.Add(label3);
             popupPanel.CustomizableEdges = customizableEdges9;
-            popupPanel.Location = new Point(498, 65);
+            popupPanel.Location = new Point(696, 65);
             popupPanel.Name = "popupPanel";
             popupPanel.ShadowDecoration.CustomizableEdges = customizableEdges10;
-            popupPanel.Size = new Size(224, 170);
+            popupPanel.Size = new Size(224, 109);
             popupPanel.TabIndex = 20;
             // 
             // loadFromA_Z
             // 
+            loadFromA_Z.ButtonMode = Guna.UI2.WinForms.Enums.ButtonMode.ToogleButton;
             loadFromA_Z.Cursor = Cursors.Hand;
             loadFromA_Z.CustomBorderColor = Color.Black;
             loadFromA_Z.CustomBorderThickness = new Padding(1);
@@ -196,13 +188,14 @@
             loadFromA_Z.ForeColor = Color.Black;
             loadFromA_Z.ImageAlign = HorizontalAlignment.Left;
             loadFromA_Z.ImageSize = new Size(15, 15);
-            loadFromA_Z.Location = new Point(19, 118);
+            loadFromA_Z.Location = new Point(19, 12);
             loadFromA_Z.Name = "loadFromA_Z";
             loadFromA_Z.PressedDepth = 10;
             loadFromA_Z.ShadowDecoration.CustomizableEdges = customizableEdges6;
             loadFromA_Z.Size = new Size(186, 38);
             loadFromA_Z.TabIndex = 7;
             loadFromA_Z.Text = "Load documents (A-Z)";
+            loadFromA_Z.Click += loadFromA_Z_Click;
             // 
             // btnFileUpload
             // 
@@ -215,24 +208,25 @@
             btnFileUpload.DisabledState.FillColor = Color.FromArgb(169, 169, 169);
             btnFileUpload.DisabledState.ForeColor = Color.FromArgb(141, 141, 141);
             btnFileUpload.FillColor = Color.FromArgb(255, 236, 130);
-            btnFileUpload.Font = new Font("Microsoft Sans Serif", 10.2F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            btnFileUpload.Font = new Font("Microsoft Sans Serif", 9F);
             btnFileUpload.ForeColor = Color.Black;
             btnFileUpload.Image = (Image)resources.GetObject("btnFileUpload.Image");
             btnFileUpload.ImageAlign = HorizontalAlignment.Left;
             btnFileUpload.ImageSize = new Size(15, 15);
-            btnFileUpload.Location = new Point(19, 72);
+            btnFileUpload.Location = new Point(19, 58);
             btnFileUpload.Name = "btnFileUpload";
             btnFileUpload.PressedDepth = 10;
             btnFileUpload.ShadowDecoration.CustomizableEdges = customizableEdges8;
             btnFileUpload.Size = new Size(186, 38);
             btnFileUpload.TabIndex = 6;
-            btnFileUpload.Text = "Upload document";
+            btnFileUpload.Text = "Upload a document";
             btnFileUpload.TextAlign = HorizontalAlignment.Right;
             btnFileUpload.TextOffset = new Point(-4, 0);
             btnFileUpload.Click += btnFileUpload_Click;
             // 
             // panel3
             // 
+            panel3.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             panel3.Controls.Add(loadingPictureBox);
             panel3.Controls.Add(popupPanel);
             panel3.Controls.Add(panel5);
@@ -242,7 +236,7 @@
             panel3.Controls.Add(label1);
             panel3.Location = new Point(0, 0);
             panel3.Name = "panel3";
-            panel3.Size = new Size(763, 520);
+            panel3.Size = new Size(961, 646);
             panel3.TabIndex = 21;
             // 
             // loadingPictureBox
@@ -252,7 +246,7 @@
             loadingPictureBox.FillColor = Color.FromArgb(255, 255, 192);
             loadingPictureBox.Image = (Image)resources.GetObject("loadingPictureBox.Image");
             loadingPictureBox.ImageRotate = 0F;
-            loadingPictureBox.Location = new Point(342, 1);
+            loadingPictureBox.Location = new Point(450, 1);
             loadingPictureBox.Name = "loadingPictureBox";
             loadingPictureBox.ShadowDecoration.CustomizableEdges = customizableEdges12;
             loadingPictureBox.Size = new Size(56, 54);
@@ -262,8 +256,10 @@
             // 
             // panel5
             // 
+            panel5.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             panel5.AutoScroll = true;
             panel5.BackColor = Color.FromArgb(255, 207, 64);
+            panel5.Controls.Add(guna2Panel2);
             panel5.Controls.Add(tableLayoutPanel1);
             panel5.Controls.Add(label4);
             panel5.Controls.Add(label6);
@@ -272,12 +268,94 @@
             panel5.Location = new Point(16, 71);
             panel5.Name = "panel5";
             panel5.Padding = new Padding(0, 0, 0, 100);
-            panel5.Size = new Size(719, 422);
+            panel5.Size = new Size(917, 548);
             panel5.TabIndex = 20;
+            // 
+            // guna2Panel2
+            // 
+            guna2Panel2.Controls.Add(guna2Button6);
+            guna2Panel2.Controls.Add(guna2Button5);
+            guna2Panel2.Controls.Add(button1);
+            guna2Panel2.CustomizableEdges = customizableEdges19;
+            guna2Panel2.Location = new Point(460, 131);
+            guna2Panel2.Name = "guna2Panel2";
+            guna2Panel2.ShadowDecoration.CustomizableEdges = customizableEdges20;
+            guna2Panel2.Size = new Size(181, 173);
+            guna2Panel2.TabIndex = 22;
+            guna2Panel2.Visible = false;
+            // 
+            // guna2Button6
+            // 
+            guna2Button6.CustomizableEdges = customizableEdges13;
+            guna2Button6.DisabledState.BorderColor = Color.DarkGray;
+            guna2Button6.DisabledState.CustomBorderColor = Color.DarkGray;
+            guna2Button6.DisabledState.FillColor = Color.FromArgb(169, 169, 169);
+            guna2Button6.DisabledState.ForeColor = Color.FromArgb(141, 141, 141);
+            guna2Button6.FillColor = Color.FromArgb(255, 236, 130);
+            guna2Button6.Font = new Font("Microsoft Sans Serif", 10.2F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            guna2Button6.ForeColor = Color.Black;
+            guna2Button6.Image = (Image)resources.GetObject("guna2Button6.Image");
+            guna2Button6.ImageAlign = HorizontalAlignment.Left;
+            guna2Button6.ImageSize = new Size(15, 15);
+            guna2Button6.Location = new Point(0, 87);
+            guna2Button6.Name = "guna2Button6";
+            guna2Button6.PressedDepth = 10;
+            guna2Button6.ShadowDecoration.CustomizableEdges = customizableEdges14;
+            guna2Button6.Size = new Size(181, 42);
+            guna2Button6.TabIndex = 3;
+            guna2Button6.Text = "Move to trash";
+            guna2Button6.TextAlign = HorizontalAlignment.Right;
+            guna2Button6.TextOffset = new Point(-12, 0);
+            // 
+            // guna2Button5
+            // 
+            guna2Button5.CustomizableEdges = customizableEdges15;
+            guna2Button5.DisabledState.BorderColor = Color.DarkGray;
+            guna2Button5.DisabledState.CustomBorderColor = Color.DarkGray;
+            guna2Button5.DisabledState.FillColor = Color.FromArgb(169, 169, 169);
+            guna2Button5.DisabledState.ForeColor = Color.FromArgb(141, 141, 141);
+            guna2Button5.FillColor = Color.FromArgb(255, 236, 130);
+            guna2Button5.Font = new Font("Microsoft Sans Serif", 10.2F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            guna2Button5.ForeColor = Color.Black;
+            guna2Button5.Image = (Image)resources.GetObject("guna2Button5.Image");
+            guna2Button5.ImageAlign = HorizontalAlignment.Left;
+            guna2Button5.ImageSize = new Size(15, 15);
+            guna2Button5.Location = new Point(0, 44);
+            guna2Button5.Name = "guna2Button5";
+            guna2Button5.PressedDepth = 10;
+            guna2Button5.ShadowDecoration.CustomizableEdges = customizableEdges16;
+            guna2Button5.Size = new Size(181, 42);
+            guna2Button5.TabIndex = 2;
+            guna2Button5.Text = "Rename";
+            guna2Button5.TextOffset = new Point(-18, 0);
+            // 
+            // button1
+            // 
+            button1.CustomizableEdges = customizableEdges17;
+            button1.DisabledState.BorderColor = Color.DarkGray;
+            button1.DisabledState.CustomBorderColor = Color.DarkGray;
+            button1.DisabledState.FillColor = Color.FromArgb(169, 169, 169);
+            button1.DisabledState.ForeColor = Color.FromArgb(141, 141, 141);
+            button1.FillColor = Color.FromArgb(255, 236, 130);
+            button1.Font = new Font("Microsoft Sans Serif", 10.2F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            button1.ForeColor = Color.Black;
+            button1.Image = (Image)resources.GetObject("button1.Image");
+            button1.ImageAlign = HorizontalAlignment.Left;
+            button1.ImageSize = new Size(15, 15);
+            button1.Location = new Point(0, 1);
+            button1.Name = "button1";
+            button1.PressedDepth = 10;
+            button1.ShadowDecoration.CustomizableEdges = customizableEdges18;
+            button1.Size = new Size(181, 42);
+            button1.TabIndex = 1;
+            button1.Text = "Download";
+            button1.TextOffset = new Point(-18, 0);
             // 
             // tableLayoutPanel1
             // 
+            tableLayoutPanel1.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             tableLayoutPanel1.AutoSize = true;
+            tableLayoutPanel1.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             tableLayoutPanel1.ColumnCount = 1;
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 56.7615662F));
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 20F));
@@ -286,14 +364,14 @@
             tableLayoutPanel1.Name = "tableLayoutPanel1";
             tableLayoutPanel1.RowCount = 1;
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tableLayoutPanel1.Size = new Size(687, 51);
+            tableLayoutPanel1.Size = new Size(885, 0);
             tableLayoutPanel1.TabIndex = 11;
             // 
             // label4
             // 
             label4.AutoSize = true;
             label4.Font = new Font("Microsoft Sans Serif", 10.2F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            label4.Location = new Point(617, 9);
+            label4.Location = new Point(803, 9);
             label4.Name = "label4";
             label4.Size = new Size(62, 20);
             label4.TabIndex = 10;
@@ -334,7 +412,7 @@
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(255, 255, 192);
-            ClientSize = new Size(763, 520);
+            ClientSize = new Size(961, 646);
             Controls.Add(panel3);
             Font = new Font("Segoe UI", 9F);
             FormBorderStyle = FormBorderStyle.None;
@@ -344,20 +422,18 @@
             Load += manageDocs_Load;
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             popupPanel.ResumeLayout(false);
-            popupPanel.PerformLayout();
             panel3.ResumeLayout(false);
             panel3.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)loadingPictureBox).EndInit();
             panel5.ResumeLayout(false);
             panel5.PerformLayout();
+            guna2Panel2.ResumeLayout(false);
             ResumeLayout(false);
         }
 
         #endregion
 
         private Label label1;
-        private ComboBox comboBox1;
-        private Label label3;
         private Guna.UI2.WinForms.Guna2Button Newbtn;
         private PictureBox pictureBox1;
         private Guna.UI2.WinForms.Guna2TextBox searchBar;
@@ -372,5 +448,9 @@
         private Label label7;
         private TableLayoutPanel tableLayoutPanel1;
         private Guna.UI2.WinForms.Guna2PictureBox loadingPictureBox;
+        private Guna.UI2.WinForms.Guna2Panel guna2Panel2;
+        private Guna.UI2.WinForms.Guna2Button guna2Button6;
+        private Guna.UI2.WinForms.Guna2Button guna2Button5;
+        private Guna.UI2.WinForms.Guna2Button button1;
     }
 }

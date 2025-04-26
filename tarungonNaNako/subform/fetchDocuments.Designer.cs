@@ -106,7 +106,7 @@
             Newbtn.ImageAlign = HorizontalAlignment.Left;
             Newbtn.ImageOffset = new Point(-2, 0);
             Newbtn.ImageSize = new Size(30, 30);
-            Newbtn.Location = new Point(299, 10);
+            Newbtn.Location = new Point(299, 6);
             Newbtn.Margin = new Padding(10, 3, 5, 3);
             Newbtn.Name = "Newbtn";
             Newbtn.Padding = new Padding(20, 0, 0, 0);
@@ -125,7 +125,7 @@
             breadcrumbPanel.Dock = DockStyle.Fill;
             breadcrumbPanel.Location = new Point(0, 0);
             breadcrumbPanel.Name = "breadcrumbPanel";
-            breadcrumbPanel.Size = new Size(785, 49);
+            breadcrumbPanel.Size = new Size(961, 49);
             breadcrumbPanel.TabIndex = 20;
             breadcrumbPanel.Click += breadcrumbPanel_Click;
             // 
@@ -139,7 +139,7 @@
             panel3.Dock = DockStyle.Fill;
             panel3.Location = new Point(0, 0);
             panel3.Name = "panel3";
-            panel3.Size = new Size(785, 529);
+            panel3.Size = new Size(961, 646);
             panel3.TabIndex = 22;
             panel3.Click += panel3_Click;
             // 
@@ -151,7 +151,7 @@
             searchBarPanel.BorderThickness = 1;
             searchBarPanel.Controls.Add(searchBar);
             searchBarPanel.CustomizableEdges = customizableEdges5;
-            searchBarPanel.Location = new Point(470, 50);
+            searchBarPanel.Location = new Point(653, 53);
             searchBarPanel.Name = "searchBarPanel";
             searchBarPanel.ShadowDecoration.CustomizableEdges = customizableEdges6;
             searchBarPanel.Size = new Size(280, 66);
@@ -171,7 +171,7 @@
             searchBar.Font = new Font("Segoe UI", 9F);
             searchBar.ForeColor = Color.Black;
             searchBar.HoverState.BorderColor = Color.FromArgb(94, 148, 255);
-            searchBar.Location = new Point(6, 13);
+            searchBar.Location = new Point(6, 15);
             searchBar.Margin = new Padding(3, 4, 3, 4);
             searchBar.Name = "searchBar";
             searchBar.PlaceholderForeColor = Color.DimGray;
@@ -186,6 +186,7 @@
             searchBarBtn.BorderColor = Color.FromArgb(255, 255, 192);
             searchBarBtn.BorderRadius = 15;
             searchBarBtn.BorderThickness = 1;
+            searchBarBtn.ButtonMode = Guna.UI2.WinForms.Enums.ButtonMode.ToogleButton;
             searchBarBtn.Cursor = Cursors.Hand;
             searchBarBtn.CustomizableEdges = customizableEdges7;
             searchBarBtn.DisabledState.BorderColor = Color.DarkGray;
@@ -198,11 +199,12 @@
             searchBarBtn.Image = (Image)resources.GetObject("searchBarBtn.Image");
             searchBarBtn.ImageAlign = HorizontalAlignment.Right;
             searchBarBtn.ImageSize = new Size(25, 25);
-            searchBarBtn.Location = new Point(560, 10);
+            searchBarBtn.Location = new Point(743, 13);
             searchBarBtn.Margin = new Padding(10, 3, 5, 3);
             searchBarBtn.Name = "searchBarBtn";
             searchBarBtn.Padding = new Padding(20, 0, 0, 0);
-            searchBarBtn.PressedDepth = 10;
+            searchBarBtn.PressedColor = Color.Yellow;
+            searchBarBtn.PressedDepth = 0;
             searchBarBtn.ShadowDecoration.CustomizableEdges = customizableEdges8;
             searchBarBtn.Size = new Size(190, 36);
             searchBarBtn.TabIndex = 24;
@@ -219,7 +221,7 @@
             fetchDocumentPanel.Location = new Point(4, 53);
             fetchDocumentPanel.Name = "fetchDocumentPanel";
             fetchDocumentPanel.ShadowDecoration.CustomizableEdges = customizableEdges26;
-            fetchDocumentPanel.Size = new Size(769, 468);
+            fetchDocumentPanel.Size = new Size(957, 581);
             fetchDocumentPanel.TabIndex = 23;
             // 
             // panel5
@@ -237,7 +239,7 @@
             panel5.Location = new Point(10, 0);
             panel5.Name = "panel5";
             panel5.Padding = new Padding(0, 0, 0, 100);
-            panel5.Size = new Size(743, 425);
+            panel5.Size = new Size(917, 511);
             panel5.TabIndex = 16;
             panel5.Scroll += panel5_Scroll;
             panel5.Click += panel5_Click;
@@ -324,11 +326,12 @@
             // 
             // guna2Panel2
             // 
+            guna2Panel2.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             guna2Panel2.Controls.Add(guna2Button6);
             guna2Panel2.Controls.Add(guna2Button5);
             guna2Panel2.Controls.Add(button1);
             guna2Panel2.CustomizableEdges = customizableEdges23;
-            guna2Panel2.Location = new Point(460, 131);
+            guna2Panel2.Location = new Point(663, 131);
             guna2Panel2.Name = "guna2Panel2";
             guna2Panel2.ShadowDecoration.CustomizableEdges = customizableEdges24;
             guna2Panel2.Size = new Size(181, 132);
@@ -407,7 +410,7 @@
             // 
             label2.AutoSize = true;
             label2.Font = new Font("Microsoft Sans Serif", 10.2F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            label2.Location = new Point(650, 9);
+            label2.Location = new Point(840, 9);
             label2.Name = "label2";
             label2.Size = new Size(62, 20);
             label2.TabIndex = 11;
@@ -426,7 +429,7 @@
             tableLayoutPanel1.Name = "tableLayoutPanel1";
             tableLayoutPanel1.RowCount = 1;
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tableLayoutPanel1.Size = new Size(735, 51);
+            tableLayoutPanel1.Size = new Size(909, 51);
             tableLayoutPanel1.TabIndex = 9;
             tableLayoutPanel1.Click += tableLayoutPanel1_Click;
             // 
@@ -469,7 +472,7 @@
             breadcrumbContainer.Margin = new Padding(3, 10, 3, 3);
             breadcrumbContainer.Name = "breadcrumbContainer";
             breadcrumbContainer.ShadowDecoration.CustomizableEdges = customizableEdges28;
-            breadcrumbContainer.Size = new Size(785, 49);
+            breadcrumbContainer.Size = new Size(961, 49);
             breadcrumbContainer.TabIndex = 22;
             // 
             // fetchDocuments
@@ -477,7 +480,7 @@
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(255, 255, 192);
-            ClientSize = new Size(785, 529);
+            ClientSize = new Size(961, 646);
             Controls.Add(panel3);
             FormBorderStyle = FormBorderStyle.None;
             Name = "fetchDocuments";

@@ -34,9 +34,14 @@ namespace tarungonNaNako.subform
 
             if (parentForm != null)
             {
-                // Use the LoadFormInPanel method from adminDashboard to load formRole
-                parentForm.LoadFormInPanel(new formRole());
-                this.Close(); // Close the current form (optional, depending on behavior)
+                formRole manageRole = new formRole();
+                manageRole.StartPosition = FormStartPosition.Manual;
+                manageRole.Location = new Point(663, 270);
+                manageRole.FormBorderStyle = FormBorderStyle.FixedDialog;
+                manageRole.MinimizeBox = false;
+                manageRole.MaximizeBox = false;
+                manageRole.ShowDialog(this);
+
             }
             else
             {

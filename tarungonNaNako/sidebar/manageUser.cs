@@ -43,7 +43,7 @@ namespace tarungonNaNako.sidebar
                         SELECT u.userId, CONCAT(u.firstName, ' ', u.lastName) AS fullName, r.roleName
                         FROM users u
                         INNER JOIN roles r ON u.roleId = r.roleId
-                        WHERE u.isArchived = 0";  // Assuming "IsArchived" is a field indicating if the user is archived
+                        WHERE u.isArchived = 0 AND is_hidden = 0";  // Assuming "IsArchived" is a field indicating if the user is archived
 
                     using (MySqlCommand cmd = new MySqlCommand(query, conn))
                     
@@ -89,7 +89,7 @@ namespace tarungonNaNako.sidebar
                         // Check if the selected user is the currently logged-in admin
                         if (userId == loggedInUserId)
                         {
-                            MessageBox.Show("You cannot archive the account you are currently using.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            MessageBox.Show("You cannot archive the account that is currently using.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                             return;
                         }
                         // Confirm archive action
@@ -109,7 +109,7 @@ namespace tarungonNaNako.sidebar
                             {
                                 conn.Open();
 
-                                string query = "UPDATE users SET isArchived = 1 WHERE userId = @userId";
+                                string query = "UPDATE users SET is_hidden = 1 WHERE userId = @userId";
 
                                 using (MySqlCommand cmd = new MySqlCommand(query, conn))
                                 {
@@ -140,7 +140,13 @@ namespace tarungonNaNako.sidebar
                         if (parentForm != null)
                         {
                             addUser editForm = new addUser(userId);
-                            parentForm.LoadFormInPanel(editForm);
+                            editForm.StartPosition = FormStartPosition.Manual;
+                            editForm.Location = new Point(663, 270);
+                            editForm.FormBorderStyle = FormBorderStyle.FixedDialog;
+                            editForm.MinimizeBox = false;
+                            editForm.MaximizeBox = false;
+                            editForm.ShowDialog(this);
+                            LoadUserData();
                         }
                         else
                         {
@@ -190,7 +196,15 @@ namespace tarungonNaNako.sidebar
             if (parentForm != null)
             {
                 // Use the LoadFormInPanel method from adminDashboard to load formRole
-                parentForm.LoadFormInPanel(new addUser());
+                addUser addUser = new addUser(); // Pass 'this'
+                addUser.StartPosition = FormStartPosition.Manual;
+                addUser.Location = new Point(663, 270);
+                addUser.FormBorderStyle = FormBorderStyle.FixedDialog;
+                addUser.MinimizeBox = false;
+                addUser.MaximizeBox = false;
+                addUser.ShowDialog(this);
+                LoadUserData();
+
                 //this.Close(); // Close the current form (optional, depending on behavior)
             }
             else

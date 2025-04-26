@@ -101,6 +101,7 @@
             // 
             // panel5
             // 
+            panel5.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             panel5.AutoScroll = true;
             panel5.BackColor = Color.FromArgb(255, 207, 64);
             panel5.Controls.Add(label2);
@@ -111,7 +112,7 @@
             panel5.Location = new Point(16, 171);
             panel5.Name = "panel5";
             panel5.Padding = new Padding(0, 0, 0, 100);
-            panel5.Size = new Size(730, 335);
+            panel5.Size = new Size(928, 461);
             panel5.TabIndex = 15;
             panel5.Scroll += panel5_Scroll;
             panel5.Click += panel5_Click;
@@ -121,7 +122,7 @@
             // 
             label2.AutoSize = true;
             label2.Font = new Font("Microsoft Sans Serif", 10.2F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            label2.Location = new Point(604, 9);
+            label2.Location = new Point(818, 9);
             label2.Name = "label2";
             label2.Size = new Size(62, 20);
             label2.TabIndex = 10;
@@ -129,6 +130,7 @@
             // 
             // tableLayoutPanel1
             // 
+            tableLayoutPanel1.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             tableLayoutPanel1.AutoSize = true;
             tableLayoutPanel1.ColumnCount = 1;
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 56.7615662F));
@@ -138,7 +140,7 @@
             tableLayoutPanel1.Name = "tableLayoutPanel1";
             tableLayoutPanel1.RowCount = 1;
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tableLayoutPanel1.Size = new Size(696, 51);
+            tableLayoutPanel1.Size = new Size(894, 51);
             tableLayoutPanel1.TabIndex = 9;
             tableLayoutPanel1.Paint += tableLayoutPanel1_Paint_1;
             // 
@@ -332,6 +334,7 @@
             // 
             // Guna2Panel1
             // 
+            Guna2Panel1.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             Guna2Panel1.AutoScroll = true;
             Guna2Panel1.Controls.Add(guna2CircleButton3);
             Guna2Panel1.Controls.Add(guna2CircleButton4);
@@ -345,7 +348,7 @@
             Guna2Panel1.Location = new Point(16, 35);
             Guna2Panel1.Name = "Guna2Panel1";
             Guna2Panel1.ShadowDecoration.CustomizableEdges = customizableEdges14;
-            Guna2Panel1.Size = new Size(730, 90);
+            Guna2Panel1.Size = new Size(928, 90);
             Guna2Panel1.TabIndex = 16;
             Guna2Panel1.Scroll += Guna2Panel1_Scroll;
             Guna2Panel1.Click += Guna2Panel1_Click;
@@ -441,6 +444,7 @@
             // 
             // panel3
             // 
+            panel3.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             panel3.Controls.Add(popupPanel);
             panel3.Controls.Add(Newbtn);
             panel3.Controls.Add(guna2Panel2);
@@ -452,7 +456,7 @@
             panel3.Controls.Add(label1);
             panel3.Location = new Point(0, 0);
             panel3.Name = "panel3";
-            panel3.Size = new Size(763, 520);
+            panel3.Size = new Size(961, 646);
             panel3.TabIndex = 18;
             panel3.Click += panel3_Click;
             // 
@@ -488,7 +492,7 @@
             btnFolderUpload.ShadowDecoration.CustomizableEdges = customizableEdges16;
             btnFolderUpload.Size = new Size(181, 42);
             btnFolderUpload.TabIndex = 3;
-            btnFolderUpload.Text = "Move to trash";
+            btnFolderUpload.Text = "Zip upload";
             btnFolderUpload.TextAlign = HorizontalAlignment.Right;
             btnFolderUpload.TextOffset = new Point(-12, 0);
             // 
@@ -511,7 +515,7 @@
             btnFileUpload.ShadowDecoration.CustomizableEdges = customizableEdges18;
             btnFileUpload.Size = new Size(181, 42);
             btnFileUpload.TabIndex = 2;
-            btnFileUpload.Text = "Rename";
+            btnFileUpload.Text = "File upload";
             btnFileUpload.TextOffset = new Point(-18, 0);
             // 
             // btnNewFolder
@@ -533,7 +537,7 @@
             btnNewFolder.ShadowDecoration.CustomizableEdges = customizableEdges20;
             btnNewFolder.Size = new Size(181, 42);
             btnNewFolder.TabIndex = 1;
-            btnNewFolder.Text = "Download";
+            btnNewFolder.Text = "New folder";
             btnNewFolder.TextOffset = new Point(-18, 0);
             // 
             // Newbtn
@@ -574,7 +578,7 @@
             guna2Panel2.Controls.Add(guna2Button5);
             guna2Panel2.Controls.Add(button1);
             guna2Panel2.CustomizableEdges = customizableEdges31;
-            guna2Panel2.Location = new Point(460, 131);
+            guna2Panel2.Location = new Point(602, 160);
             guna2Panel2.Name = "guna2Panel2";
             guna2Panel2.ShadowDecoration.CustomizableEdges = customizableEdges32;
             guna2Panel2.Size = new Size(181, 132);
@@ -653,7 +657,7 @@
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(255, 255, 192);
-            ClientSize = new Size(763, 520);
+            ClientSize = new Size(961, 646);
             Controls.Add(panel3);
             FormBorderStyle = FormBorderStyle.None;
             Name = "homepage";

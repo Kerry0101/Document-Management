@@ -1,4 +1,4 @@
-using MySql.Data.MySqlClient;
+﻿using MySql.Data.MySqlClient;
 using Org.BouncyCastle.Crypto.Generators;
 using BCrypt.Net;
 using System.Security.Cryptography;
@@ -11,27 +11,37 @@ namespace tarungonNaNako
 {
     public partial class loginPage : Form
     {
+        private bool isPasswordHidden = true; // Track password visibility
+        private string EyeCrossed = Path.Combine(Application.StartupPath, "Assets (images)", "eye-crossed.png");
+        private string EyeOpened = Path.Combine(Application.StartupPath, "Assets (images)", "eye.png");
 
         public loginPage()
         {
             InitializeComponent();
             string mysqlCon = "server=localhost; user=root; Database=docsmanagement; password=";
             MySqlConnection mySqlConnection = new MySqlConnection(mysqlCon);
+            textBox2.PasswordChar = '●';
+            isPasswordHidden = true; 
 
-            //try
-            //{
-            //    mySqlConnection.Open();
-            //    MessageBox.Show("Connected to database");
-            //}
-            //catch (Exception ex)
-            //{
-            //    MessageBox.Show(ex.Message);
-            //}
-            //finally
-            //{
-            //    mySqlConnection.Close();
-            //}
+            HideButton.Image = Image.FromFile(EyeCrossed);
+        }
 
+        private void HideButton_Click(object sender, EventArgs e)
+        {
+            if (isPasswordHidden)
+            {
+                // Show the password
+                textBox2.PasswordChar = '\0'; // '\0' means no masking
+                isPasswordHidden = false;
+                HideButton.Image = Image.FromFile(EyeOpened);
+            }
+            else
+            {
+                // Hide the password
+                textBox2.PasswordChar = '●'; // Mask the password
+                isPasswordHidden = true;
+                HideButton.Image = Image.FromFile(EyeCrossed);
+            }
         }
 
 
@@ -111,133 +121,7 @@ namespace tarungonNaNako
             }
         }
 
-        /*private void button1_Click(object sender, EventArgs e)
-        {
-            // Set the session variables
-            Session.CurrentUserId = loggedInUserId;
-            Session.CurrentUserName = username; // Use the username or another identifier for the session
 
-            // Get input from textboxes
-            string username = textBox1.Text.Trim(); // Replace with your username textbox
-            string password = textBox2.Text.Trim(); // Replace with your password textbox
-
-
-            // Connection string
-            string mysqlCon = "server=localhost; user=root; Database=docsmanagement; password=";
-
-            using (MySqlConnection mySqlConnection = new MySqlConnection(mysqlCon))
-            {
-                try
-                {
-                    mySqlConnection.Open();
-
-                    // Query to check username, password, and isArchived status
-                    string query = @"
-                    SELECT u.userId, r.roleName 
-                    FROM users u
-                    JOIN roles r ON u.roleId = r.roleId
-                    WHERE u.username = @username 
-                    AND u.password = @password 
-                    AND u.isArchived = 0";
-
-                
-
-                    using (MySqlCommand cmd = new MySqlCommand(query, mySqlConnection))
-                    {
-                        // Add parameters
-                        cmd.Parameters.AddWithValue("@username", username);
-                        cmd.Parameters.AddWithValue("@password", password); // Plain text for now
-
-                        using (MySqlDataReader reader = cmd.ExecuteReader())
-                        {
-                            if (reader.Read())
-                            {
-                                int loggedInUserId = reader.GetInt32("userId"); // Get the logged-in user's ID
-                                string roleName = reader.GetString("roleName");
-
-                                MessageBox.Show($"Login successful! Role: {roleName}");
-
-                                // Navigate to the appropriate dashboard based on the role
-                                if (roleName == "Admin")
-                                {
-                                    adminDashboard adminDashboard = new adminDashboard(loggedInUserId); // Pass the user ID
-                                    adminDashboard.Show();
-                                    this.Hide();
-                                }
-                                else if (roleName == "Principal")
-                                {
-                                    principalDashboard principalDashboard = new principalDashboard(); // Pass the user ID
-                                    principalDashboard.Show();
-                                    this.Hide();
-                                }
-                                else if (roleName == "Teacher")
-                                {
-                                    teacherDashboard teacherDashboard = new teacherDashboard(); // Pass the user ID
-                                    teacherDashboard.Show();
-                                    this.Hide();
-                                }
-                            }
-                            else
-                            {
-                                MessageBox.Show("Invalid username or password.");
-                            }
-                        }
-                    }
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show("An error occurred: " + ex.Message);
-                }
-                *//*// Add parameters
-                cmd.Parameters.AddWithValue("@username", username);
-                cmd.Parameters.AddWithValue("@password", password); // Plain text for now
-
-                var roleName = cmd.ExecuteScalar(); // Retrieve role name if credentials match
-                if (roleName != null)
-                {
-                    MessageBox.Show($"Login successful! Role: {roleName}");
-
-                    // Navigate to the appropriate dashboard based on the role
-                    string role = roleName.ToString();
-                    if (role == "Admin")
-                    {
-
-                        // Open admin dashboard
-                        adminDashboard adminDashboard = new adminDashboard();
-                        adminDashboard.Show();
-                        this.Hide();
-                    }
-                    else if (role == "Principal")
-                    {
-                        // Open principal dashboard
-                        principalDashboard principalDashboard = new principalDashboard();
-                        principalDashboard.Show();
-                        this.Hide();
-                    }
-                    else if (role == "Teacher")
-                    {
-                        // Open teacher dashboard
-                        teacherDashboard teacherlDashboard = new teacherDashboard();
-                        teacherlDashboard.Show();
-                        this.Hide();
-                    }
-
-                }
-                else
-                {
-                    MessageBox.Show("Invalid username or password.");
-                }
-            }
-        }
-        catch (Exception ex)
-        {
-            MessageBox.Show("An error occurred: " + ex.Message);
-        }*//*
-            }
-        
-
-
-    }*/
 
         private void label4_Click(object sender, EventArgs e)
         {

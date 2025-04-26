@@ -47,7 +47,6 @@ namespace tarungonNaNako.subform
             else
                 fadeTimer.Stop(); // Stop when fully visible
         }
-
         private void button1_Click(object sender, EventArgs e)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
@@ -56,14 +55,14 @@ namespace tarungonNaNako.subform
 
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
-                if (!string.IsNullOrEmpty(openFileDialog.FileName))
+                if (!string.IsNullOrEmpty(openFileDialog.FileName) && File.Exists(openFileDialog.FileName))
                 {
                     selectedFilePath = openFileDialog.FileName; // Assign to the class variable
                     textBox1.Text = Path.GetFileName(selectedFilePath);
                 }
                 else
                 {
-                    MessageBox.Show("No file was selected. Please try again.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBox.Show("The selected file does not exist. Please try again.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
             }
             else
@@ -71,6 +70,8 @@ namespace tarungonNaNako.subform
                 MessageBox.Show("File selection canceled.", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
+
+
 
         private void btnSave_Click(object sender, EventArgs e)
         {
@@ -105,10 +106,22 @@ namespace tarungonNaNako.subform
                     Directory.CreateDirectory(currentFolderPath);
                 }
 
-                // Copy the file to the destination with the new name
-                File.Copy(selectedFilePath, filePath, true);
-                MessageBox.Show($"File uploaded successfully!");
+                // Log the current folder path for debugging
+                Console.WriteLine($"Current Folder Path: {currentFolderPath}");
 
+                // Copy the file to the destination with the new name
+                if (!File.Exists(filePath)) // Avoid overwriting existing files
+                {
+                    File.Copy(selectedFilePath, filePath, true);
+                    Console.WriteLine($"File copied to: {filePath}");
+                }
+                else
+                {
+                    MessageBox.Show("A file with the same name already exists in the destination folder.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                // Insert file metadata into the database
                 using (MySqlConnection conn = new MySqlConnection(connectionString))
                 {
                     conn.Open();
@@ -128,6 +141,7 @@ namespace tarungonNaNako.subform
                     }
                 }
 
+                // Insert file version into the database
                 using (MySqlConnection conn = new MySqlConnection(connectionString))
                 {
                     conn.Open();
@@ -146,6 +160,7 @@ namespace tarungonNaNako.subform
                     }
                 }
 
+                MessageBox.Show($"File uploaded successfully!");
             }
             catch (Exception ex)
             {
@@ -155,6 +170,8 @@ namespace tarungonNaNako.subform
             this.DialogResult = DialogResult.OK;
             this.Close();
         }
+
+
 
 
         private int GetRoleIdFromUserId(int userId)

@@ -16,14 +16,28 @@ namespace tarungonNaNako
     {
         private int loggedInUserId; // Store logged-in user ID
 
-        public adminDashboard()
-        {
-            InitializeComponent();
-        }
         public adminDashboard(int userId)
         {
             InitializeComponent();
+            HighlightButton(button1);
             loggedInUserId = userId; // Save logged-in admin's user ID
+        }
+
+        private void HighlightButton(Guna.UI2.WinForms.Guna2Button buttonToHighlight)
+        {
+            // Reset the highlight for all buttons
+            button1.FillColor = Color.Transparent;
+            button2.FillColor = Color.Transparent;
+            button4.FillColor = Color.Transparent;
+            button3.FillColor = Color.Transparent;
+            button5.FillColor = Color.Transparent;
+            button6.FillColor = Color.Transparent;
+            button7.FillColor = Color.Transparent;
+            button8.FillColor = Color.Transparent;
+            button9.FillColor = Color.Transparent;
+
+            // Highlight the selected button
+            buttonToHighlight.FillColor = Color.FromArgb(219, 195, 0);
         }
 
         public void LoadFormInPanel(Form form)
@@ -50,26 +64,30 @@ namespace tarungonNaNako
 
         private void button2_Click(object sender, EventArgs e)
         {
+            HighlightButton(button2);
             LoadFormInPanel(new manageDocs());
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
-            LoadFormInPanel(new formHome());
+            HighlightButton(button1);
+            LoadFormInPanel(new homepage());
         }
 
         private void adminDashboard_Load_1(object sender, EventArgs e)
         {
-            LoadFormInPanel(new formHome());  // Load formDashboard on load
+            LoadFormInPanel(new homepage());  // Load formDashboard on load
         }
 
         private void button4_Click(object sender, EventArgs e)
         {
+            HighlightButton(button4);
             LoadFormInPanel(new docsApproval());
         }
 
         private void button5_Click(object sender, EventArgs e)
         {
+            HighlightButton(button5);
             LoadFormInPanel(new addRole());
         }
 
@@ -80,6 +98,7 @@ namespace tarungonNaNako
 
         private void button6_Click(object sender, EventArgs e)
         {
+            HighlightButton(button6);
             manageUser manageUserForm = new manageUser(loggedInUserId);
             LoadFormInPanel(manageUserForm);
 
@@ -92,16 +111,19 @@ namespace tarungonNaNako
 
         private void button3_Click_1(object sender, EventArgs e)
         {
+            HighlightButton(button3);
             LoadFormInPanel(new categories());
         }
 
         private void button7_Click(object sender, EventArgs e)
         {
-
+            HighlightButton(button7);
+            LoadFormInPanel(new profile());
         }
 
         private void button9_Click(object sender, EventArgs e)
         {
+            HighlightButton(button9);
             LoadFormInPanel(new archived());
         }
 
@@ -112,6 +134,7 @@ namespace tarungonNaNako
 
         private void button8_Click(object sender, EventArgs e)
         {
+            HighlightButton(button8);
             // Show a confirmation dialog
             DialogResult result = MessageBox.Show(
                 "Are you sure you want to log out?",
@@ -129,6 +152,21 @@ namespace tarungonNaNako
                 loginPage login = new loginPage();
                 login.Show();
             }
+        }
+
+        private void button7_Click_1(object sender, EventArgs e)
+        {
+
+        }
+
+        private void CloseBtn_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
+        }
+
+        private void MinimizeBtn_Click(object sender, EventArgs e)
+        {
+            this.WindowState = FormWindowState.Minimized;
         }
     }
 }

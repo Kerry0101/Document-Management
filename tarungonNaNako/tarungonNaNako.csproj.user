@@ -31,6 +31,12 @@
     <Compile Update="sidebar\manageUser.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Update="sidebar\profile.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="sidebar\SharedFiles.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Update="subform\addCategory.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -49,10 +55,16 @@
     <Compile Update="subform\createNewFolderForm.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Update="subform\EditUserAccount.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Update="subform\fetchDocuments.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Update="subform\homepage.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="subform\PasswordPrompt.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Update="subform\subCategories.cs">
@@ -62,6 +74,9 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Update="teacherDashboard.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UpdateItems.cs">
       <SubType>Form</SubType>
     </Compile>
   </ItemGroup>
