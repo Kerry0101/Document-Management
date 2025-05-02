@@ -258,6 +258,7 @@
             // 
             panel5.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             panel5.AutoScroll = true;
+            panel5.AutoScrollMargin = new Size(0, 15);
             panel5.BackColor = Color.FromArgb(255, 207, 64);
             panel5.Controls.Add(guna2Panel2);
             panel5.Controls.Add(tableLayoutPanel1);
@@ -355,7 +356,6 @@
             // 
             tableLayoutPanel1.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             tableLayoutPanel1.AutoSize = true;
-            tableLayoutPanel1.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             tableLayoutPanel1.ColumnCount = 1;
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 56.7615662F));
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 20F));
@@ -364,7 +364,7 @@
             tableLayoutPanel1.Name = "tableLayoutPanel1";
             tableLayoutPanel1.RowCount = 1;
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tableLayoutPanel1.Size = new Size(885, 0);
+            tableLayoutPanel1.Size = new Size(895, 13);
             tableLayoutPanel1.TabIndex = 11;
             // 
             // label4

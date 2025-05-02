@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using MySql.Data.MySqlClient;
+using System.IO;
 
 namespace tarungonNaNako.subform
 {
@@ -79,6 +80,7 @@ namespace tarungonNaNako.subform
             string folderQuery = "INSERT INTO category (categoryName, parentCategoryId, folderPath, userId, uploadedBy) VALUES (@categoryName, @parentCategoryId, @folderPath, @userId, @roleId)";
             string roleQuery = "SELECT roleId FROM users WHERE userId = @userId";
             string parentPathQuery = "SELECT folderPath FROM category WHERE categoryId = @parentCategoryId";
+            string checkFolderQuery = "SELECT COUNT(*) FROM category WHERE folderPath = @folderPath";
 
             int parentCategoryId = -1; // Default to root-level folder
             string parentFolderPath = @"C:\DocsManagement"; // Base path for root-level folders
@@ -127,10 +129,29 @@ namespace tarungonNaNako.subform
                     // Step 3: Construct the physical path for the new folder
                     physicalPath = Path.Combine(parentFolderPath, folderName);
 
-                    // Step 4: Insert the folder into the database
+                    // Step 4: Check if the folder already exists and modify the name if necessary
+                    int suffix = 1;
+                    string originalPhysicalPath = physicalPath;
+                    while (true)
+                    {
+                        using (MySqlCommand checkFolderCmd = new MySqlCommand(checkFolderQuery, connection))
+                        {
+                            checkFolderCmd.Parameters.AddWithValue("@folderPath", physicalPath);
+                            int count = Convert.ToInt32(checkFolderCmd.ExecuteScalar());
+                            if (count == 0 && !Directory.Exists(physicalPath))
+                            {
+                                break; // Folder name is unique
+                            }
+                        }
+
+                        // Append a suffix to the folder name
+                        physicalPath = $"{originalPhysicalPath} ({suffix++})";
+                    }
+
+                    // Step 5: Insert the folder into the database
                     using (MySqlCommand folderCmd = new MySqlCommand(folderQuery, connection))
                     {
-                        folderCmd.Parameters.AddWithValue("@categoryName", folderName);
+                        folderCmd.Parameters.AddWithValue("@categoryName", Path.GetFileName(physicalPath));
                         folderCmd.Parameters.AddWithValue("@parentCategoryId", parentCategoryId == -1 ? (object)DBNull.Value : parentCategoryId);
                         folderCmd.Parameters.AddWithValue("@folderPath", physicalPath);
                         folderCmd.Parameters.AddWithValue("@userId", userId);
@@ -139,7 +160,7 @@ namespace tarungonNaNako.subform
                         folderCmd.ExecuteNonQuery();
                     }
 
-                    // Step 5: Create the physical folder after successful database insertion
+                    // Step 6: Create the physical folder after successful database insertion
                     Directory.CreateDirectory(physicalPath);
 
                     MessageBox.Show("Folder created successfully.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -168,6 +189,7 @@ namespace tarungonNaNako.subform
                 }
             }
         }
+
 
 
 

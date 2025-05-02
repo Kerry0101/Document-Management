@@ -78,7 +78,7 @@
             // 
             label2.AutoSize = true;
             label2.Font = new Font("Script MT Bold", 15.2F, FontStyle.Bold);
-            label2.Location = new Point(79, 12);
+            label2.Location = new Point(69, 12);
             label2.Name = "label2";
             label2.Size = new Size(116, 32);
             label2.TabIndex = 1;

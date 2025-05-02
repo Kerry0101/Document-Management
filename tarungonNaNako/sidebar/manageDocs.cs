@@ -521,32 +521,44 @@ namespace tarungonNaNako.sidebar
 
         private void DownloadFile(string fileName)
         {
-            string storagePath = @"C:\\DocsManagement\\"; // Ensure this path is correct
-            string sourceFilePath = Path.Combine(storagePath, fileName);
-
-            // Debugging: Show the path to confirm it's correct
-            MessageBox.Show($"Checking file path: {sourceFilePath}", "Debug Info");
-
-            if (!File.Exists(sourceFilePath))
+            try
             {
-                MessageBox.Show("File not found!\nPath: " + sourceFilePath, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
+                // Step 1: Retrieve the file path from the database
+                string sourceFilePath = GetFilePathByFileName(fileName);
 
-            using (SaveFileDialog saveFileDialog = new SaveFileDialog())
-            {
-                saveFileDialog.FileName = fileName;
-                saveFileDialog.Filter = "All Files|*.*";
-
-                if (saveFileDialog.ShowDialog() == DialogResult.OK)
+                if (string.IsNullOrEmpty(sourceFilePath) || !File.Exists(sourceFilePath))
                 {
-                    string destinationPath = saveFileDialog.FileName;
-                    File.Copy(sourceFilePath, destinationPath, true);
-                    MessageBox.Show("File downloaded successfully!", "Download Complete", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    guna2Panel2.Hide();
+                    MessageBox.Show("File not found!\nPath: " + sourceFilePath, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                // Step 2: Prompt the user to select a save location
+                using (SaveFileDialog saveFileDialog = new SaveFileDialog())
+                {
+                    saveFileDialog.FileName = fileName;
+                    saveFileDialog.Filter = "All Files|*.*";
+
+                    if (saveFileDialog.ShowDialog() == DialogResult.OK)
+                    {
+                        string destinationPath = saveFileDialog.FileName;
+
+                        // Step 3: Copy the file to the selected location
+                        File.Copy(sourceFilePath, destinationPath, true);
+
+                        MessageBox.Show("File downloaded successfully!", "Download Complete", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
                 }
             }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"An error occurred while downloading the file: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                guna2Panel2.Hide(); // Hide the options panel after the operation
+            }
         }
+
 
         private void RenameButton_Click()
         {
@@ -619,8 +631,7 @@ namespace tarungonNaNako.sidebar
             string newFileName = Microsoft.VisualBasic.Interaction.InputBox(
                 "Enter new file name:",
                 "Edit File",
-                selectedName
-            ).Trim();
+                Path.GetFileNameWithoutExtension(selectedName)).Trim();
 
             if (string.IsNullOrWhiteSpace(newFileName))
             {
@@ -733,34 +744,99 @@ namespace tarungonNaNako.sidebar
 
         private void RemoveFile(string fileName)
         {
+            // Optional: Add confirmation dialog
+            var confirmResult = MessageBox.Show("Are you sure you want to move this file to the trash?",
+                                                 "Confirm Move",
+                                                 MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (confirmResult == DialogResult.No)
+            {
+                return;
+            }
+
             try
             {
+                string currentFilePath = string.Empty;
+                string currentFileName = string.Empty;
+                string archivedFilePath = string.Empty;
+                string archivedFileName = string.Empty;
+
                 using (MySqlConnection conn = new MySqlConnection(connectionString))
                 {
                     conn.Open();
-                    string query = "UPDATE files SET isArchived = 1 WHERE fileName = @fileName";
+
+                    // Step 1: Retrieve the file details
+                    string query = "SELECT filePath, fileName FROM files WHERE fileName = @fileName AND isArchived = 0";
                     using (MySqlCommand cmd = new MySqlCommand(query, conn))
                     {
                         cmd.Parameters.AddWithValue("@fileName", fileName);
-                        int rowsAffected = cmd.ExecuteNonQuery();
+
+                        using (MySqlDataReader reader = cmd.ExecuteReader())
+                        {
+                            if (reader.Read())
+                            {
+                                currentFilePath = reader["filePath"].ToString();
+                                currentFileName = reader["fileName"].ToString();
+                            }
+                            else
+                            {
+                                MessageBox.Show("File not found or already archived.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                return;
+                            }
+                        }
+                    }
+
+                    // Step 2: Generate the archived name
+                    string timestamp = DateTime.Now.ToString("yyyyMMddHHmmss");
+                    string fileExtension = Path.GetExtension(currentFileName);
+                    string fileNameWithoutExtension = Path.GetFileNameWithoutExtension(currentFileName);
+                    archivedFileName = $"{fileNameWithoutExtension}_archived_{timestamp}{fileExtension}";
+                    archivedFilePath = Path.Combine(Path.GetDirectoryName(currentFilePath), archivedFileName);
+
+                    // Step 3: Rename the file in the file system
+                    if (File.Exists(currentFilePath))
+                    {
+                        File.Move(currentFilePath, archivedFilePath);
+                    }
+                    else
+                    {
+                        MessageBox.Show("File not found in the file system.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return;
+                    }
+
+                    // Step 4: Update the database
+                    string updateQuery = @"
+                UPDATE files
+                SET fileName = @archivedFileName,
+                    filePath = @archivedFilePath,
+                    isArchived = 1
+                WHERE fileName = @fileName";
+
+                    using (MySqlCommand updateCmd = new MySqlCommand(updateQuery, conn))
+                    {
+                        updateCmd.Parameters.AddWithValue("@archivedFileName", archivedFileName);
+                        updateCmd.Parameters.AddWithValue("@archivedFilePath", archivedFilePath);
+                        updateCmd.Parameters.AddWithValue("@fileName", fileName);
+
+                        int rowsAffected = updateCmd.ExecuteNonQuery();
                         if (rowsAffected > 0)
                         {
                             guna2Panel2.Visible = false;
-                            MessageBox.Show($"File '{fileName}' removed successfully.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                            LoadDocumentsIntoTablePanelInternal();
+                            MessageBox.Show($"File '{currentFileName}' has been archived successfully.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            LoadDocumentsIntoTablePanel(); // Refresh the UI
                         }
                         else
                         {
-                            MessageBox.Show("File not found.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            MessageBox.Show("Failed to update the database.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         }
                     }
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error removing file: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Error archiving file: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
 
         private void textBox1_TextChanged(object sender, EventArgs e)
         {

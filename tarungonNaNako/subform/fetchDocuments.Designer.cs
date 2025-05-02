@@ -408,9 +408,10 @@
             // 
             // label2
             // 
+            label2.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             label2.AutoSize = true;
             label2.Font = new Font("Microsoft Sans Serif", 10.2F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            label2.Location = new Point(840, 9);
+            label2.Location = new Point(832, 9);
             label2.Name = "label2";
             label2.Size = new Size(62, 20);
             label2.TabIndex = 11;
@@ -425,11 +426,11 @@
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 56.7615662F));
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 20F));
             tableLayoutPanel1.Cursor = Cursors.Hand;
-            tableLayoutPanel1.Location = new Point(3, 33);
+            tableLayoutPanel1.Location = new Point(9, 33);
             tableLayoutPanel1.Name = "tableLayoutPanel1";
             tableLayoutPanel1.RowCount = 1;
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tableLayoutPanel1.Size = new Size(909, 51);
+            tableLayoutPanel1.Size = new Size(899, 51);
             tableLayoutPanel1.TabIndex = 9;
             tableLayoutPanel1.Click += tableLayoutPanel1_Click;
             // 

@@ -58,7 +58,7 @@ namespace tarungonNaNako.subform
                 if (!string.IsNullOrEmpty(openFileDialog.FileName) && File.Exists(openFileDialog.FileName))
                 {
                     selectedFilePath = openFileDialog.FileName; // Assign to the class variable
-                    textBox1.Text = Path.GetFileName(selectedFilePath);
+                    textBox1.Text = Path.GetFileNameWithoutExtension(selectedFilePath);
                 }
                 else
                 {
@@ -93,6 +93,16 @@ namespace tarungonNaNako.subform
             string fileExtension = Path.GetExtension(selectedFilePath);
             string fileName = newFileName + fileExtension; // Create the new file name with the original extension
             string filePath = Path.Combine(currentFolderPath, fileName);
+
+            // Check for duplicate file names and adjust the name if necessary
+            string originalFileName = fileName;
+            int suffix = 1;
+            while (File.Exists(filePath))
+            {
+                fileName = $"{Path.GetFileNameWithoutExtension(originalFileName)} ({suffix++}){fileExtension}";
+                filePath = Path.Combine(currentFolderPath, fileName);
+            }
+
             int userId = Session.CurrentUserId; // Use the logged-in user's ID
             int roleId = GetRoleIdFromUserId(userId); // Fetch the roleId based on userId
             string fileType = fileExtension;
@@ -110,16 +120,8 @@ namespace tarungonNaNako.subform
                 Console.WriteLine($"Current Folder Path: {currentFolderPath}");
 
                 // Copy the file to the destination with the new name
-                if (!File.Exists(filePath)) // Avoid overwriting existing files
-                {
-                    File.Copy(selectedFilePath, filePath, true);
-                    Console.WriteLine($"File copied to: {filePath}");
-                }
-                else
-                {
-                    MessageBox.Show("A file with the same name already exists in the destination folder.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    return;
-                }
+                File.Copy(selectedFilePath, filePath, true);
+                Console.WriteLine($"File copied to: {filePath}");
 
                 // Insert file metadata into the database
                 using (MySqlConnection conn = new MySqlConnection(connectionString))
@@ -170,6 +172,7 @@ namespace tarungonNaNako.subform
             this.DialogResult = DialogResult.OK;
             this.Close();
         }
+
 
 
 

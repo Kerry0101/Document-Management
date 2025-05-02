@@ -30,8 +30,6 @@ namespace tarungonNaNako
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(adminDashboard));
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges1 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges2 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges3 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges4 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges5 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
@@ -48,13 +46,18 @@ namespace tarungonNaNako
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges16 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges17 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges18 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges23 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges24 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges19 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges20 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges25 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges26 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges21 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges22 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges23 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges24 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges1 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges2 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             panel1 = new Panel();
+            label2 = new Label();
             pictureBox1 = new PictureBox();
             panel2 = new Panel();
             panel4 = new Panel();
@@ -71,6 +74,7 @@ namespace tarungonNaNako
             guna2Panel1 = new Guna.UI2.WinForms.Guna2Panel();
             MinimizeBtn = new Guna.UI2.WinForms.Guna2Button();
             CloseBtn = new Guna.UI2.WinForms.Guna2Button();
+            Shared = new Guna.UI2.WinForms.Guna2Button();
             panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             panel2.SuspendLayout();
@@ -81,6 +85,7 @@ namespace tarungonNaNako
             // panel1
             // 
             panel1.BackColor = Color.FromArgb(255, 236, 130);
+            panel1.Controls.Add(label2);
             panel1.Controls.Add(pictureBox1);
             panel1.Location = new Point(0, 34);
             panel1.Margin = new Padding(2);
@@ -88,6 +93,17 @@ namespace tarungonNaNako
             panel1.Size = new Size(1153, 55);
             panel1.TabIndex = 0;
             panel1.Paint += panel1_Paint;
+            // 
+            // label2
+            // 
+            label2.AutoSize = true;
+            label2.BackColor = Color.Transparent;
+            label2.Font = new Font("Script MT Bold", 15.2F, FontStyle.Bold);
+            label2.Location = new Point(69, 12);
+            label2.Name = "label2";
+            label2.Size = new Size(116, 32);
+            label2.TabIndex = 2;
+            label2.Text = "DocSpace";
             // 
             // pictureBox1
             // 
@@ -115,6 +131,7 @@ namespace tarungonNaNako
             // panel4
             // 
             panel4.BackColor = Color.FromArgb(255, 236, 130);
+            panel4.Controls.Add(Shared);
             panel4.Controls.Add(button8);
             panel4.Controls.Add(button7);
             panel4.Controls.Add(button5);
@@ -133,7 +150,7 @@ namespace tarungonNaNako
             // 
             // button8
             // 
-            button8.CustomizableEdges = customizableEdges1;
+            button8.CustomizableEdges = customizableEdges3;
             button8.DisabledState.BorderColor = Color.DarkGray;
             button8.DisabledState.CustomBorderColor = Color.DarkGray;
             button8.DisabledState.FillColor = Color.FromArgb(169, 169, 169);
@@ -145,10 +162,10 @@ namespace tarungonNaNako
             button8.ImageAlign = HorizontalAlignment.Left;
             button8.ImageOffset = new Point(10, 0);
             button8.ImageSize = new Size(18, 18);
-            button8.Location = new Point(0, 530);
+            button8.Location = new Point(0, 578);
             button8.Name = "button8";
             button8.PressedDepth = 10;
-            button8.ShadowDecoration.CustomizableEdges = customizableEdges2;
+            button8.ShadowDecoration.CustomizableEdges = customizableEdges4;
             button8.Size = new Size(194, 60);
             button8.TabIndex = 16;
             button8.Text = "LOGOUT";
@@ -157,7 +174,7 @@ namespace tarungonNaNako
             // 
             // button7
             // 
-            button7.CustomizableEdges = customizableEdges3;
+            button7.CustomizableEdges = customizableEdges5;
             button7.DisabledState.BorderColor = Color.DarkGray;
             button7.DisabledState.CustomBorderColor = Color.DarkGray;
             button7.DisabledState.FillColor = Color.FromArgb(169, 169, 169);
@@ -169,10 +186,10 @@ namespace tarungonNaNako
             button7.ImageAlign = HorizontalAlignment.Left;
             button7.ImageOffset = new Point(10, 0);
             button7.ImageSize = new Size(18, 18);
-            button7.Location = new Point(0, 467);
+            button7.Location = new Point(0, 515);
             button7.Name = "button7";
             button7.PressedDepth = 10;
-            button7.ShadowDecoration.CustomizableEdges = customizableEdges4;
+            button7.ShadowDecoration.CustomizableEdges = customizableEdges6;
             button7.Size = new Size(194, 60);
             button7.TabIndex = 18;
             button7.Text = "PROFILE";
@@ -181,7 +198,7 @@ namespace tarungonNaNako
             // 
             // button5
             // 
-            button5.CustomizableEdges = customizableEdges5;
+            button5.CustomizableEdges = customizableEdges7;
             button5.DisabledState.BorderColor = Color.DarkGray;
             button5.DisabledState.CustomBorderColor = Color.DarkGray;
             button5.DisabledState.FillColor = Color.FromArgb(169, 169, 169);
@@ -193,10 +210,10 @@ namespace tarungonNaNako
             button5.ImageAlign = HorizontalAlignment.Left;
             button5.ImageOffset = new Point(10, 0);
             button5.ImageSize = new Size(23, 20);
-            button5.Location = new Point(0, 403);
+            button5.Location = new Point(0, 451);
             button5.Name = "button5";
             button5.PressedDepth = 10;
-            button5.ShadowDecoration.CustomizableEdges = customizableEdges6;
+            button5.ShadowDecoration.CustomizableEdges = customizableEdges8;
             button5.Size = new Size(194, 60);
             button5.TabIndex = 17;
             button5.Text = "ROLE";
@@ -205,7 +222,7 @@ namespace tarungonNaNako
             // 
             // button9
             // 
-            button9.CustomizableEdges = customizableEdges7;
+            button9.CustomizableEdges = customizableEdges9;
             button9.DisabledState.BorderColor = Color.DarkGray;
             button9.DisabledState.CustomBorderColor = Color.DarkGray;
             button9.DisabledState.FillColor = Color.FromArgb(169, 169, 169);
@@ -217,10 +234,10 @@ namespace tarungonNaNako
             button9.ImageAlign = HorizontalAlignment.Left;
             button9.ImageOffset = new Point(10, 0);
             button9.ImageSize = new Size(20, 15);
-            button9.Location = new Point(0, 277);
+            button9.Location = new Point(0, 269);
             button9.Name = "button9";
             button9.PressedDepth = 10;
-            button9.ShadowDecoration.CustomizableEdges = customizableEdges8;
+            button9.ShadowDecoration.CustomizableEdges = customizableEdges10;
             button9.Size = new Size(194, 60);
             button9.TabIndex = 16;
             button9.Text = "ARCHIVED";
@@ -229,7 +246,7 @@ namespace tarungonNaNako
             // 
             // button6
             // 
-            button6.CustomizableEdges = customizableEdges9;
+            button6.CustomizableEdges = customizableEdges11;
             button6.DisabledState.BorderColor = Color.DarkGray;
             button6.DisabledState.CustomBorderColor = Color.DarkGray;
             button6.DisabledState.FillColor = Color.FromArgb(169, 169, 169);
@@ -240,10 +257,10 @@ namespace tarungonNaNako
             button6.Image = (Image)resources.GetObject("button6.Image");
             button6.ImageAlign = HorizontalAlignment.Left;
             button6.ImageOffset = new Point(10, 0);
-            button6.Location = new Point(0, 339);
+            button6.Location = new Point(0, 387);
             button6.Name = "button6";
             button6.PressedDepth = 10;
-            button6.ShadowDecoration.CustomizableEdges = customizableEdges10;
+            button6.ShadowDecoration.CustomizableEdges = customizableEdges12;
             button6.Size = new Size(194, 60);
             button6.TabIndex = 15;
             button6.Text = "USER";
@@ -253,7 +270,7 @@ namespace tarungonNaNako
             // 
             // button2
             // 
-            button2.CustomizableEdges = customizableEdges11;
+            button2.CustomizableEdges = customizableEdges13;
             button2.DisabledState.BorderColor = Color.DarkGray;
             button2.DisabledState.CustomBorderColor = Color.DarkGray;
             button2.DisabledState.FillColor = Color.FromArgb(169, 169, 169);
@@ -265,10 +282,10 @@ namespace tarungonNaNako
             button2.ImageAlign = HorizontalAlignment.Left;
             button2.ImageOffset = new Point(10, 0);
             button2.ImageSize = new Size(17, 17);
-            button2.Location = new Point(0, 215);
+            button2.Location = new Point(0, 207);
             button2.Name = "button2";
             button2.PressedDepth = 10;
-            button2.ShadowDecoration.CustomizableEdges = customizableEdges12;
+            button2.ShadowDecoration.CustomizableEdges = customizableEdges14;
             button2.Size = new Size(194, 60);
             button2.TabIndex = 14;
             button2.Text = "DOCUMENTS";
@@ -277,7 +294,7 @@ namespace tarungonNaNako
             // 
             // button3
             // 
-            button3.CustomizableEdges = customizableEdges13;
+            button3.CustomizableEdges = customizableEdges15;
             button3.DisabledState.BorderColor = Color.DarkGray;
             button3.DisabledState.CustomBorderColor = Color.DarkGray;
             button3.DisabledState.FillColor = Color.FromArgb(169, 169, 169);
@@ -289,10 +306,10 @@ namespace tarungonNaNako
             button3.ImageAlign = HorizontalAlignment.Left;
             button3.ImageOffset = new Point(10, 0);
             button3.ImageSize = new Size(17, 17);
-            button3.Location = new Point(0, 153);
+            button3.Location = new Point(0, 145);
             button3.Name = "button3";
             button3.PressedDepth = 10;
-            button3.ShadowDecoration.CustomizableEdges = customizableEdges14;
+            button3.ShadowDecoration.CustomizableEdges = customizableEdges16;
             button3.Size = new Size(194, 60);
             button3.TabIndex = 13;
             button3.Text = "FOLDERS";
@@ -301,7 +318,7 @@ namespace tarungonNaNako
             // 
             // button4
             // 
-            button4.CustomizableEdges = customizableEdges15;
+            button4.CustomizableEdges = customizableEdges17;
             button4.DisabledState.BorderColor = Color.DarkGray;
             button4.DisabledState.CustomBorderColor = Color.DarkGray;
             button4.DisabledState.FillColor = Color.FromArgb(169, 169, 169);
@@ -312,18 +329,19 @@ namespace tarungonNaNako
             button4.Image = (Image)resources.GetObject("button4.Image");
             button4.ImageAlign = HorizontalAlignment.Left;
             button4.ImageOffset = new Point(9, 0);
-            button4.Location = new Point(0, 91);
+            button4.Location = new Point(0, 83);
             button4.Name = "button4";
             button4.PressedDepth = 10;
-            button4.ShadowDecoration.CustomizableEdges = customizableEdges16;
+            button4.ShadowDecoration.CustomizableEdges = customizableEdges18;
             button4.Size = new Size(194, 60);
             button4.TabIndex = 12;
-            button4.Text = "DOCUMENT APPROVAL";
+            button4.Text = "     FILES         APPROVAL";
+            button4.TextOffset = new Point(-5, 0);
             button4.Click += button4_Click;
             // 
             // button1
             // 
-            button1.CustomizableEdges = customizableEdges17;
+            button1.CustomizableEdges = customizableEdges19;
             button1.DisabledState.BorderColor = Color.DarkGray;
             button1.DisabledState.CustomBorderColor = Color.DarkGray;
             button1.DisabledState.FillColor = Color.FromArgb(169, 169, 169);
@@ -335,10 +353,10 @@ namespace tarungonNaNako
             button1.ImageAlign = HorizontalAlignment.Left;
             button1.ImageOffset = new Point(10, 0);
             button1.ImageSize = new Size(15, 15);
-            button1.Location = new Point(0, 28);
+            button1.Location = new Point(0, 20);
             button1.Name = "button1";
             button1.PressedDepth = 10;
-            button1.ShadowDecoration.CustomizableEdges = customizableEdges18;
+            button1.ShadowDecoration.CustomizableEdges = customizableEdges20;
             button1.Size = new Size(194, 60);
             button1.TabIndex = 11;
             button1.Text = "HOME";
@@ -360,11 +378,11 @@ namespace tarungonNaNako
             guna2Panel1.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             guna2Panel1.Controls.Add(MinimizeBtn);
             guna2Panel1.Controls.Add(CloseBtn);
-            guna2Panel1.CustomizableEdges = customizableEdges23;
+            guna2Panel1.CustomizableEdges = customizableEdges25;
             guna2Panel1.FillColor = Color.FromArgb(219, 195, 0);
             guna2Panel1.Location = new Point(0, -1);
             guna2Panel1.Name = "guna2Panel1";
-            guna2Panel1.ShadowDecoration.CustomizableEdges = customizableEdges24;
+            guna2Panel1.ShadowDecoration.CustomizableEdges = customizableEdges26;
             guna2Panel1.Size = new Size(1153, 35);
             guna2Panel1.TabIndex = 7;
             // 
@@ -372,7 +390,7 @@ namespace tarungonNaNako
             // 
             MinimizeBtn.BackColor = Color.FromArgb(219, 195, 0);
             MinimizeBtn.BorderRadius = 1;
-            MinimizeBtn.CustomizableEdges = customizableEdges19;
+            MinimizeBtn.CustomizableEdges = customizableEdges21;
             MinimizeBtn.DisabledState.BorderColor = Color.DarkGray;
             MinimizeBtn.DisabledState.CustomBorderColor = Color.DarkGray;
             MinimizeBtn.DisabledState.FillColor = Color.FromArgb(169, 169, 169);
@@ -387,7 +405,7 @@ namespace tarungonNaNako
             MinimizeBtn.Location = new Point(1075, 5);
             MinimizeBtn.Name = "MinimizeBtn";
             MinimizeBtn.PressedDepth = 10;
-            MinimizeBtn.ShadowDecoration.CustomizableEdges = customizableEdges20;
+            MinimizeBtn.ShadowDecoration.CustomizableEdges = customizableEdges22;
             MinimizeBtn.Size = new Size(31, 28);
             MinimizeBtn.TabIndex = 16;
             MinimizeBtn.TextOffset = new Point(-30, 0);
@@ -397,7 +415,7 @@ namespace tarungonNaNako
             // 
             CloseBtn.BackColor = Color.FromArgb(219, 195, 0);
             CloseBtn.BorderRadius = 1;
-            CloseBtn.CustomizableEdges = customizableEdges21;
+            CloseBtn.CustomizableEdges = customizableEdges23;
             CloseBtn.DisabledState.BorderColor = Color.DarkGray;
             CloseBtn.DisabledState.CustomBorderColor = Color.DarkGray;
             CloseBtn.DisabledState.FillColor = Color.FromArgb(169, 169, 169);
@@ -411,11 +429,34 @@ namespace tarungonNaNako
             CloseBtn.Location = new Point(1115, 4);
             CloseBtn.Name = "CloseBtn";
             CloseBtn.PressedDepth = 10;
-            CloseBtn.ShadowDecoration.CustomizableEdges = customizableEdges22;
+            CloseBtn.ShadowDecoration.CustomizableEdges = customizableEdges24;
             CloseBtn.Size = new Size(31, 28);
             CloseBtn.TabIndex = 15;
             CloseBtn.TextOffset = new Point(-30, 0);
             CloseBtn.Click += CloseBtn_Click;
+            // 
+            // Shared
+            // 
+            Shared.CustomizableEdges = customizableEdges1;
+            Shared.DisabledState.BorderColor = Color.DarkGray;
+            Shared.DisabledState.CustomBorderColor = Color.DarkGray;
+            Shared.DisabledState.FillColor = Color.FromArgb(169, 169, 169);
+            Shared.DisabledState.ForeColor = Color.FromArgb(141, 141, 141);
+            Shared.FillColor = Color.FromArgb(255, 236, 130);
+            Shared.Font = new Font("Microsoft Sans Serif", 8F, FontStyle.Bold);
+            Shared.ForeColor = Color.Black;
+            Shared.Image = (Image)resources.GetObject("Shared.Image");
+            Shared.ImageAlign = HorizontalAlignment.Left;
+            Shared.ImageOffset = new Point(10, 0);
+            Shared.Location = new Point(0, 328);
+            Shared.Name = "Shared";
+            Shared.PressedDepth = 10;
+            Shared.ShadowDecoration.CustomizableEdges = customizableEdges2;
+            Shared.Size = new Size(194, 60);
+            Shared.TabIndex = 19;
+            Shared.Text = "SHARED FILES";
+            Shared.TextOffset = new Point(10, 0);
+            Shared.Click += Shared_Click;
             // 
             // adminDashboard
             // 
@@ -435,6 +476,7 @@ namespace tarungonNaNako
             Text = "Form2";
             Load += adminDashboard_Load_1;
             panel1.ResumeLayout(false);
+            panel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             panel2.ResumeLayout(false);
             panel4.ResumeLayout(false);
@@ -464,5 +506,7 @@ namespace tarungonNaNako
         private Guna.UI2.WinForms.Guna2Button button5;
         private Guna.UI2.WinForms.Guna2Button button7;
         private Guna.UI2.WinForms.Guna2Button button8;
+        private Label label2;
+        private Guna.UI2.WinForms.Guna2Button Shared;
     }
 }

@@ -35,6 +35,7 @@ namespace tarungonNaNako
             button7.FillColor = Color.Transparent;
             button8.FillColor = Color.Transparent;
             button9.FillColor = Color.Transparent;
+            Shared.FillColor = Color.Transparent;
 
             // Highlight the selected button
             buttonToHighlight.FillColor = Color.FromArgb(219, 195, 0);
@@ -167,6 +168,12 @@ namespace tarungonNaNako
         private void MinimizeBtn_Click(object sender, EventArgs e)
         {
             this.WindowState = FormWindowState.Minimized;
+        }
+
+        private void Shared_Click(object sender, EventArgs e)
+        {
+            HighlightButton(Shared);
+            LoadFormInPanel(new SharedFiles());
         }
     }
 }

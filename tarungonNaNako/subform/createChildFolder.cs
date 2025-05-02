@@ -13,8 +13,9 @@ namespace tarungonNaNako.subform
 {
     public partial class createChildFolder : Form
     {
-        public int ParentCategoryId { get; set; }
-        private string selectedFolderPath = ""; // To store the selected file path
+        public int? ParentCategoryId { get; set; }
+        private readonly string connectionString = "server=localhost;user=root;database=docsmanagement;password=";
+        private readonly string baseStoragePath = @"C:\DocsManagement"; // Or your actual root storage
         public createChildFolder()
         {
             InitializeComponent();
@@ -26,87 +27,142 @@ namespace tarungonNaNako.subform
             this.Close();
         }
 
+        private bool IsCategoryNameExists(string categoryName, int? parentCategoryId)
+        {
+            if (string.IsNullOrWhiteSpace(categoryName)) return false;
+
+            using (MySqlConnection conn = new MySqlConnection(connectionString))
+            {
+                conn.Open();
+                string query = @"SELECT COUNT(*) FROM category
+                                 WHERE categoryName = @categoryName
+                                 AND (parentCategoryId = @parentCategoryId OR (@parentCategoryId IS NULL AND parentCategoryId IS NULL))
+                                 AND is_archived = 0 AND userId = @userId";
+                using (MySqlCommand cmd = new MySqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@categoryName", categoryName);
+                    cmd.Parameters.AddWithValue("@parentCategoryId", (object)parentCategoryId ?? DBNull.Value);
+                    cmd.Parameters.AddWithValue("@userId", Session.CurrentUserId);
+                    try { return Convert.ToInt32(cmd.ExecuteScalar()) > 0; }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show($"Error checking for duplicate category name: {ex.Message}", "Database Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        return true; // Assume duplicate on error
+                    }
+                }
+            }
+        }
+
         private void Createbtn_Click(object sender, EventArgs e)
         {
             string folderName = CreatefolderTextBox.Text.Trim();
 
+            // --- Step 1: Validate Input ---
             if (string.IsNullOrEmpty(folderName))
             {
                 MessageBox.Show("Please enter a folder name.", "Validation", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                CreatefolderTextBox.Focus();
                 return;
             }
 
-            string connectionString = "server=localhost; user=root; Database=docsmanagement; password=";
+            // Validate for invalid characters
+            if (folderName.IndexOfAny(Path.GetInvalidFileNameChars()) >= 0 || folderName.Contains(".."))
+            {
+                MessageBox.Show("Invalid characters detected in the folder name. Please avoid characters like \\ / : * ? \" < > | and '..'.", "Validation", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                CreatefolderTextBox.Focus();
+                return;
+            }
+
+            // --- Step 2: Basic Setup ---
+            if (!ParentCategoryId.HasValue)
+            {
+                MessageBox.Show("Error: Parent category information is missing.", "Internal Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            string parentFolderPath = "";
+            int roleId = -1;
+
             using (MySqlConnection conn = new MySqlConnection(connectionString))
             {
                 try
                 {
                     conn.Open();
 
-                    // Step 1: Fetch the roleId of the current user
+                    // --- Step 3: Get User Role ID ---
                     string roleQuery = "SELECT roleId FROM users WHERE userId = @userId";
-                    int roleId = -1;  // Default value if no role is found
                     using (MySqlCommand roleCmd = new MySqlCommand(roleQuery, conn))
                     {
                         roleCmd.Parameters.AddWithValue("@userId", Session.CurrentUserId);
-                        using (MySqlDataReader reader = roleCmd.ExecuteReader())
+                        object roleResult = roleCmd.ExecuteScalar();
+                        if (roleResult != null && roleResult != DBNull.Value)
                         {
-                            if (reader.Read())
-                            {
-                                roleId = reader.GetInt32("roleId");  // Get the roleId for the current user
-                            }
+                            roleId = Convert.ToInt32(roleResult);
                         }
                     }
-
                     if (roleId == -1)
                     {
                         MessageBox.Show("Error: User role not found.", "Database Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         return;
                     }
 
-                    // Step 2: Fetch the parent folder's path
-                    string parentFolderPath = "C:\\DocsManagement"; // Default to root path
-                    string parentPathQuery = "SELECT folderPath FROM category WHERE categoryId = @parentCategoryId";
+                    // --- Step 4: Determine Parent Folder Path ---
+                    string parentPathQuery = "SELECT folderPath FROM category WHERE categoryId = @parentCategoryId AND userId = @userId";
                     using (MySqlCommand parentPathCmd = new MySqlCommand(parentPathQuery, conn))
                     {
-                        parentPathCmd.Parameters.AddWithValue("@parentCategoryId", ParentCategoryId);
+                        parentPathCmd.Parameters.AddWithValue("@parentCategoryId", ParentCategoryId.Value);
+                        parentPathCmd.Parameters.AddWithValue("@userId", Session.CurrentUserId);
                         object result = parentPathCmd.ExecuteScalar();
-                        if (result != null)
+                        if (result != null && result != DBNull.Value)
                         {
-                            parentFolderPath = result.ToString(); // Use the parent's folder path if it exists
+                            parentFolderPath = result.ToString();
+                        }
+                        else
+                        {
+                            parentFolderPath = baseStoragePath;
                         }
                     }
 
-                    // Step 3: Generate the new folder's path
+                    if (!Directory.Exists(parentFolderPath))
+                    {
+                        try { Directory.CreateDirectory(parentFolderPath); }
+                        catch (Exception dirEx)
+                        {
+                            MessageBox.Show($"Could not create or access parent directory '{parentFolderPath}': {dirEx.Message}", "File System Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            return;
+                        }
+                    }
+
+                    // --- Step 5: Check for Existing Folder and Adjust Name ---
                     string newFolderPath = Path.Combine(parentFolderPath, folderName);
+                    string originalFolderName = folderName;
+                    int suffix = 1;
 
-                    // Step 4: Create the folder on the file system
-                    if (!Directory.Exists(newFolderPath))
+                    while (IsCategoryNameExists(folderName, ParentCategoryId) || Directory.Exists(newFolderPath))
                     {
-                        Directory.CreateDirectory(newFolderPath); // Create the new folder
-                    }
-                    else
-                    {
-                        MessageBox.Show("A folder with this name already exists in the selected location.", "Validation", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                        return;
+                        folderName = $"{originalFolderName} ({suffix++})";
+                        newFolderPath = Path.Combine(parentFolderPath, folderName);
                     }
 
-                    // Step 5: Insert the new folder into the database
-                    string query = @"
-                INSERT INTO category 
-                    (categoryName, parentCategoryId, folderPath, is_archived, created_at, updated_at, userId, uploadedBy)
-                VALUES 
-                    (@categoryName, @parentCategoryId, @folderPath, 0, NOW(), NOW(), @userId, @uploadedBy);";
+                    // --- Step 6: Create Physical Folder ---
+                    Directory.CreateDirectory(newFolderPath);
 
-                    using (MySqlCommand cmd = new MySqlCommand(query, conn))
+                    // --- Step 7: Insert into Database ---
+                    string insertQuery = @"
+            INSERT INTO category
+                (categoryName, parentCategoryId, folderPath, is_archived, created_at, updated_at, userId, uploadedBy)
+            VALUES
+                (@categoryName, @parentCategoryId, @folderPath, 0, NOW(), NOW(), @userId, @uploadedBy);";
+
+                    using (MySqlCommand insertCmd = new MySqlCommand(insertQuery, conn))
                     {
-                        cmd.Parameters.AddWithValue("@categoryName", folderName); // Store the folder name
-                        cmd.Parameters.AddWithValue("@parentCategoryId", ParentCategoryId); // Store the parent category ID
-                        cmd.Parameters.AddWithValue("@folderPath", newFolderPath); // Store the full folder path
-                        cmd.Parameters.AddWithValue("@userId", Session.CurrentUserId); // Store the user ID
-                        cmd.Parameters.AddWithValue("@uploadedBy", roleId); // Store the role ID
+                        insertCmd.Parameters.AddWithValue("@categoryName", folderName);
+                        insertCmd.Parameters.AddWithValue("@parentCategoryId", ParentCategoryId.Value);
+                        insertCmd.Parameters.AddWithValue("@folderPath", newFolderPath);
+                        insertCmd.Parameters.AddWithValue("@userId", Session.CurrentUserId);
+                        insertCmd.Parameters.AddWithValue("@uploadedBy", roleId);
 
-                        cmd.ExecuteNonQuery();
+                        insertCmd.ExecuteNonQuery();
                     }
 
                     MessageBox.Show("Folder created successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -115,7 +171,7 @@ namespace tarungonNaNako.subform
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("Error creating folder: " + ex.Message, "Database Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("Error creating folder: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
         }

@@ -22,6 +22,8 @@ namespace tarungonNaNako.subform
         private string storagePath = @"C:\\DocSpace\\DocsManagement\\";
         private string selectedType = ""; // "file" or "category"
         private string selectedName = ""; // Holds fileName or categoryName
+        private int? selectedCategoryId;
+        private int? selectedFileId;
         private string connectionString = "server=localhost;database=docsmanagement;uid=root;pwd=;";
         private Image originalImage;
         string Folder = Path.Combine(Application.StartupPath, "Assets (images)", "folder.png");
@@ -91,15 +93,17 @@ namespace tarungonNaNako.subform
                     }
 
                     string query = @"
-                    SELECT f.fileName, f.updated_at, c.categoryName
-                    FROM files f
-                    JOIN category c ON f.categoryId = c.categoryId
-                    WHERE f.isArchived = 0 
-                    AND f.is_hidden = 0
-                    AND c.is_hidden = 0
-                    AND f.userId = @userId
-                    ORDER BY f.updated_at DESC
-                    LIMIT 20"; // Filter by logged-in user and order by updated_at
+                SELECT f.fileId, f.fileName, f.updated_at, c.categoryName, c.categoryId 
+                FROM files f
+                JOIN category c ON f.categoryId = c.categoryId
+                WHERE f.isArchived = 0
+                AND f.is_hidden = 0
+                AND c.is_hidden = 0  
+                AND c.is_archived = 0
+                AND f.userId = @userId
+                ORDER BY f.updated_at DESC
+                LIMIT 20";
+
 
                     using (MySqlCommand cmd = new MySqlCommand(query, conn))
                     {
@@ -117,9 +121,11 @@ namespace tarungonNaNako.subform
 
                             while (reader.Read())
                             {
+                                int fileId = Convert.ToInt32(reader["fileId"]);
                                 string fileName = reader["fileName"].ToString();
                                 string modificationTime = Convert.ToDateTime(reader["updated_at"]).ToString("yyyy-MM-dd hh:mm tt");
                                 string categoryName = reader["categoryName"].ToString();
+                                int categoryIdForFile = Convert.ToInt32(reader["categoryId"]);
 
                                 // ✅ Create TableLayoutPanel for Row
                                 TableLayoutPanel rowTable = new TableLayoutPanel
@@ -200,7 +206,7 @@ namespace tarungonNaNako.subform
 
                                 actionButton.Click += (s, e) =>
                                 {
-                                    ShowPanel("file", fileName, categoryName, actionButton); // Show panel with file-related options
+                                    ShowPanel("file", fileName, null, fileId, categoryName, actionButton);
                                     popupPanel.Hide(); // Hide the category panel if it's open
                                 };
 
@@ -359,7 +365,7 @@ namespace tarungonNaNako.subform
 
                                 menuButton.Click += (s, e) =>
                                 {
-                                    ShowPanel("category", categoryName, null, menuButton);
+                                    ShowPanel("category", categoryName, categoryId, null, null, menuButton);
                                     popupPanel.Hide();
                                 };
 
@@ -385,11 +391,13 @@ namespace tarungonNaNako.subform
         }
 
 
-        private void ShowPanel(string type, string name, string categoryName, Control btn)
+        private void ShowPanel(string type, string name, int? categoryId, int? fileId, string categoryNameForFile, Control btn)
         {
-            selectedType = type; // Store what was clicked
-            selectedName = name; // Store file or category name
-                                 // Toggle visibility of guna2Panel2
+            selectedType = type;
+            selectedName = name;
+            selectedCategoryId = categoryId;
+            selectedFileId = fileId;
+
             if (guna2Panel2.Visible)
             {
                 guna2Panel2.Visible = false;
@@ -399,12 +407,13 @@ namespace tarungonNaNako.subform
             string download = Path.Combine(Application.StartupPath, "Assets (images)", "down-to-line.png");
             string rename = Path.Combine(Application.StartupPath, "Assets (images)", "pencil.png");
             string remove = Path.Combine(Application.StartupPath, "Assets (images)", "trash.png");
+            string share = Path.Combine(Application.StartupPath, "Assets (images)", "share.png");
 
             guna2Panel2.Controls.Clear(); // Clear previous content
             guna2Panel2.Visible = true;   // Show the panel
 
             // Set panel properties
-            guna2Panel2.Size = new Size(181, 132); // Adjust size  
+            guna2Panel2.Size = new Size(181, 174); // Adjust size  
             guna2Panel2.BorderRadius = 5;
             guna2Panel2.BorderThickness = 1;
             guna2Panel2.BorderColor = Color.Black;
@@ -480,10 +489,29 @@ namespace tarungonNaNako.subform
             btnDelete.BorderRadius = 5;
             btnDelete.Click += (s, e) => RemoveButton_Click();
 
+            Guna.UI2.WinForms.Guna2Button btnShare = new Guna.UI2.WinForms.Guna2Button();
+            btnShare.Size = new Size(177, 44);
+            btnShare.Text = "Share";
+            btnShare.TextAlign = HorizontalAlignment.Right;
+            btnShare.TextOffset = new Point(-40, 0);
+            btnShare.BackColor = Color.FromArgb(255, 236, 130);
+            btnShare.FillColor = Color.FromArgb(255, 236, 130);
+            btnShare.Font = new Font("Microsoft Sans Serif", 10);
+            btnShare.ForeColor = Color.Black;
+            btnShare.Image = Image.FromFile(share);
+            btnShare.ImageAlign = HorizontalAlignment.Left;
+            btnShare.ImageSize = new Size(15, 15);
+            btnShare.Location = new Point(2, 128);
+            btnShare.PressedColor = Color.Black;
+            btnShare.PressedDepth = 10;
+            btnShare.BorderRadius = 5;
+            btnShare.Click += (s, e) => ShareButton_Click();
+
             // Add buttons to panel
             guna2Panel2.Controls.Add(btnDownload);
             guna2Panel2.Controls.Add(btnRename);
             guna2Panel2.Controls.Add(btnDelete);
+            guna2Panel2.Controls.Add(btnShare);
 
             // ===== Adjust Panel Position to Keep it Inside the Form =====
             Point btnScreenLocation = btn.Parent.PointToScreen(btn.Location);
@@ -527,56 +555,410 @@ namespace tarungonNaNako.subform
         {
             if (selectedType == "file")
             {
-                EditFile(GetCategoryIdByName(selectedName), selectedName);
+                if (selectedFileId.HasValue) // Check if we have a fileId
+                {
+                    // Call EditFile with fileId and the current name (for the dialog prompt)
+                    EditFile(selectedFileId.Value, selectedName); // <<< MODIFIED CALL
+                }
+                else
+                {
+                    MessageBox.Show("Internal error: File ID not found.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
-            else if (selectedType == "category")
+            else if (selectedType == "category" && selectedCategoryId.HasValue)
             {
-                EditCategory(GetCategoryIdByName(selectedName), selectedName);
+                // This part is already correct from your previous changes
+                EditCategory(selectedCategoryId.Value, selectedName);
             }
+            guna2Panel2.Hide(); // Hide panel after action attempt
         }
+
 
         private void RemoveButton_Click()
         {
             if (selectedType == "file")
             {
-                RemoveFile(selectedName);
+                if (selectedFileId.HasValue) // Check if we have a fileId
+                {
+                    // Call RemoveFile with fileId
+                    RemoveFile(selectedFileId.Value); // <<< MODIFIED CALL
+                }
+                else
+                {
+                    MessageBox.Show("Internal error: File ID not found.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+            else if (selectedType == "category") // No need to check HasValue for categoryId here if RemoveCategory still uses name
+            {
+                // If you changed RemoveCategory to use ID, you'd check selectedCategoryId.HasValue
+                RemoveCategory(selectedName); // Or RemoveCategory(selectedCategoryId.Value) if you change it
+            }
+            guna2Panel2.Hide(); // Hide panel after action attempt
+        }
+
+        private void ShareButton_Click()
+        {
+            if (selectedType == "file")
+            {
+                ShareFile(selectedName);
             }
             else if (selectedType == "category")
             {
-                RemoveCategory(selectedName);
+                ShareCategory(selectedName);
             }
         }
 
-        private void RemoveFile(string fileName)
+
+        private void ShareFile(string fileName)
         {
             try
             {
                 using (MySqlConnection conn = new MySqlConnection(connectionString))
                 {
                     conn.Open();
-                    string query = "UPDATE files SET isArchived = 1 WHERE fileName = @fileName";
+
+                    // Step 1: Retrieve the fileId and userId
+                    string query = "SELECT fileId, userId FROM files WHERE fileName = @fileName";
+                    int fileId = 0;
+                    int userId = 0;
+
                     using (MySqlCommand cmd = new MySqlCommand(query, conn))
                     {
                         cmd.Parameters.AddWithValue("@fileName", fileName);
-                        int rowsAffected = cmd.ExecuteNonQuery();
-                        if (rowsAffected > 0)
+                        using (MySqlDataReader reader = cmd.ExecuteReader())
                         {
-                            guna2Panel2.Visible = false;
-                            MessageBox.Show($"File '{fileName}' removed successfully.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                            LoadFilesIntoTablePanel(); // Refresh the panel after removing the file
+                            if (reader.Read())
+                            {
+                                fileId = Convert.ToInt32(reader["fileId"]);
+                                userId = Convert.ToInt32(reader["userId"]);
+                            }
+                            else
+                            {
+                                MessageBox.Show("File not found in the database.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                return;
+                            }
+                        }
+                    }
+
+                    // Step 2: Retrieve the file name using the fileId
+                    string fileNameFromDb = string.Empty;
+                    string fileNameQuery = "SELECT fileName FROM files WHERE fileId = @fileId";
+
+                    using (MySqlCommand fileNameCmd = new MySqlCommand(fileNameQuery, conn))
+                    {
+                        fileNameCmd.Parameters.AddWithValue("@fileId", fileId);
+                        object result = fileNameCmd.ExecuteScalar();
+                        if (result != null)
+                        {
+                            fileNameFromDb = result.ToString();
                         }
                         else
                         {
-                            MessageBox.Show("File not found.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            MessageBox.Show("Failed to retrieve the file name from the database.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            return;
+                        }
+                    }
+
+                    // Step 3: Insert the fileId and file name into the shared_files table
+                    string insertQuery = @"
+                INSERT INTO shared_files (userId, fileId, file_name, is_folder, status)
+                VALUES (@UserId, @FileId, @FileName, 0, 'Pending')";
+
+                    using (MySqlCommand insertCmd = new MySqlCommand(insertQuery, conn))
+                    {
+                        insertCmd.Parameters.AddWithValue("@UserId", userId);
+                        insertCmd.Parameters.AddWithValue("@FileId", fileId);
+                        insertCmd.Parameters.AddWithValue("@FileName", fileNameFromDb);
+
+                        int rowsAffected = insertCmd.ExecuteNonQuery();
+                        if (rowsAffected > 0)
+                        {
+                            MessageBox.Show($"File '{fileNameFromDb}' has been shared successfully and is pending approval.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            guna2Panel2.Hide();
+                        }
+                        else
+                        {
+                            MessageBox.Show("Failed to share the file.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         }
                     }
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error removing file: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"An error occurred while sharing the file: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
+
+
+        private void ShareCategory(string categoryName)
+        {
+            try
+            {
+                using (MySqlConnection conn = new MySqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    // Step 1: Retrieve the folder name, user ID, and category ID (from category table)
+                    string query = "SELECT folderPath, userId, categoryId FROM category WHERE categoryName = @categoryName";
+                    string folderPath = string.Empty;
+                    int userId = 0;
+                    int originalCategoryId = 0; // Renamed to avoid confusion
+
+                    using (MySqlCommand cmd = new MySqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@categoryName", categoryName);
+                        using (MySqlDataReader reader = cmd.ExecuteReader())
+                        {
+                            if (reader.Read())
+                            {
+                                folderPath = reader["folderPath"].ToString();
+                                userId = Convert.ToInt32(reader["userId"]);
+                                originalCategoryId = Convert.ToInt32(reader["categoryId"]); // Use the new variable name
+                            }
+                            else
+                            {
+                                MessageBox.Show("Category not found in the database.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                return;
+                            }
+                        } // Reader is automatically closed here
+                    }
+
+                    string folderName = System.IO.Path.GetFileName(folderPath.TrimEnd('/', '\\'));
+                    int rootSharedFileId = 0;
+
+                    // Step 2: Insert the ROOT folder into the shared_files table AND GET ITS ID
+                    string insertQuery = @"
+                    INSERT INTO shared_files (userId, file_name, parentId, is_folder, status, categoryId) -- Added categoryId column
+                    VALUES (@UserId, @FolderName, NULL, 1, 'Pending', @OriginalCategoryId);            -- Added @OriginalCategoryId parameter
+                    SELECT LAST_INSERT_ID();";
+
+                    using (MySqlCommand insertCmd = new MySqlCommand(insertQuery, conn))
+                    {
+                        insertCmd.Parameters.AddWithValue("@UserId", userId);
+                        insertCmd.Parameters.AddWithValue("@FolderName", folderName);
+                        insertCmd.Parameters.AddWithValue("@OriginalCategoryId", originalCategoryId);
+
+                        // Use ExecuteScalar to get the LAST_INSERT_ID()
+                        object result = insertCmd.ExecuteScalar();
+                        if (result != null && result != DBNull.Value)
+                        {
+                            rootSharedFileId = Convert.ToInt32(result); // Store the new ID
+                            MessageBox.Show($"Category '{categoryName}' (ID: {rootSharedFileId}) has been shared successfully and is pending approval.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        }
+                        else
+                        {
+                            MessageBox.Show("Failed to share the category or retrieve its ID.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            return; // Stop if we couldn't insert/get the ID
+                        }
+                    }
+
+
+                    if (rootSharedFileId > 0)
+                    {
+                        ShareSubcategoriesAndFiles(conn, originalCategoryId, userId, rootSharedFileId); // Pass the correct parent ID
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"An error occurred while sharing the category: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+
+        private void ShareSubcategoriesAndFiles(MySqlConnection conn, int parentCategoryId, int userId, int parentSharedFileId = 0)
+        {
+            try
+            {
+                // Step 1: Share all subcategories (folders)
+                string subcategoriesQuery = "SELECT categoryId, folderPath FROM category WHERE parentCategoryId = @ParentCategoryId";
+                List<(int SubcategoryId, string SubcategoryPath)> subcategories = new List<(int, string)>();
+
+                using (MySqlCommand subcategoriesCmd = new MySqlCommand(subcategoriesQuery, conn))
+                {
+                    subcategoriesCmd.Parameters.AddWithValue("@ParentCategoryId", parentCategoryId);
+                    using (MySqlDataReader reader = subcategoriesCmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            int subcategoryId = Convert.ToInt32(reader["categoryId"]);
+                            string subcategoryPath = reader["folderPath"].ToString();
+                            subcategories.Add((subcategoryId, subcategoryPath));
+                        }
+                    }
+                }
+
+                foreach (var (subcategoryId, subcategoryPath) in subcategories)
+                {
+                    string subcategoryName = System.IO.Path.GetFileName(subcategoryPath.TrimEnd('/', '\\'));
+                    int newSubcategorySharedId = 0;
+
+                    string insertSubcategoryQuery = @"
+                    INSERT INTO shared_files (userId, file_name, parentId, is_folder, status, categoryId) -- Added categoryId column
+                    VALUES (@UserId, @FolderName, @ParentId, 1, 'Pending', @SubcategoryId);           -- Added @SubcategoryId parameter
+                    SELECT LAST_INSERT_ID();";
+
+                    using (MySqlCommand insertSubcategoryCmd = new MySqlCommand(insertSubcategoryQuery, conn))
+                    {
+                        insertSubcategoryCmd.Parameters.AddWithValue("@UserId", userId);
+                        insertSubcategoryCmd.Parameters.AddWithValue("@FolderName", subcategoryName);
+                        insertSubcategoryCmd.Parameters.AddWithValue("@ParentId", parentSharedFileId == 0 ? (object)DBNull.Value : parentSharedFileId);
+                        insertSubcategoryCmd.Parameters.AddWithValue("@SubcategoryId", subcategoryId); // Pass the subcategoryId
+
+                        object result = insertSubcategoryCmd.ExecuteScalar();
+                        newSubcategorySharedId = Convert.ToInt32(result);
+                    }
+
+                    // Recursively share subcategories inside the current subcategory
+                    ShareSubcategoriesAndFiles(conn, subcategoryId, userId, newSubcategorySharedId);
+                }
+
+                // Step 2: Share all files within this category
+                string filesQuery = "SELECT filePath FROM files WHERE categoryId = @CategoryId";
+                List<string> files = new List<string>();
+
+                using (MySqlCommand filesCmd = new MySqlCommand(filesQuery, conn))
+                {
+                    filesCmd.Parameters.AddWithValue("@CategoryId", parentCategoryId);
+                    using (MySqlDataReader reader = filesCmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            string filePath = reader["filePath"].ToString();
+                            files.Add(filePath);
+                        }
+                    }
+                }
+
+                foreach (string filePath in files)
+                {
+                    string fileName = System.IO.Path.GetFileName(filePath);
+
+                    // The categoryId for the file is the parentCategoryId passed to this function instance
+                    int fileCategoryId = parentCategoryId;
+
+                    string insertFileQuery = @"
+                    INSERT INTO shared_files (userId, file_name, parentId, is_folder, status, categoryId) -- Added categoryId column
+                    VALUES (@UserId, @FileName, @ParentId, 0, 'Pending', @FileCategoryId);           -- Added @FileCategoryId parameter";
+
+                    using (MySqlCommand insertFileCmd = new MySqlCommand(insertFileQuery, conn))
+                    {
+                        insertFileCmd.Parameters.AddWithValue("@UserId", userId);
+                        insertFileCmd.Parameters.AddWithValue("@FileName", fileName);
+                        insertFileCmd.Parameters.AddWithValue("@ParentId", parentSharedFileId == 0 ? (object)DBNull.Value : parentSharedFileId);
+                        insertFileCmd.Parameters.AddWithValue("@FileCategoryId", fileCategoryId); // Pass the file's categoryId
+
+                        insertFileCmd.ExecuteNonQuery();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"An error occurred while sharing subcategories or files: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+
+
+
+        // Change signature to accept fileId
+        private void RemoveFile(int fileId)
+        {
+            // Optional: Add confirmation dialog
+            var confirmResult = MessageBox.Show("Are you sure you want to move this file to the trash?",
+                                                 "Confirm Move",
+                                                 MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (confirmResult == DialogResult.No)
+            {
+                return;
+            }
+
+            try
+            {
+                string currentFilePath = string.Empty;
+                string currentFileName = string.Empty;
+                string archivedFilePath = string.Empty;
+                string archivedFileName = string.Empty;
+
+                using (MySqlConnection conn = new MySqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    // Step 1: Retrieve the file details
+                    string query = "SELECT filePath, fileName FROM files WHERE fileId = @fileId AND userId = @userId AND isArchived = 0";
+                    using (MySqlCommand cmd = new MySqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@fileId", fileId);
+                        cmd.Parameters.AddWithValue("@userId", Session.CurrentUserId);
+
+                        using (MySqlDataReader reader = cmd.ExecuteReader())
+                        {
+                            if (reader.Read())
+                            {
+                                currentFilePath = reader["filePath"].ToString();
+                                currentFileName = reader["fileName"].ToString();
+                            }
+                            else
+                            {
+                                MessageBox.Show("File not found or already archived.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                return;
+                            }
+                        }
+                    }
+
+                    // Step 2: Generate the archived name
+                    string timestamp = DateTime.Now.ToString("yyyyMMddHHmmss");
+                    string fileExtension = Path.GetExtension(currentFileName);
+                    string fileNameWithoutExtension = Path.GetFileNameWithoutExtension(currentFileName);
+                    archivedFileName = $"{fileNameWithoutExtension}_archived_{timestamp}{fileExtension}";
+                    archivedFilePath = Path.Combine(Path.GetDirectoryName(currentFilePath), archivedFileName);
+
+                    // Step 3: Rename the file in the file system
+                    if (File.Exists(currentFilePath))
+                    {
+                        File.Move(currentFilePath, archivedFilePath);
+                    }
+                    else
+                    {
+                        MessageBox.Show("File not found in the file system.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return;
+                    }
+
+                    // Step 4: Update the database
+                    string updateQuery = @"
+                UPDATE files
+                SET fileName = @archivedFileName,
+                    filePath = @archivedFilePath,
+                    isArchived = 1
+                WHERE fileId = @fileId AND userId = @userId";
+
+                    using (MySqlCommand updateCmd = new MySqlCommand(updateQuery, conn))
+                    {
+                        updateCmd.Parameters.AddWithValue("@archivedFileName", archivedFileName);
+                        updateCmd.Parameters.AddWithValue("@archivedFilePath", archivedFilePath);
+                        updateCmd.Parameters.AddWithValue("@fileId", fileId);
+                        updateCmd.Parameters.AddWithValue("@userId", Session.CurrentUserId);
+
+                        int rowsAffected = updateCmd.ExecuteNonQuery();
+                        if (rowsAffected > 0)
+                        {
+                            MessageBox.Show($"File '{currentFileName}' has been archived successfully.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            LoadFilesIntoTablePanel(); // Refresh the UI
+                        }
+                        else
+                        {
+                            MessageBox.Show("Failed to update the database.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error archiving file: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
 
         private void DownloadFile(string fileName)
         {
@@ -792,80 +1174,173 @@ namespace tarungonNaNako.subform
             }
         }
 
-        private void EditFile(int categoryId, string selectedName)
+        private bool IsFileNameExistsInSameCategory(string fileName, int categoryId)
         {
-            // Prompt user for new file name
-            string newFileName = Microsoft.VisualBasic.Interaction.InputBox(
-                "Enter new file name:",
-                "Edit File",
-                selectedName
-            ).Trim();
-
-            if (string.IsNullOrWhiteSpace(newFileName))
+            using (MySqlConnection conn = new MySqlConnection(connectionString))
             {
-                MessageBox.Show("File name cannot be empty.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
+                conn.Open();
+                // Check only ACTIVE files in the specific category for the current user
+                string query = @"SELECT COUNT(*)
+                         FROM files
+                         WHERE fileName = @fileName
+                           AND categoryId = @categoryId
+                           AND isArchived = 0
+                           AND userId = @userId";
+                using (MySqlCommand cmd = new MySqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@fileName", fileName);
+                    cmd.Parameters.AddWithValue("@categoryId", categoryId);
+                    cmd.Parameters.AddWithValue("@userId", Session.CurrentUserId);
+                    return Convert.ToInt32(cmd.ExecuteScalar()) > 0;
+                }
             }
+        }
 
-            // Ensure the new file name includes the correct extension
-            string fileExtension = Path.GetExtension(selectedName);
-            if (!newFileName.EndsWith(fileExtension, StringComparison.OrdinalIgnoreCase))
-            {
-                newFileName += fileExtension;
-            }
+        private void EditFile(int fileId, string currentFileName)
+        {
+            string currentFilePath = "";
+            int categoryIdForFile = -1;
 
-            // Prevent duplicate file names
-            if (IsFileNameExists(newFileName))
-            {
-                MessageBox.Show("A file with this name already exists. Please choose a different name.",
-                                "Duplicate File", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-
+            // --- Step 1: Get Current File Details using fileId ---
             try
             {
-                // Step 1: Retrieve the current file path from the database
-                string currentFilePath = GetFilePathByFileName(selectedName);
-                if (string.IsNullOrEmpty(currentFilePath) || !File.Exists(currentFilePath))
-                {
-                    MessageBox.Show("File not found in the file system.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
-                }
-
-                // Step 2: Construct the new file path
-                string newFilePath = Path.Combine(Path.GetDirectoryName(currentFilePath), newFileName);
-
-                // Step 3: Rename the file in the file system
-                File.Move(currentFilePath, newFilePath);
-
-                // Step 4: Update the file name and path in the database
-                using (MySqlConnection conn = new MySqlConnection(connectionString))
+                using (var conn = new MySqlConnection(connectionString))
                 {
                     conn.Open();
-                    string query = "UPDATE files SET fileName = @newFileName, filePath = @newFilePath WHERE fileName = @fileName";
-                    using (MySqlCommand cmd = new MySqlCommand(query, conn))
+                    string query = "SELECT filePath, categoryId FROM files WHERE fileId = @fileId AND userId = @userId AND isArchived = 0"; // Ensure we're editing an active file
+                    using (var cmd = new MySqlCommand(query, conn))
                     {
-                        cmd.Parameters.AddWithValue("@newFileName", newFileName);
-                        cmd.Parameters.AddWithValue("@newFilePath", newFilePath);
-                        cmd.Parameters.AddWithValue("@fileName", selectedName);
-                        int rowsAffected = cmd.ExecuteNonQuery();
-
-                        if (rowsAffected > 0)
+                        cmd.Parameters.AddWithValue("@fileId", fileId);
+                        cmd.Parameters.AddWithValue("@userId", Session.CurrentUserId);
+                        using (var reader = cmd.ExecuteReader())
                         {
-                            guna2Panel2.Visible = false;
-                            MessageBox.Show($"File renamed to '{newFileName}' successfully.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                            LoadFilesIntoTablePanel(); // Refresh the panel after renaming the file
-                        }
-                        else
-                        {
-                            MessageBox.Show("File not found in the database.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            if (reader.Read())
+                            {
+                                currentFilePath = reader["filePath"].ToString();
+                                categoryIdForFile = Convert.ToInt32(reader["categoryId"]);
+                            }
+                            else
+                            {
+                                MessageBox.Show("Active file details not found in database.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                return;
+                            }
                         }
                     }
+                }
+                if (string.IsNullOrEmpty(currentFilePath) || categoryIdForFile <= 0)
+                {
+                     MessageBox.Show("Failed to retrieve necessary file details (Path or Category ID).", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                     return;
+                }
+                if (!File.Exists(currentFilePath))
+                {
+                    MessageBox.Show($"Physical file not found at the expected location:\n{currentFilePath}\nPlease check storage consistency.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    // Consider allowing DB update only if user confirms, or just return
+                    return;
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error renaming file: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Error retrieving file details: {ex.Message}", "Database Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            // --- Step 2: Prompt for New Name and Validate ---
+            string newFileNameBase = Microsoft.VisualBasic.Interaction.InputBox(
+                "Enter new file name (without extension):",
+                "Edit File",
+                Path.GetFileNameWithoutExtension(currentFileName)).Trim();
+
+            if (string.IsNullOrWhiteSpace(newFileNameBase))
+            {
+                MessageBox.Show("File name cannot be empty.", "Input Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            // Validate for invalid characters
+            if (newFileNameBase.IndexOfAny(Path.GetInvalidFileNameChars()) >= 0 || newFileNameBase.Contains(".."))
+            {
+                MessageBox.Show("Invalid characters detected in the file name. Please avoid characters like \\ / : * ? \" < > | and '..'.", "Input Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            // Re-attach the original extension
+            string fileExtension = Path.GetExtension(currentFileName); // Use the extension from the parameter
+            string newFileNameWithExt = newFileNameBase + fileExtension;
+
+            // --- Step 3: Check for Duplicates (Only if Name Changed) ---
+            if (!newFileNameWithExt.Equals(currentFileName, StringComparison.OrdinalIgnoreCase))
+            {
+                if (IsFileNameExistsInSameCategory(newFileNameWithExt, categoryIdForFile))
+                {
+                    MessageBox.Show($"A file named '{newFileNameWithExt}' already exists in this category. Please choose a different name.",
+                                    "Duplicate File", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+            }
+            else
+            {
+                 // Name hasn't changed, no need to do anything else.
+                 MessageBox.Show("File name is the same. No changes made.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                 return;
+            }
+
+
+            // --- Step 4: Perform Rename Operation (File System & Database) ---
+            string currentDirectory = Path.GetDirectoryName(currentFilePath);
+            string newFilePath = Path.Combine(currentDirectory, newFileNameWithExt);
+
+            try
+            {
+                // Step 4a: Rename the file in the file system
+                File.Move(currentFilePath, newFilePath); // Throws IOException if fails
+
+                // Step 4b: Update the file name and path in the database using fileId
+                using (MySqlConnection conn = new MySqlConnection(connectionString))
+                {
+                    conn.Open();
+                    string query = @"UPDATE files
+                                   SET fileName = @newFileName,
+                                       filePath = @newFilePath
+                                   WHERE fileId = @fileId AND userId = @userId";
+                    using (MySqlCommand cmd = new MySqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@newFileName", newFileNameWithExt);
+                        cmd.Parameters.AddWithValue("@newFilePath", newFilePath);
+                        cmd.Parameters.AddWithValue("@fileId", fileId); // Use the fileId parameter
+                        cmd.Parameters.AddWithValue("@userId", Session.CurrentUserId);
+
+                        int rowsAffected = cmd.ExecuteNonQuery();
+
+                        if (rowsAffected > 0)
+                        {
+                            // Success! Don't hide guna2Panel2 here.
+                            MessageBox.Show($"File renamed to '{newFileNameWithExt}' successfully.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            LoadFilesIntoTablePanel(); // Refresh the UI
+                        }
+                        else
+                        {
+                            // Should ideally not happen if initial check passed, but handle defensively
+                            MessageBox.Show("File could not be updated in the database (might have been deleted or permissions changed).", "Database Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            // Attempt to revert the file system change
+                            try { File.Move(newFilePath, currentFilePath); } catch { /* Log revert failure */ }
+                        }
+                    }
+                }
+            }
+            catch (IOException ioEx) // Catch specific file system errors
+            {
+                 MessageBox.Show($"Error renaming file on disk: {ioEx.Message}\nPlease check file permissions or if the file is in use.", "File System Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                 // DB was not updated, no revert needed for DB.
+            }
+            catch (Exception ex) // Catch other errors (like database connection issues)
+            {
+                MessageBox.Show($"An unexpected error occurred during rename: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                // If File.Move succeeded but DB failed, attempt to revert File.Move
+                if (File.Exists(newFilePath) && !File.Exists(currentFilePath)) // Check if move likely happened
+                {
+                     try { File.Move(newFilePath, currentFilePath); } catch { /* Log revert failure */ }
+                }
             }
         }
 
@@ -978,10 +1453,12 @@ namespace tarungonNaNako.subform
             using (MySqlConnection conn = new MySqlConnection(connectionString))
             {
                 conn.Open();
-                string query = "SELECT COUNT(*) FROM category WHERE categoryName = @categoryName";
+                // Only check against ACTIVE categories for the current user
+                string query = "SELECT COUNT(*) FROM category WHERE categoryName = @categoryName AND is_archived = 0 AND userId = @userId";
                 using (MySqlCommand cmd = new MySqlCommand(query, conn))
                 {
                     cmd.Parameters.AddWithValue("@categoryName", categoryName);
+                    cmd.Parameters.AddWithValue("@userId", Session.CurrentUserId); // Ensure check is per user
                     return Convert.ToInt32(cmd.ExecuteScalar()) > 0;
                 }
             }
@@ -1019,86 +1496,144 @@ namespace tarungonNaNako.subform
                         }
                     }
 
-                    // Step 2: Archive all subcategories recursively
-                    string archiveSubcategoriesQuery = @"
-                WITH RECURSIVE Subcategories AS (
-                    SELECT categoryId, folderPath
-                    FROM category
-                    WHERE categoryId = @parentCategoryId
-                    UNION ALL
-                    SELECT c.categoryId, c.folderPath
-                    FROM category c
-                    INNER JOIN Subcategories sc ON c.parentCategoryId = sc.categoryId
-                )
-                SELECT categoryId, folderPath FROM Subcategories";
-
-                    List<int> categoryIds = new List<int>();
-                    List<string> folderPaths = new List<string>();
-
-                    using (MySqlCommand archiveSubcategoriesCmd = new MySqlCommand(archiveSubcategoriesQuery, conn))
+                    if (parentCategoryId == null || string.IsNullOrEmpty(parentFolderPath))
                     {
-                        archiveSubcategoriesCmd.Parameters.AddWithValue("@parentCategoryId", parentCategoryId);
-
-                        using (MySqlDataReader reader = archiveSubcategoriesCmd.ExecuteReader())
-                        {
-                            while (reader.Read())
-                            {
-                                categoryIds.Add(reader.GetInt32(0));
-                                folderPaths.Add(reader.GetString(1));
-                            }
-                        }
+                        MessageBox.Show("Invalid category details retrieved.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return;
                     }
 
-                    // Step 3: Update the categories using the fetched IDs
-                    if (categoryIds.Count > 0)
+                    // Step 2: Perform soft delete recursively
+                    string archiveSuffix = $"_archived_{DateTime.Now:yyyyMMddHHmmss}";
+                    string archivedParentFolderPath = parentFolderPath + archiveSuffix;
+
+                    if (Directory.Exists(parentFolderPath))
                     {
-                        string updateCategoriesQuery = "UPDATE category SET is_archived = 1 WHERE categoryId IN (" + string.Join(",", categoryIds) + ")";
-                        using (MySqlCommand updateCategoriesCmd = new MySqlCommand(updateCategoriesQuery, conn))
-                        {
-                            updateCategoriesCmd.ExecuteNonQuery();
-                        }
+                        Directory.Move(parentFolderPath, archivedParentFolderPath); // Rename the folder
                     }
 
-                    // Step 4: Archive all files in the parent category and its subcategories
-                    string archiveFilesQuery = @"
-                UPDATE files
-                SET isArchived = 1
-                WHERE categoryId IN (" + string.Join(",", categoryIds) + ")";
+                    // Step 3: Update the database for the parent category and its contents
+                    ArchiveCategoryAndContents(conn, parentCategoryId.Value, archivedParentFolderPath, archiveSuffix);
 
-                    using (MySqlCommand archiveFilesCmd = new MySqlCommand(archiveFilesQuery, conn))
-                    {
-                        archiveFilesCmd.ExecuteNonQuery();
-                    }
-
-                    // Step 5: Delete the parent folder and its subfolders from the file system
-                    foreach (string folderPath in folderPaths)
-                    {
-                        if (Directory.Exists(folderPath))
-                        {
-                            try
-                            {
-                                Directory.Delete(folderPath, true); // Recursively delete the folder
-                            }
-                            catch (Exception ex)
-                            {
-                                MessageBox.Show($"Error deleting folder '{folderPath}': {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                            }
-                        }
-                    }
-
-                    // Step 6: Notify the user and refresh the UI
+                    // Step 4: Notify the user and refresh the UI
                     guna2Panel2.Visible = false;
-                    MessageBox.Show($"Category '{categoryName}' and its subfolders and files have been removed successfully.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MessageBox.Show($"Category '{categoryName}' and its contents have been archived successfully.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     RefreshCategoriesPanel(); // Refresh the panel after removing the category
                     LoadFilesIntoTablePanel();
                 }
             }
             catch (Exception ex)
             {
-                // Log the exception for debugging purposes
-                MessageBox.Show($"Error removing category: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Error archiving category: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
+        private void ArchiveCategoryAndContents(MySqlConnection conn, int categoryId, string archivedFolderPath, string archiveSuffix)
+        {
+            try
+            {
+                // Step 1: Archive all subcategories recursively
+                string subcategoriesQuery = "SELECT categoryId, folderPath, categoryName FROM category WHERE parentCategoryId = @ParentCategoryId";
+                List<(int SubcategoryId, string SubcategoryPath, string SubcategoryName)> subcategories = new List<(int, string, string)>();
+
+                using (MySqlCommand subcategoriesCmd = new MySqlCommand(subcategoriesQuery, conn))
+                {
+                    subcategoriesCmd.Parameters.AddWithValue("@ParentCategoryId", categoryId);
+                    using (MySqlDataReader reader = subcategoriesCmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            int subcategoryId = reader.GetInt32(0);
+                            string subcategoryPath = reader.GetString(1);
+                            string subcategoryName = reader.GetString(2);
+                            subcategories.Add((subcategoryId, subcategoryPath, subcategoryName));
+                        }
+                    }
+                }
+
+                foreach (var (subcategoryId, subcategoryPath, subcategoryName) in subcategories)
+                {
+                    // Adjust the subcategory path to reflect the new parent folder path
+                    string archivedSubcategoryPath = Path.Combine(archivedFolderPath, subcategoryName + archiveSuffix);
+                    string archivedSubcategoryName = subcategoryName + archiveSuffix;
+
+                    if (Directory.Exists(subcategoryPath))
+                    {
+                        Directory.Move(subcategoryPath, archivedSubcategoryPath); // Rename the subfolder
+                    }
+
+                    // Recursively archive subcategories
+                    ArchiveCategoryAndContents(conn, subcategoryId, archivedSubcategoryPath, archiveSuffix);
+
+                    // Update the subcategory name and path in the database
+                    string updateSubcategoryQuery = "UPDATE category SET folderPath = @ArchivedFolderPath, categoryName = @ArchivedCategoryName, is_archived = 1 WHERE categoryId = @CategoryId";
+                    using (MySqlCommand updateSubcategoryCmd = new MySqlCommand(updateSubcategoryQuery, conn))
+                    {
+                        updateSubcategoryCmd.Parameters.AddWithValue("@ArchivedFolderPath", archivedSubcategoryPath);
+                        updateSubcategoryCmd.Parameters.AddWithValue("@ArchivedCategoryName", archivedSubcategoryName);
+                        updateSubcategoryCmd.Parameters.AddWithValue("@CategoryId", subcategoryId);
+                        updateSubcategoryCmd.ExecuteNonQuery();
+                    }
+                }
+
+                // Step 2: Archive all files within this category
+                string filesQuery = "SELECT fileId, filePath, fileName FROM files WHERE categoryId = @CategoryId";
+                List<(int FileId, string FilePath, string FileName)> files = new List<(int, string, string)>();
+
+                using (MySqlCommand filesCmd = new MySqlCommand(filesQuery, conn))
+                {
+                    filesCmd.Parameters.AddWithValue("@CategoryId", categoryId);
+                    using (MySqlDataReader reader = filesCmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            int fileId = reader.GetInt32(0);
+                            string filePath = reader.GetString(1);
+                            string fileName = reader.GetString(2);
+                            files.Add((fileId, filePath, fileName));
+                        }
+                    }
+                }
+
+                foreach (var (fileId, filePath, fileName) in files)
+                {
+                    string archivedFilePath = Path.Combine(archivedFolderPath, Path.GetFileNameWithoutExtension(fileName) + archiveSuffix + Path.GetExtension(fileName));
+                    string archivedFileName = Path.GetFileNameWithoutExtension(fileName) + archiveSuffix + Path.GetExtension(fileName);
+
+                    if (File.Exists(filePath))
+                    {
+                        File.Move(filePath, archivedFilePath); // Rename the file
+                    }
+
+                    // Update the file path and file name in the database, and mark as archived
+                    string updateFileQuery = "UPDATE files SET filePath = @ArchivedFilePath, fileName = @ArchivedFileName, isArchived = 1 WHERE fileId = @FileId";
+                    using (MySqlCommand updateFileCmd = new MySqlCommand(updateFileQuery, conn))
+                    {
+                        updateFileCmd.Parameters.AddWithValue("@ArchivedFilePath", archivedFilePath);
+                        updateFileCmd.Parameters.AddWithValue("@ArchivedFileName", archivedFileName);
+                        updateFileCmd.Parameters.AddWithValue("@FileId", fileId);
+                        updateFileCmd.ExecuteNonQuery();
+                    }
+                }
+
+                // Step 3: Update the category name, path, and mark as archived in the database
+                string updateCategoryQuery = "UPDATE category SET folderPath = @ArchivedFolderPath, categoryName = @ArchivedCategoryName, is_archived = 1 WHERE categoryId = @CategoryId";
+                using (MySqlCommand updateCategoryCmd = new MySqlCommand(updateCategoryQuery, conn))
+                {
+                    string archivedCategoryName = Path.GetFileName(archivedFolderPath); // Extract the new folder name
+                    updateCategoryCmd.Parameters.AddWithValue("@ArchivedFolderPath", archivedFolderPath);
+                    updateCategoryCmd.Parameters.AddWithValue("@ArchivedCategoryName", archivedCategoryName);
+                    updateCategoryCmd.Parameters.AddWithValue("@CategoryId", categoryId);
+                    updateCategoryCmd.ExecuteNonQuery();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error archiving category contents: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+
+
 
 
 
@@ -1273,6 +1808,10 @@ namespace tarungonNaNako.subform
                 addDocsForm.MaximizeBox = false; // Remove maximize button
                 DialogResult result = addDocsForm.ShowDialog(this); // Show the form as a dialog
                 popupPanel.Hide();
+                if (result == DialogResult.OK)
+                {
+                    LoadFilesIntoTablePanel();
+                }
             };
 
             // Add buttons to the panel

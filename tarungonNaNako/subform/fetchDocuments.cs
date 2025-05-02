@@ -215,7 +215,7 @@ namespace tarungonNaNako.subform
             breadcrumbPanel.Controls.Clear();
 
             breadcrumbItems.Reverse();
-            if (breadcrumbItems.Count > 8)
+            if (breadcrumbItems.Count > 4)
             {
                 Guna2CircleButton moreButton = CreateMoreButton(breadcrumbItems.Take(breadcrumbItems.Count - 4).ToList());
                 breadcrumbPanel.Controls.Add(moreButton);
@@ -439,6 +439,7 @@ namespace tarungonNaNako.subform
                     LEFT JOIN category pc ON c.parentCategoryId = pc.categoryId
                     WHERE c.is_archived = 0 AND c.is_hidden = 0 AND c.parentCategoryId = @categoryId
                         AND (@searchTerm IS NULL OR c.categoryName LIKE @searchTerm)";
+
                     using (MySqlCommand cmd = new MySqlCommand(query, conn))
                     {
                         cmd.Parameters.AddWithValue("@categoryId", selectedCategoryId);
@@ -486,8 +487,8 @@ namespace tarungonNaNako.subform
                                 rowTable.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 40)); // Image Icon
                                 rowTable.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 200)); // Name
                                 rowTable.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 180)); // Modification Time
-                                rowTable.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 180)); // Category
-                                rowTable.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 10)); // Action
+                                rowTable.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 180)); // Category/Parent
+                                rowTable.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F)); // Action (Fill remaining)
 
                                 Image icon;
                                 if (type == "file")
@@ -1188,8 +1189,6 @@ namespace tarungonNaNako.subform
 
 
 
-
-
         private void RemoveFile(string fileName)
         {
             try
@@ -1197,59 +1196,81 @@ namespace tarungonNaNako.subform
                 using (MySqlConnection conn = new MySqlConnection(connectionString))
                 {
                     conn.Open();
-                    string query = "UPDATE files SET isArchived = 1 WHERE fileName = @fileName";
+
+                    // Step 1: Retrieve the file details
+                    string query = "SELECT fileId, filePath, fileName FROM files WHERE fileName = @fileName AND isArchived = 0";
+                    int fileId = -1;
+                    string currentFilePath = string.Empty;
+                    string currentFileName = string.Empty;
+
                     using (MySqlCommand cmd = new MySqlCommand(query, conn))
                     {
                         cmd.Parameters.AddWithValue("@fileName", fileName);
-                        int rowsAffected = cmd.ExecuteNonQuery();
-                        if (rowsAffected > 0)
+                        using (MySqlDataReader reader = cmd.ExecuteReader())
                         {
-                            if (InvokeRequired)
+                            if (reader.Read())
                             {
-                                Invoke(new Action(() =>
-                                {
-                                    guna2Panel2.Visible = false;
-                                    MessageBox.Show($"File '{fileName}' removed successfully.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                                    LoadFilesAndFoldersIntoTablePanel(); // Refresh the panel after removing the file
-                                }));
+                                fileId = reader.GetInt32("fileId");
+                                currentFilePath = reader["filePath"].ToString();
+                                currentFileName = reader["fileName"].ToString();
                             }
                             else
                             {
-                                guna2Panel2.Visible = false;
-                                MessageBox.Show($"File '{fileName}' removed successfully.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                                LoadFilesAndFoldersIntoTablePanel(); // Refresh the panel after removing the file
+                                MessageBox.Show("File not found or already archived.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                return;
                             }
+                        }
+                    }
+
+                    // Step 2: Generate the archived name
+                    string timestamp = DateTime.Now.ToString("yyyyMMddHHmmss");
+                    string fileExtension = Path.GetExtension(currentFileName);
+                    string fileNameWithoutExtension = Path.GetFileNameWithoutExtension(currentFileName);
+                    string archivedFileName = $"{fileNameWithoutExtension}_archived_{timestamp}{fileExtension}";
+                    string archivedFilePath = Path.Combine(Path.GetDirectoryName(currentFilePath), archivedFileName);
+
+                    // Step 3: Rename the file in the file system
+                    if (File.Exists(currentFilePath))
+                    {
+                        File.Move(currentFilePath, archivedFilePath);
+                    }
+                    else
+                    {
+                        MessageBox.Show("File not found in the file system.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return;
+                    }
+
+                    // Step 4: Update the database
+                    string updateQuery = @"
+                UPDATE files
+                SET fileName = @archivedFileName,
+                    filePath = @archivedFilePath,
+                    isArchived = 1
+                WHERE fileId = @fileId";
+
+                    using (MySqlCommand updateCmd = new MySqlCommand(updateQuery, conn))
+                    {
+                        updateCmd.Parameters.AddWithValue("@archivedFileName", archivedFileName);
+                        updateCmd.Parameters.AddWithValue("@archivedFilePath", archivedFilePath);
+                        updateCmd.Parameters.AddWithValue("@fileId", fileId);
+
+                        int rowsAffected = updateCmd.ExecuteNonQuery();
+                        if (rowsAffected > 0)
+                        {
+                            guna2Panel2.Visible = false;
+                            MessageBox.Show($"File '{currentFileName}' has been archived successfully.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            RefreshPanel5(); // Refresh the UI
                         }
                         else
                         {
-                            if (InvokeRequired)
-                            {
-                                Invoke(new Action(() =>
-                                {
-                                    MessageBox.Show("File not found.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                                }));
-                            }
-                            else
-                            {
-                                MessageBox.Show("File not found.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                            }
+                            MessageBox.Show("Failed to update the database.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         }
                     }
                 }
             }
             catch (Exception ex)
             {
-                if (InvokeRequired)
-                {
-                    Invoke(new Action(() =>
-                    {
-                        MessageBox.Show($"Error removing file: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    }));
-                }
-                else
-                {
-                    MessageBox.Show($"Error removing file: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
+                MessageBox.Show($"Error archiving file: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -1493,9 +1514,9 @@ namespace tarungonNaNako.subform
         {
             // Prompt user for new category name
             string newCategoryName = Microsoft.VisualBasic.Interaction.InputBox(
-                "Enter new category name:",
-                "Edit Category",
-                categoryName
+               "Enter new category name:",
+               "Edit Category",
+               Path.GetFileNameWithoutExtension(categoryName) // Exclude the extension  
             ).Trim();
 
             if (string.IsNullOrWhiteSpace(newCategoryName))
@@ -1685,122 +1706,243 @@ namespace tarungonNaNako.subform
                         }
                     }
 
-                    // Step 2: Archive all subcategories recursively
-                    string archiveSubcategoriesQuery = @"
-                WITH RECURSIVE Subcategories AS (
-                    SELECT categoryId, folderPath
-                    FROM category
-                    WHERE categoryId = @parentCategoryId
-                    UNION ALL
-                    SELECT c.categoryId, c.folderPath
-                    FROM category c
-                    INNER JOIN Subcategories sc ON c.parentCategoryId = sc.categoryId
-                )
-                SELECT categoryId, folderPath FROM Subcategories";
-
-                    List<int> categoryIds = new List<int>();
-                    List<string> folderPaths = new List<string>();
-
-                    using (MySqlCommand archiveSubcategoriesCmd = new MySqlCommand(archiveSubcategoriesQuery, conn))
+                    if (parentCategoryId == null || string.IsNullOrEmpty(parentFolderPath))
                     {
-                        archiveSubcategoriesCmd.Parameters.AddWithValue("@parentCategoryId", parentCategoryId);
+                        MessageBox.Show("Invalid category details retrieved.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return;
+                    }
 
-                        using (MySqlDataReader reader = archiveSubcategoriesCmd.ExecuteReader())
+                    // Step 2: Perform soft delete recursively
+                    string archiveSuffix = $"_archived_{DateTime.Now:yyyyMMddHHmmss}";
+                    string archivedParentFolderPath = parentFolderPath + archiveSuffix;
+
+                    if (Directory.Exists(parentFolderPath))
+                    {
+                        Directory.Move(parentFolderPath, archivedParentFolderPath); // Rename the folder
+                    }
+
+                    // Step 3: Update the database for the parent category and its contents
+                    ArchiveCategoryAndContents(conn, parentCategoryId.Value, archivedParentFolderPath, archiveSuffix);
+
+                    // Step 4: Notify the user and refresh the UI
+                    guna2Panel2.Visible = false;
+                    MessageBox.Show($"Category '{categoryName}' and its contents have been archived successfully.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    RefreshPanel5();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error archiving category: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+
+        private void ArchiveCategoryAndContents(MySqlConnection conn, int categoryId, string archivedFolderPath, string archiveSuffix)
+        {
+            try
+            {
+                // Step 1: Archive all subcategories recursively
+                string subcategoriesQuery = "SELECT categoryId, folderPath, categoryName FROM category WHERE parentCategoryId = @ParentCategoryId";
+                List<(int SubcategoryId, string SubcategoryPath, string SubcategoryName)> subcategories = new List<(int, string, string)>();
+
+                using (MySqlCommand subcategoriesCmd = new MySqlCommand(subcategoriesQuery, conn))
+                {
+                    subcategoriesCmd.Parameters.AddWithValue("@ParentCategoryId", categoryId);
+                    using (MySqlDataReader reader = subcategoriesCmd.ExecuteReader())
+                    {
+                        while (reader.Read())
                         {
-                            while (reader.Read())
-                            {
-                                categoryIds.Add(reader.GetInt32(0));
-                                folderPaths.Add(reader.GetString(1));
-                            }
+                            int subcategoryId = reader.GetInt32(0);
+                            string subcategoryPath = reader.GetString(1);
+                            string subcategoryName = reader.GetString(2);
+                            subcategories.Add((subcategoryId, subcategoryPath, subcategoryName));
                         }
                     }
+                }
 
-                    // Step 3: Update the categories using the fetched IDs
-                    if (categoryIds.Count > 0)
+                foreach (var (subcategoryId, subcategoryPath, subcategoryName) in subcategories)
+                {
+                    // Adjust the subcategory path to reflect the new parent folder path
+                    string archivedSubcategoryPath = Path.Combine(archivedFolderPath, subcategoryName + archiveSuffix);
+                    string archivedSubcategoryName = subcategoryName + archiveSuffix;
+
+                    if (Directory.Exists(subcategoryPath))
                     {
-                        string updateCategoriesQuery = "UPDATE category SET is_archived = 1 WHERE categoryId IN (" + string.Join(",", categoryIds) + ")";
-                        using (MySqlCommand updateCategoriesCmd = new MySqlCommand(updateCategoriesQuery, conn))
+                        Directory.Move(subcategoryPath, archivedSubcategoryPath); // Rename the subfolder
+                    }
+
+                    // Recursively archive subcategories
+                    ArchiveCategoryAndContents(conn, subcategoryId, archivedSubcategoryPath, archiveSuffix);
+
+                    // Update the subcategory name and path in the database
+                    string updateSubcategoryQuery = "UPDATE category SET folderPath = @ArchivedFolderPath, categoryName = @ArchivedCategoryName, is_archived = 1 WHERE categoryId = @CategoryId";
+                    using (MySqlCommand updateSubcategoryCmd = new MySqlCommand(updateSubcategoryQuery, conn))
+                    {
+                        updateSubcategoryCmd.Parameters.AddWithValue("@ArchivedFolderPath", archivedSubcategoryPath);
+                        updateSubcategoryCmd.Parameters.AddWithValue("@ArchivedCategoryName", archivedSubcategoryName);
+                        updateSubcategoryCmd.Parameters.AddWithValue("@CategoryId", subcategoryId);
+                        updateSubcategoryCmd.ExecuteNonQuery();
+                    }
+                }
+
+                // Step 2: Archive all files within this category
+                string filesQuery = "SELECT fileId, filePath, fileName FROM files WHERE categoryId = @CategoryId";
+                List<(int FileId, string FilePath, string FileName)> files = new List<(int, string, string)>();
+
+                using (MySqlCommand filesCmd = new MySqlCommand(filesQuery, conn))
+                {
+                    filesCmd.Parameters.AddWithValue("@CategoryId", categoryId);
+                    using (MySqlDataReader reader = filesCmd.ExecuteReader())
+                    {
+                        while (reader.Read())
                         {
-                            updateCategoriesCmd.ExecuteNonQuery();
+                            int fileId = reader.GetInt32(0);
+                            string filePath = reader.GetString(1);
+                            string fileName = reader.GetString(2);
+                            files.Add((fileId, filePath, fileName));
                         }
                     }
+                }
 
-                    // Step 4: Archive all files in the parent category and its subcategories
-                    string archiveFilesQuery = @"
-                UPDATE files
-                SET isArchived = 1
-                WHERE categoryId IN (" + string.Join(",", categoryIds) + ")";
+                foreach (var (fileId, filePath, fileName) in files)
+                {
+                    string archivedFilePath = Path.Combine(archivedFolderPath, Path.GetFileNameWithoutExtension(fileName) + archiveSuffix + Path.GetExtension(fileName));
+                    string archivedFileName = Path.GetFileNameWithoutExtension(fileName) + archiveSuffix + Path.GetExtension(fileName);
 
-                    using (MySqlCommand archiveFilesCmd = new MySqlCommand(archiveFilesQuery, conn))
+                    if (File.Exists(filePath))
                     {
-                        archiveFilesCmd.ExecuteNonQuery();
+                        File.Move(filePath, archivedFilePath); // Rename the file
                     }
 
-                    // Step 5: Delete the parent folder and its subfolders from the file system
-                    foreach (string folderPath in folderPaths)
+                    // Update the file path and file name in the database, and mark as archived
+                    string updateFileQuery = "UPDATE files SET filePath = @ArchivedFilePath, fileName = @ArchivedFileName, isArchived = 1 WHERE fileId = @FileId";
+                    using (MySqlCommand updateFileCmd = new MySqlCommand(updateFileQuery, conn))
                     {
-                        if (Directory.Exists(folderPath))
-                        {
-                            try
-                            {
-                                // Debugging: Log the folder path being deleted
-                                Console.WriteLine($"Attempting to delete folder: {folderPath}");
-
-                                Directory.Delete(folderPath, true); // Recursively delete the folder
-                            }
-                            catch (UnauthorizedAccessException ex)
-                            {
-                                MessageBox.Show($"Access denied to folder '{folderPath}'. Please check permissions.\n{ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                            }
-                            catch (IOException ex)
-                            {
-                                MessageBox.Show($"Folder '{folderPath}' is in use or cannot be deleted.\n{ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                            }
-                            catch (Exception ex)
-                            {
-                                MessageBox.Show($"Error deleting folder '{folderPath}': {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                            }
-                        }
-                        else
-                        {
-                            // Debugging: Log if the folder does not exist
-                            Console.WriteLine($"Folder does not exist: {folderPath}");
-                        }
+                        updateFileCmd.Parameters.AddWithValue("@ArchivedFilePath", archivedFilePath);
+                        updateFileCmd.Parameters.AddWithValue("@ArchivedFileName", archivedFileName);
+                        updateFileCmd.Parameters.AddWithValue("@FileId", fileId);
+                        updateFileCmd.ExecuteNonQuery();
                     }
+                }
 
-                    // Step 6: Notify the user and refresh the UI
-                    if (InvokeRequired)
+                // Step 3: Update the category name, path, and mark as archived in the database
+                string updateCategoryQuery = "UPDATE category SET folderPath = @ArchivedFolderPath, categoryName = @ArchivedCategoryName, is_archived = 1 WHERE categoryId = @CategoryId";
+                using (MySqlCommand updateCategoryCmd = new MySqlCommand(updateCategoryQuery, conn))
+                {
+                    string archivedCategoryName = Path.GetFileName(archivedFolderPath); // Extract the new folder name
+                    updateCategoryCmd.Parameters.AddWithValue("@ArchivedFolderPath", archivedFolderPath);
+                    updateCategoryCmd.Parameters.AddWithValue("@ArchivedCategoryName", archivedCategoryName);
+                    updateCategoryCmd.Parameters.AddWithValue("@CategoryId", categoryId);
+                    updateCategoryCmd.ExecuteNonQuery();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error archiving category contents: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+
+        private void RenameAndArchiveContents(string folderPath, string archivedFolderName, int parentCategoryId)
+        {
+            try
+            {
+                // Step 1: Traverse all subfolders and files inside the folder
+                DirectoryInfo directoryInfo = new DirectoryInfo(folderPath);
+
+                // Rename and update subfolders
+                foreach (DirectoryInfo subFolder in directoryInfo.GetDirectories())
+                {
+                    string newSubFolderName = $"{subFolder.Name}_{archivedFolderName}";
+                    string newSubFolderPath = Path.Combine(subFolder.Parent.FullName, newSubFolderName);
+
+                    // Rename the folder in the file system
+                    subFolder.MoveTo(newSubFolderPath);
+
+                    // Update the folder in the database
+                    UpdateCategoryInDatabase(subFolder.Name, newSubFolderName, newSubFolderPath, parentCategoryId);
+
+                    // Recursively rename contents of the subfolder
+                    RenameAndArchiveContents(newSubFolderPath, archivedFolderName, GetCategoryIdFromName(newSubFolderName));
+                }
+
+                // Rename and update files
+                foreach (FileInfo file in directoryInfo.GetFiles())
+                {
+                    string newFileName = $"{Path.GetFileNameWithoutExtension(file.Name)}_{archivedFolderName}{file.Extension}";
+                    string newFilePath = Path.Combine(file.DirectoryName, newFileName);
+
+                    // Rename the file in the file system
+                    file.MoveTo(newFilePath);
+
+                    // Update the file in the database
+                    UpdateFileInDatabase(file.Name, newFileName, newFilePath, parentCategoryId);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error renaming and archiving contents: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void UpdateCategoryInDatabase(string oldCategoryName, string newCategoryName, string newFolderPath, int parentCategoryId)
+        {
+            try
+            {
+                using (MySqlConnection conn = new MySqlConnection(connectionString))
+                {
+                    conn.Open();
+                    string query = @"
+                UPDATE category
+                SET categoryName = @newCategoryName, folderPath = @newFolderPath
+                WHERE categoryName = @oldCategoryName AND parentCategoryId = @parentCategoryId";
+
+                    using (MySqlCommand cmd = new MySqlCommand(query, conn))
                     {
-                        Invoke(new Action(() =>
-                        {
-                            guna2Panel2.Visible = false;
-                            MessageBox.Show($"Category '{categoryName}' and its subfolders and files have been removed successfully.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                            RefreshPanel5(); // Refresh the panel after removing the category
-                        }));
-                    }
-                    else
-                    {
-                        guna2Panel2.Visible = false;
-                        MessageBox.Show($"Category '{categoryName}' and its subfolders and files have been removed successfully.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        RefreshPanel5(); // Refresh the panel after removing the category
+                        cmd.Parameters.AddWithValue("@newCategoryName", newCategoryName);
+                        cmd.Parameters.AddWithValue("@newFolderPath", newFolderPath);
+                        cmd.Parameters.AddWithValue("@oldCategoryName", oldCategoryName);
+                        cmd.Parameters.AddWithValue("@parentCategoryId", parentCategoryId);
+
+                        cmd.ExecuteNonQuery();
                     }
                 }
             }
             catch (Exception ex)
             {
-                if (InvokeRequired)
-                {
-                    Invoke(new Action(() =>
-                    {
-                        MessageBox.Show($"Error removing category: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    }));
-                }
-                else
-                {
-                    MessageBox.Show($"Error removing category: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
+                MessageBox.Show($"Error updating category in database: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
+        private void UpdateFileInDatabase(string oldFileName, string newFileName, string newFilePath, int parentCategoryId)
+        {
+            try
+            {
+                using (MySqlConnection conn = new MySqlConnection(connectionString))
+                {
+                    conn.Open();
+                    string query = @"
+                UPDATE files
+                SET fileName = @newFileName, filePath = @newFilePath
+                WHERE fileName = @oldFileName AND categoryId = @parentCategoryId";
+
+                    using (MySqlCommand cmd = new MySqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@newFileName", newFileName);
+                        cmd.Parameters.AddWithValue("@newFilePath", newFilePath);
+                        cmd.Parameters.AddWithValue("@oldFileName", oldFileName);
+                        cmd.Parameters.AddWithValue("@parentCategoryId", parentCategoryId);
+
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error updating file in database: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
 
 
 
@@ -2051,4 +2193,4 @@ namespace tarungonNaNako.subform
             guna2Panel2.Hide();
         }
     }
-}       
+}

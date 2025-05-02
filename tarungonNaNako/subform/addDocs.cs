@@ -144,7 +144,7 @@ namespace tarungonNaNako.subform
                 if (!string.IsNullOrEmpty(openFileDialog.FileName))
                 {
                     selectedFilePath = openFileDialog.FileName; // Assign to the class variable
-                    textBox1.Text = Path.GetFileName(selectedFilePath);
+                    textBox1.Text = Path.GetFileNameWithoutExtension(selectedFilePath);
                 }
                 else
                 {
@@ -166,7 +166,6 @@ namespace tarungonNaNako.subform
                 return;
             }
 
-            // Use the new file name from textBox1, but make sure it's not empty
             string newFileName = textBox1.Text.Trim();
             if (string.IsNullOrEmpty(newFileName))
             {
@@ -174,11 +173,9 @@ namespace tarungonNaNako.subform
                 return;
             }
 
-            // Ensure the file extension is retained
             string fileExtension = Path.GetExtension(selectedFilePath);
-            string fileName = newFileName + fileExtension; // Create the new file name with the original extension
+            string fileName = newFileName + fileExtension;
 
-            // Dynamically determine the folder path based on the selected category
             string selectedCategory = searchBar.Text.Trim();
             string folderPath = GetFolderPathByCategory(selectedCategory);
 
@@ -188,41 +185,43 @@ namespace tarungonNaNako.subform
                 return;
             }
 
-            // Combine the folder path with the file name
             string filePath = Path.Combine(folderPath, fileName);
 
-            int userId = Session.CurrentUserId; // Use the logged-in user's ID
-            int roleId = GetRoleIdFromUserId(userId); // Fetch the roleId based on userId
+            string originalFileName = fileName;
+            int suffix = 1;
+            while (File.Exists(filePath))
+            {
+                fileName = $"{Path.GetFileNameWithoutExtension(originalFileName)} ({suffix++}) {fileExtension}";
+                filePath = Path.Combine(folderPath, fileName);
+            }
+            int userId = Session.CurrentUserId;
+            int roleId = GetRoleIdFromUserId(userId);
             string fileType = fileExtension;
             long fileSize = new FileInfo(selectedFilePath).Length;
 
             try
             {
-                // Ensure the destination directory exists
                 if (!Directory.Exists(folderPath))
                 {
                     Directory.CreateDirectory(folderPath);
                 }
-
-                // Copy the file to the destination with the new name
                 File.Copy(selectedFilePath, filePath, true);
 
-                // Insert file metadata into the database
                 using (var conn = new MySqlConnection(connectionString))
                 {
                     conn.Open();
 
                     string insertFileQuery = @"
-                INSERT INTO files (fileName, filePath, categoryId, uploadedBy, userId, uploadDate, fileType, fileSize) 
-                VALUES (@fileName, @filePath, (SELECT categoryId FROM category WHERE categoryName = @selectedCategory AND userId = @userId), 
-                        @uploadedBy, @userId, CURRENT_TIMESTAMP, @fileType, @fileSize)";
+            INSERT INTO files (fileName, filePath, categoryId, uploadedBy, userId, uploadDate, fileType, fileSize) 
+            VALUES (@fileName, @filePath, (SELECT categoryId FROM category WHERE categoryName = @selectedCategory AND userId = @userId), 
+                    @uploadedBy, @userId, CURRENT_TIMESTAMP, @fileType, @fileSize)";
 
                     using (var cmd = new MySqlCommand(insertFileQuery, conn))
                     {
                         cmd.Parameters.AddWithValue("@fileName", fileName);
                         cmd.Parameters.AddWithValue("@filePath", filePath);
                         cmd.Parameters.AddWithValue("@selectedCategory", selectedCategory);
-                        cmd.Parameters.AddWithValue("@uploadedBy", roleId); // Assuming Session.CurrentRoleId holds the role ID
+                        cmd.Parameters.AddWithValue("@uploadedBy", roleId);
                         cmd.Parameters.AddWithValue("@userId", userId);
                         cmd.Parameters.AddWithValue("@fileType", fileType);
                         cmd.Parameters.AddWithValue("@fileSize", fileSize);
@@ -240,7 +239,6 @@ namespace tarungonNaNako.subform
             this.DialogResult = DialogResult.OK;
             this.Close();
         }
-
 
         private int GetRoleIdFromUserId(int userId)
         {

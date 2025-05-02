@@ -11,6 +11,7 @@ using System.Windows.Forms;
 using tarungonNaNako.subform;
 using System.Timers;
 using Guna.UI2.WinForms;
+using System.IO.Compression;
 
 namespace tarungonNaNako.sidebar
 {
@@ -19,6 +20,12 @@ namespace tarungonNaNako.sidebar
         private BackgroundWorker backgroundWorker;
         private System.Timers.Timer debounceTimer;
         private bool isSortByNameAscending = false;
+        string ThreeDotMenu = Path.Combine(Application.StartupPath, "Assets (images)", "menu-dots-vertical.png");
+        private readonly string connectionString = "server=localhost;user=root;database=docsmanagement;password=";
+        string FolderIcon = Path.Combine(Application.StartupPath, "Assets (images)", "folder.png");
+        string ZippedFolderIcon = Path.Combine(Application.StartupPath, "Assets (images)", "zip-file-format.png");
+        string download = Path.Combine(Application.StartupPath, "Assets (images)", "down-to-line.png");
+        private string selectedName = "";
 
         public categories()
         {
@@ -75,7 +82,7 @@ namespace tarungonNaNako.sidebar
         private void BackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
         {
             string searchTerm = e.Argument as string;
-            LoadCategories(currentCategoryId, searchTerm);
+            LoadCategoriesInternal(currentCategoryId, searchTerm);
         }
 
         private void BackgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
@@ -112,23 +119,28 @@ namespace tarungonNaNako.sidebar
         {
             navigationHistory.Push(currentCategoryId); // Store current category before navigating
             currentCategoryId = categoryId; // Update current category
-            LoadCategories(currentCategoryId); // Reload with new category
+            LoadCategoriesInternal(currentCategoryId); // Reload with new category
         }
 
         private void LoadCategories(string searchTerm = "")
         {
-            LoadCategories(currentCategoryId);
+            LoadCategoriesInternal(currentCategoryId);
         }
 
-        private void LoadCategories(int? currentCategoryId, string searchTerm = "")
+        private void LoadCategoriesInternal(int? currentCategoryId = null, string searchTerm = "")
         {
-            string connectionString = "server=localhost; user=root; Database=docsmanagement; password=";
-
-            using (MySqlConnection conn = new MySqlConnection(connectionString))
+            if (InvokeRequired)
             {
-                try
+                Invoke(new Action(() => LoadCategoriesInternal(currentCategoryId, searchTerm)));
+                return;
+            }
+
+            try
+            {
+                using (MySqlConnection conn = new MySqlConnection(connectionString))
                 {
                     conn.Open();
+
                     // Ensure the user is logged in
                     if (Session.CurrentUserId == 0)
                     {
@@ -136,199 +148,576 @@ namespace tarungonNaNako.sidebar
                         return;
                     }
 
-                    string query = "SELECT categoryId, categoryName, created_at FROM category WHERE userId = @userId AND is_archived = 0 AND is_hidden = 0";
-                    if (!string.IsNullOrEmpty(searchTerm))
-                    {
-                        query += " AND categoryName LIKE @searchTerm";
-                    }
-                    query += isSortByNameAscending ? " ORDER BY categoryName ASC" : " ORDER BY categoryName DESC";
+                    // Update the query to include sorting and search logic
+                    string query = @"
+            SELECT categoryId, categoryName, created_at
+            FROM category
+            WHERE userId = @userId
+            AND is_archived = 0
+            AND is_hidden = 0
+            AND (@currentCategoryId IS NULL OR parentCategoryId = @currentCategoryId)
+            AND categoryName LIKE @searchTerm
+            ORDER BY " + (isSortByNameAscending ? "categoryName ASC" : "created_at DESC");
 
                     using (MySqlCommand cmd = new MySqlCommand(query, conn))
                     {
                         cmd.Parameters.AddWithValue("@userId", Session.CurrentUserId);
-                        if (!string.IsNullOrEmpty(searchTerm))
-                        {
-                            cmd.Parameters.AddWithValue("@searchTerm", "%" + searchTerm + "%");
-                        }
+                        cmd.Parameters.AddWithValue("@currentCategoryId", currentCategoryId.HasValue ? (object)currentCategoryId.Value : DBNull.Value);
+                        cmd.Parameters.AddWithValue("@searchTerm", "%" + searchTerm + "%");
 
                         using (MySqlDataReader reader = cmd.ExecuteReader())
                         {
-                            // Clear existing controls and reset row styles
-                            if (InvokeRequired)
-                            {
-                                Invoke(new Action(() =>
-                                {
-                                    tableLayoutPanel1.Controls.Clear();
-                                    tableLayoutPanel1.RowCount = 0;
-                                    tableLayoutPanel1.RowStyles.Clear();
-                                }));
-                            }
-                            else
-                            {
-                                tableLayoutPanel1.Controls.Clear();
-                                tableLayoutPanel1.RowCount = 0;
-                                tableLayoutPanel1.RowStyles.Clear();
-                            }
+                            // Clear existing rows
+                            tableLayoutPanel1.Controls.Clear();
+                            tableLayoutPanel1.RowCount = 0;
+                            tableLayoutPanel1.RowStyles.Clear();
 
-                            // Fixed height for rows
-                            int fixedRowHeight = 60; // Adjust this value as needed
                             int rowIndex = 0;
 
                             while (reader.Read())
                             {
                                 int categoryId = reader.GetInt32("categoryId");
                                 string categoryName = reader.GetString("categoryName");
-                                DateTime dateCreated = reader.GetDateTime("created_at");
+                                string createdAt = Convert.ToDateTime(reader["created_at"]).ToString("yyyy-MM-dd hh:mm tt");
 
-                                // Add a new row and set its height
-                                if (InvokeRequired)
+                                // Create TableLayoutPanel for Row
+                                TableLayoutPanel rowTable = new TableLayoutPanel
                                 {
-                                    Invoke(new Action(() =>
-                                    {
-                                        tableLayoutPanel1.RowCount = rowIndex + 1;
-                                    }));
+                                    ColumnCount = 4,
+                                    Dock = DockStyle.Fill,
+                                    Height = 60,
+                                    BackColor = ColorTranslator.FromHtml("#ffe261")
+                                };
+
+                                // Set column sizes
+                                rowTable.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 40));
+                                rowTable.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 200));
+                                rowTable.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 170));
+                                rowTable.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 10));
+
+                                // Determine the icon based on file type
+                                Image icon;
+                                string categoryExtension = Path.GetExtension(categoryName).ToLower();
+                                if (categoryExtension == ".zip")
+                                {
+                                    icon = Image.FromFile(ZippedFolderIcon);
                                 }
                                 else
                                 {
-                                    tableLayoutPanel1.RowCount = rowIndex + 1;
+                                    icon = Image.FromFile(FolderIcon);
                                 }
 
-                                // Create Label for category name
+                                // Create Labels
                                 Label categoryLabel = new Label
                                 {
                                     Text = categoryName,
-                                    Dock = DockStyle.Left,
-                                    AutoSize = false,
-                                    Font = new Font("Microsoft Sans Serif", 10),
-                                    Width = 200, // Set a width for the label
-                                    TextAlign = ContentAlignment.MiddleLeft,
-                                    Padding = new Padding(10, 0, 0, 0)
-                                };
-
-                                // Create Label for date created  
-                                Label dateCreatedLabel = new Label
-                                {
-                                    Text = dateCreated.ToString("yyyy-MM-dd hh:mm tt"),
-                                    AutoSize = false,
-                                    Font = new Font("Microsoft Sans Serif", 10),
-                                    Width = 200, // Set a width for the label  
-                                    TextAlign = ContentAlignment.MiddleLeft, // Align text to the right 
-                                    Dock = DockStyle.Right, // Dock it to the right of the rowPanel  
-                                    Padding = new Padding(0, 0, 10, 0) // Add padding to the right for spacing  
-                                };
-                                // Create Archive button
-                                Guna.UI2.WinForms.Guna2Button archiveButton = new Guna.UI2.WinForms.Guna2Button
-                                {
-                                    Text = "Archive",
-                                    BorderRadius = 10,
-                                    PressedDepth = 10,
-                                    FillColor = Color.FromArgb(255, 226, 97),
-                                    ForeColor = Color.Black,
-                                    Font = new Font("Segoe UI", 10, FontStyle.Bold),
-                                    Dock = DockStyle.Right,
-                                    Width = 90, // Set a fixed width
-                                    Height = 50
-                                };
-
-                                archiveButton.Click += (sender, e) => ArchiveCategory(categoryId);
-
-                                // Create Remove button
-                                Guna.UI2.WinForms.Guna2Button removeButton = new Guna.UI2.WinForms.Guna2Button
-                                {
-                                    Text = "Remove",
-                                    BorderRadius = 10,
-                                    PressedDepth = 10,
-                                    FillColor = Color.FromArgb(255, 226, 97),
-                                    ForeColor = Color.Black,
-                                    Font = new Font("Segoe UI", 10, FontStyle.Bold),
-                                    Dock = DockStyle.Right,
-                                    Width = 95, // Set a fixed width
-                                    Height = 50,
-                                };
-                                removeButton.Click += (sender, e) => RemoveCategory(categoryId);
-
-                                // Create a Panel for the row to handle layout and events
-                                Panel rowPanel = new Panel
-                                {
                                     Dock = DockStyle.Fill,
-                                    BackColor = ColorTranslator.FromHtml("#ffe261"),
-                                    Height = fixedRowHeight,
-                                    Tag = categoryId, // Store categoryId for later use
-                                    Padding = new Padding(0, 0, 20, 0)
-                                };
-                                rowPanel.DoubleClick += (s, e) =>
-                                {
-                                    ShowLoadingAnimation(); // Show loading animation
-                                    Task.Run(() =>
-                                    {
-                                        // Simulate some loading process if needed
-                                        System.Threading.Thread.Sleep(1000); // Simulate delay
-
-                                        // Navigate to the category and load the form
-                                        Invoke(new Action(() =>
-                                        {
-                                            NavigateToCategory(categoryId);
-                                            LoadFormInPanel(new fetchDocuments(categoryId, categoryName, ""));
-                                            HideLoadingAnimation(); // Hide loading animation after loading the form
-                                        }));
-                                    });
-                                };
-                                // Add hover effects
-                                rowPanel.MouseEnter += (s, e) =>
-                                {
-                                    rowPanel.BackColor = Color.FromArgb(219, 195, 0);
-                                    archiveButton.FillColor = Color.FromArgb(219, 195, 0);
-                                    removeButton.FillColor = Color.FromArgb(219, 195, 0);
-                                };
-                                rowPanel.MouseLeave += (s, e) =>
-                                {
-                                    rowPanel.BackColor = ColorTranslator.FromHtml("#ffe261");
-                                    archiveButton.FillColor = ColorTranslator.FromHtml("#ffe261");
-                                    removeButton.FillColor = ColorTranslator.FromHtml("#ffe261");
+                                    AutoSize = false,
+                                    TextAlign = ContentAlignment.MiddleLeft,
+                                    Padding = new Padding(5, 0, 0, 0),
+                                    Font = new Font("Microsoft Sans Serif", 10),
+                                    BackColor = Color.Transparent
                                 };
 
-                                // Add controls to the rowPanel
-                                rowPanel.Controls.Add(categoryLabel);
-                                rowPanel.Controls.Add(dateCreatedLabel); // Add the date created label
-                                rowPanel.Controls.Add(archiveButton);
-                                rowPanel.Controls.Add(removeButton);
-
-                                // Add the rowPanel to the TableLayoutPanel
-                                if (InvokeRequired)
+                                Label dateLabel = new Label
                                 {
-                                    Invoke(new Action(() =>
-                                    {
-                                        this.tableLayoutPanel1.Controls.Add(rowPanel, 0, rowIndex);
-                                        this.tableLayoutPanel1.SetColumnSpan(rowPanel, 3); // Span all columns
-                                    }));
+                                    Text = createdAt,
+                                    Dock = DockStyle.Fill,
+                                    AutoSize = false,
+                                    TextAlign = ContentAlignment.MiddleLeft,
+                                    Padding = new Padding(10, 0, 0, 0),
+                                    Margin = new Padding(13, 0, 0, 0),
+                                    Font = new Font("Microsoft Sans Serif", 10),
+                                    BackColor = Color.Transparent
+                                };
+
+                                Guna2CircleButton actionButton = new Guna2CircleButton
+                                {
+                                    Image = Image.FromFile(ThreeDotMenu),
+                                    ImageSize = new Size(15, 15),
+                                    ImageAlign = HorizontalAlignment.Center,
+                                    ImageOffset = new Point(0, 12),
+                                    BackColor = Color.FromArgb(255, 226, 97),
+                                    FillColor = Color.Transparent,
+                                    Size = new Size(30, 26),
+                                    Text = "⋮",
+                                    Anchor = AnchorStyles.Right,
+                                    Margin = new Padding(0, 5, 50, 0),
+                                    PressedDepth = 10
+                                };
+
+                                actionButton.Click += (s, e) =>
+                                {
+                                    ShowPanel("category", categoryName, actionButton);
+                                    popupPanel.Hide();
+                                };
+
+                                // Add hover effect to row and its labels
+                                void RowHover(object sender, EventArgs e)
+                                {
+                                    rowTable.BackColor = Color.FromArgb(219, 195, 0);
+                                    actionButton.BackColor = Color.FromArgb(219, 195, 0);
                                 }
-                                else
+                                void RowLeave(object sender, EventArgs e)
                                 {
-                                    this.tableLayoutPanel1.Controls.Add(rowPanel, 0, rowIndex);
-                                    this.tableLayoutPanel1.SetColumnSpan(rowPanel, 3); // Span all columns
+                                    rowTable.BackColor = ColorTranslator.FromHtml("#ffe261");
+                                    actionButton.BackColor = ColorTranslator.FromHtml("#ffe261");
                                 }
+
+                                rowTable.MouseEnter += RowHover;
+                                rowTable.MouseLeave += RowLeave;
+
+                                categoryLabel.MouseEnter += RowHover;
+                                categoryLabel.MouseLeave += RowLeave;
+
+                                dateLabel.MouseEnter += RowHover;
+                                dateLabel.MouseLeave += RowLeave;
+
+                                // Add Labels and Button to rowTable
+                                PictureBox fileIconPictureBox = new PictureBox
+                                {
+                                    Image = icon,
+                                    SizeMode = PictureBoxSizeMode.Zoom,
+                                    Margin = new Padding(13, 17, 5, 5),
+                                    Width = 25,
+                                    Height = 25
+                                };
+
+                                rowTable.Controls.Add(fileIconPictureBox, 0, 0);
+                                rowTable.Controls.Add(categoryLabel, 1, 0);
+                                rowTable.Controls.Add(dateLabel, 2, 0);
+                                rowTable.Controls.Add(actionButton, 4, 0);
+
+                                // Add rowTable to TableLayoutPanel
+                                tableLayoutPanel1.RowCount = rowIndex + 1;
+                                tableLayoutPanel1.Controls.Add(rowTable, 0, rowIndex);
+                                tableLayoutPanel1.SetColumnSpan(rowTable, 3);
 
                                 rowIndex++;
                             }
                         }
                     }
                 }
-                catch (Exception ex)
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error loading categories: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+
+
+        private void ShowPanel(string type, string name, Control btn)
+        {
+            selectedName = name; // Store the category name
+
+            // Toggle visibility of guna2Panel2
+            if (guna2Panel2.Visible)
+            {
+                guna2Panel2.Visible = false;
+                return;
+            }
+
+            string openFolder = Path.Combine(Application.StartupPath, "Assets (images)", "folder-open.png");
+            string rename = Path.Combine(Application.StartupPath, "Assets (images)", "pencil.png");
+            string remove = Path.Combine(Application.StartupPath, "Assets (images)", "trash.png");
+            string archive = Path.Combine(Application.StartupPath, "Assets (images)", "archive.png");
+
+            guna2Panel2.Controls.Clear(); // Clear previous content
+            guna2Panel2.Visible = true;   // Show the panel
+
+            // Set panel properties
+            guna2Panel2.Size = new Size(181, 218); // Adjust size
+            guna2Panel2.BorderRadius = 5;
+            guna2Panel2.BorderThickness = 1;
+            guna2Panel2.BorderColor = Color.Black;
+            guna2Panel2.BackColor = ColorTranslator.FromHtml("#ffe261");
+            guna2Panel2.BringToFront();
+            guna2Panel2.Font = new Font("Segoe UI", 9);
+            guna2Panel2.ForeColor = Color.Black;
+
+            // Create buttons
+            Guna2Button btnOpen = new Guna2Button
+            {
+                Size = new Size(177, 42),
+                Text = "View",
+                TextAlign = HorizontalAlignment.Left,
+                TextOffset = new Point(5, 0),
+                BackColor = Color.FromArgb(255, 236, 130),
+                FillColor = Color.FromArgb(255, 236, 130),
+                Font = new Font("Microsoft Sans Serif", 10),
+                ForeColor = Color.Black,
+                Image = Image.FromFile(openFolder),
+                ImageAlign = HorizontalAlignment.Left,
+                ImageSize = new Size(20, 20),
+                Location = new Point(2, 3),
+                PressedColor = Color.Black,
+                PressedDepth = 10,
+                BorderRadius = 5
+            };
+            btnOpen.Click += (s, e) =>
+            {
+                ShowLoadingAnimation(); // Show loading animation
+                Task.Run(() =>
                 {
-                    if (InvokeRequired)
+                    try
+                    {
+                        // Simulate some loading process if needed
+                        System.Threading.Thread.Sleep(1000); // Simulate delay
+
+                        // Navigate to the category and load the form
+                        Invoke(new Action(() =>
+                        {
+                            int categoryId = GetCategoryIdByName(selectedName); // Get the category ID by name
+                            if (categoryId != -1) // Ensure the category exists
+                            {
+                                NavigateToCategory(categoryId); // Navigate to the selected category
+                                LoadFormInPanel(new fetchDocuments(categoryId, selectedName, "")); // Load the fetchDocuments form
+                            }
+                            else
+                            {
+                                MessageBox.Show("Unable to open the folder. Category not found.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            }
+                            HideLoadingAnimation(); // Hide loading animation after loading the form
+                        }));
+                    }
+                    catch (Exception ex)
                     {
                         Invoke(new Action(() =>
                         {
-                            MessageBox.Show("Error loading categories: " + ex.Message);
+                            MessageBox.Show($"An error occurred while opening the folder: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            HideLoadingAnimation(); // Ensure the loading animation is hidden in case of an error
                         }));
                     }
-                    else
+                });
+            };
+
+
+            Guna2Button btnDownload = new Guna2Button
+            {
+                Size = new Size(177, 42),
+                Text = "Download",
+                TextAlign = HorizontalAlignment.Left,
+                TextOffset = new Point(10, 0),
+                BackColor = Color.FromArgb(255, 236, 130),
+                FillColor = Color.FromArgb(255, 236, 130),
+                Font = new Font("Microsoft Sans Serif", 10),
+                ForeColor = Color.Black,
+                Image = Image.FromFile(download),
+                ImageAlign = HorizontalAlignment.Left,
+                ImageSize = new Size(15, 15),
+                Location = new Point(2, 45),
+                PressedColor = Color.Black,
+                PressedDepth = 10,
+                BorderRadius = 5
+            };
+            btnDownload.Click += (s, e) =>
+            {
+                try
+                {
+                    // Step 1: Retrieve the folder path for the selected category
+                    int categoryId = GetCategoryIdByName(selectedName);
+                    if (categoryId == -1)
                     {
-                        MessageBox.Show("Error loading categories: " + ex.Message);
+                        MessageBox.Show("Category not found.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return;
+                    }
+
+                    string folderPath = GetFolderPathByCategoryId(categoryId);
+                    if (string.IsNullOrEmpty(folderPath) || !Directory.Exists(folderPath))
+                    {
+                        MessageBox.Show("Category folder not found in the file system.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return;
+                    }
+
+                    // Step 2: Prompt the user to select a save location
+                    using (SaveFileDialog saveFileDialog = new SaveFileDialog())
+                    {
+                        saveFileDialog.FileName = $"{selectedName}.zip";
+                        saveFileDialog.Filter = "ZIP files|*.zip";
+
+                        if (saveFileDialog.ShowDialog() == DialogResult.OK)
+                        {
+                            string zipPath = saveFileDialog.FileName;
+
+                            // Step 3: Create the ZIP file
+                            if (File.Exists(zipPath))
+                                File.Delete(zipPath); // Ensure no conflict
+
+                            ZipFile.CreateFromDirectory(folderPath, zipPath);
+
+                            MessageBox.Show("Category downloaded successfully as ZIP!", "Download Complete", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"An error occurred while downloading the category: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                guna2Panel2.Hide(); // Hide the options panel after the action
+            };
+
+
+            Guna2Button btnRename = new Guna2Button
+            {
+                Size = new Size(177, 42),
+                Text = "Rename",
+                TextAlign = HorizontalAlignment.Left,
+                TextOffset = new Point(10, 0),
+                BackColor = Color.FromArgb(255, 236, 130),
+                FillColor = Color.FromArgb(255, 236, 130),
+                Font = new Font("Microsoft Sans Serif", 10),
+                ForeColor = Color.Black,
+                Image = Image.FromFile(rename),
+                ImageAlign = HorizontalAlignment.Left,
+                ImageSize = new Size(15, 15),
+                Location = new Point(2, 87),
+                PressedColor = Color.Black,
+                PressedDepth = 10,
+                BorderRadius = 5
+            };
+
+            // Attach the event that handles renaming
+            btnRename.Click += (s, e) => RenameCategory(selectedName);
+
+            Guna2Button btnDelete = new Guna2Button
+            {
+                Size = new Size(177, 44),
+                Text = "Move to trash",
+                TextAlign = HorizontalAlignment.Left,
+                TextOffset = new Point(10, 0),
+                BackColor = Color.FromArgb(255, 236, 130),
+                FillColor = Color.FromArgb(255, 236, 130),
+                Font = new Font("Microsoft Sans Serif", 10),
+                ForeColor = Color.Black,
+                Image = Image.FromFile(remove),
+                ImageAlign = HorizontalAlignment.Left,
+                ImageSize = new Size(15, 15),
+                Location = new Point(2, 129),
+                PressedColor = Color.Black,
+                PressedDepth = 10,
+                BorderRadius = 5
+            };
+
+            // Attach the event that handles deleting
+            btnDelete.Click += (s, e) => RemoveCategory(GetCategoryIdByName(selectedName));
+
+            Guna2Button btnArchive = new Guna2Button
+            {
+                Size = new Size(177, 44),
+                Text = "Archive",
+                TextAlign = HorizontalAlignment.Left,
+                TextOffset = new Point(10, 0),
+                BackColor = Color.FromArgb(255, 236, 130),
+                FillColor = Color.FromArgb(255, 236, 130),
+                Font = new Font("Microsoft Sans Serif", 10),
+                ForeColor = Color.Black,
+                Image = Image.FromFile(archive),
+                ImageAlign = HorizontalAlignment.Left,
+                ImageSize = new Size(15, 15),
+                Location = new Point(2, 172),
+                PressedColor = Color.Black,
+                PressedDepth = 10,
+                BorderRadius = 5
+            };
+
+            // Attach the event that handles archiving
+            btnArchive.Click += (s, e) => ArchiveCategory(GetCategoryIdByName(selectedName));
+
+            // Add buttons to panel
+            guna2Panel2.Controls.Add(btnOpen);
+            guna2Panel2.Controls.Add(btnDownload);
+            guna2Panel2.Controls.Add(btnRename);
+            guna2Panel2.Controls.Add(btnDelete);
+            guna2Panel2.Controls.Add(btnArchive);
+
+            // Adjust Panel Position to Keep it Inside the Form
+            Point btnScreenLocation = btn.Parent.PointToScreen(btn.Location);
+            Point panelLocation = this.PointToClient(new Point(btnScreenLocation.X, btnScreenLocation.Y + btn.Height + -100));
+
+            int panelX = panelLocation.X;
+            int panelY = panelLocation.Y;
+            int panelWidth = guna2Panel2.Width;
+            int panelHeight = guna2Panel2.Height;
+
+            // Ensure panel doesn't go beyond the right boundary
+            if (panelX + panelWidth > this.ClientSize.Width)
+            {
+                panelX = this.ClientSize.Width - panelWidth - 100;
+            }
+
+            // Ensure panel doesn't go beyond the bottom boundary
+            if (panelY + panelHeight > this.ClientSize.Height)
+            {
+                panelY = this.ClientSize.Height - panelHeight - 190;
+            }
+
+            // Apply final position
+            guna2Panel2.Location = new Point(panelX, panelY);
+            guna2Panel2.Visible = true;
+        }
+
+
+        private int GetCategoryIdByName(string categoryName)
+        {
+            try
+            {
+                using (MySqlConnection conn = new MySqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    string query = "SELECT categoryId FROM category WHERE categoryName = @categoryName AND userId = @userId AND is_archived = 0 AND is_hidden = 0";
+                    using (MySqlCommand cmd = new MySqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@categoryName", categoryName);
+                        cmd.Parameters.AddWithValue("@userId", Session.CurrentUserId);
+
+                        object result = cmd.ExecuteScalar();
+                        if (result != null)
+                        {
+                            return Convert.ToInt32(result);
+                        }
+                        else
+                        {
+                            MessageBox.Show($"Category '{categoryName}' not found.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            return -1; // Return -1 if the category is not found
+                        }
                     }
                 }
             }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error retrieving category ID: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return -1; // Return -1 in case of an error
+            }
         }
+
+        private bool IsCategoryNameExists(string categoryName)
+        {
+            using (MySqlConnection conn = new MySqlConnection(connectionString))
+            {
+                conn.Open();
+                // Only check against ACTIVE categories for the current user
+                string query = "SELECT COUNT(*) FROM category WHERE categoryName = @categoryName AND is_archived = 0 AND userId = @userId";
+                using (MySqlCommand cmd = new MySqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@categoryName", categoryName);
+                    cmd.Parameters.AddWithValue("@userId", Session.CurrentUserId); // Ensure check is per user
+                    return Convert.ToInt32(cmd.ExecuteScalar()) > 0;
+                }
+            }
+        }
+
+
+        private string GetFolderPathByCategoryId(int categoryId)
+        {
+            string folderPath = string.Empty;
+
+            try
+            {
+                using (var conn = new MySqlConnection(connectionString))
+                {
+                    conn.Open();
+                    string query = "SELECT folderPath FROM category WHERE categoryId = @categoryId";
+
+                    using (var cmd = new MySqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@categoryId", categoryId);
+                        object result = cmd.ExecuteScalar();
+                        if (result != null)
+                        {
+                            folderPath = result.ToString();
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error retrieving folder path: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+
+            return folderPath;
+        }
+
+
+        private void RenameCategory(string categoryName)
+        {
+            try
+            {
+                // Step 1: Retrieve the category ID and current folder path
+                int categoryId = GetCategoryIdByName(categoryName);
+                if (categoryId == -1)
+                {
+                    MessageBox.Show("Category not found.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                string currentFolderPath = GetFolderPathByCategoryId(categoryId);
+                if (string.IsNullOrEmpty(currentFolderPath) || !Directory.Exists(currentFolderPath))
+                {
+                    MessageBox.Show("Category folder not found in the file system.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                // Step 2: Prompt user for a new category name
+                string newCategoryName = Microsoft.VisualBasic.Interaction.InputBox(
+                    "Enter new category name:",
+                    "Rename Category",
+                    categoryName
+                ).Trim();
+
+                if (string.IsNullOrWhiteSpace(newCategoryName))
+                {
+                    MessageBox.Show("Category name cannot be empty.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                // Step 3: Prevent duplicate category names
+                if (IsCategoryNameExists(newCategoryName))
+                {
+                    MessageBox.Show("A category with this name already exists. Please choose a different name.",
+                                    "Duplicate Category", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                // Step 4: Construct the new folder path
+                string parentFolderPath = Path.GetDirectoryName(currentFolderPath);
+                string newFolderPath = Path.Combine(parentFolderPath, newCategoryName);
+
+                // Step 5: Rename the folder in the file system
+                Directory.Move(currentFolderPath, newFolderPath);
+
+                // Step 6: Update the category name and folder path in the database
+                using (MySqlConnection conn = new MySqlConnection(connectionString))
+                {
+                    conn.Open();
+                    string query = "UPDATE category SET categoryName = @newCategoryName, folderPath = @newFolderPath WHERE categoryId = @categoryId";
+                    using (MySqlCommand cmd = new MySqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@newCategoryName", newCategoryName);
+                        cmd.Parameters.AddWithValue("@newFolderPath", newFolderPath);
+                        cmd.Parameters.AddWithValue("@categoryId", categoryId);
+
+                        int rowsAffected = cmd.ExecuteNonQuery();
+                        if (rowsAffected > 0)
+                        {
+                            MessageBox.Show($"Category renamed to '{newCategoryName}' successfully.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            LoadCategories(); // Refresh the categories list
+                        }
+                        else
+                        {
+                            MessageBox.Show("Category not found in the database.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error renaming category: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+
 
 
         public void LoadFormInPanel(Form form)
@@ -463,131 +852,166 @@ namespace tarungonNaNako.sidebar
                 {
                     conn.Open();
 
-                    // Retrieve the category name
-                    string selectQuery = "SELECT categoryName FROM category WHERE categoryId = @categoryId";
+                    // Step 1: Retrieve the category name and folder path
+                    string selectQuery = "SELECT categoryName, folderPath FROM category WHERE categoryId = @categoryId";
+                    string folderPath = null;
+
                     using (MySqlCommand selectCmd = new MySqlCommand(selectQuery, conn))
                     {
                         selectCmd.Parameters.AddWithValue("@categoryId", categoryId);
-                        categoryName = selectCmd.ExecuteScalar()?.ToString();
+                        using (MySqlDataReader reader = selectCmd.ExecuteReader())
+                        {
+                            if (reader.Read())
+                            {
+                                categoryName = reader["categoryName"].ToString();
+                                folderPath = reader["folderPath"].ToString();
+                            }
+                            else
+                            {
+                                MessageBox.Show("Category not found.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                return;
+                            }
+                        }
                     }
 
-                    if (string.IsNullOrEmpty(categoryName))
-                    {
-                        MessageBox.Show("Folder not found.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        return;
-                    }
-
-                    // Display a confirmation dialog
-                    var result = MessageBox.Show(
-                        $"Are you sure you want to remove the folder '{categoryName}' and all its files inside? This action cannot be undone.",
+                    // Step 2: Confirm the removal action
+                    var confirmationResult = MessageBox.Show(
+                        $"Are you sure you want to remove the category '{categoryName}' and all its subcategories and files? This action cannot be undone.",
                         "Confirm Removal",
                         MessageBoxButtons.YesNo,
                         MessageBoxIcon.Warning);
 
-                    if (result == DialogResult.Yes)
+                    if (confirmationResult != DialogResult.Yes)
+                        return;
+
+                    // Step 3: Perform soft delete recursively
+                    string archiveSuffix = $"_archived_{DateTime.Now:yyyyMMddHHmmss}";
+                    string archivedFolderPath = folderPath + archiveSuffix;
+
+                    if (Directory.Exists(folderPath))
                     {
-                        // Step 1: Get the categoryId and folderPath of the root category
-                        string getCategoryQuery = "SELECT categoryId, folderPath FROM category WHERE categoryId = @categoryId";
-                        int? rootCategoryId = null;
-                        string rootFolderPath = null;
-
-                        using (MySqlCommand getCategoryCmd = new MySqlCommand(getCategoryQuery, conn))
-                        {
-                            getCategoryCmd.Parameters.AddWithValue("@categoryId", categoryId);
-                            using (MySqlDataReader reader = getCategoryCmd.ExecuteReader())
-                            {
-                                if (reader.Read())
-                                {
-                                    rootCategoryId = reader.GetInt32(0);
-                                    rootFolderPath = reader.GetString(1);
-                                }
-                                else
-                                {
-                                    MessageBox.Show($"Category '{categoryName}' not found.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                                    return;
-                                }
-                            }
-                        }
-
-                        // Step 2: Archive all subcategories recursively
-                        string archiveSubcategoriesQuery = @"
-                WITH RECURSIVE Subcategories AS (
-                    SELECT categoryId, folderPath
-                    FROM category
-                    WHERE categoryId = @rootCategoryId
-                    UNION ALL
-                    SELECT c.categoryId, c.folderPath
-                    FROM category c
-                    INNER JOIN Subcategories sc ON c.parentCategoryId = sc.categoryId
-                )
-                SELECT categoryId, folderPath FROM Subcategories";
-
-                        List<int> categoryIds = new List<int>();
-                        List<string> folderPaths = new List<string>();
-
-                        using (MySqlCommand archiveSubcategoriesCmd = new MySqlCommand(archiveSubcategoriesQuery, conn))
-                        {
-                            archiveSubcategoriesCmd.Parameters.AddWithValue("@rootCategoryId", rootCategoryId);
-
-                            using (MySqlDataReader reader = archiveSubcategoriesCmd.ExecuteReader())
-                            {
-                                while (reader.Read())
-                                {
-                                    categoryIds.Add(reader.GetInt32(0));
-                                    folderPaths.Add(reader.GetString(1));
-                                }
-                            }
-                        }
-
-                        // Step 3: Update the categories using the fetched IDs
-                        if (categoryIds.Count > 0)
-                        {
-                            string updateCategoriesQuery = "UPDATE category SET is_archived = 1 WHERE categoryId IN (" + string.Join(",", categoryIds) + ")";
-                            using (MySqlCommand updateCategoriesCmd = new MySqlCommand(updateCategoriesQuery, conn))
-                            {
-                                updateCategoriesCmd.ExecuteNonQuery();
-                            }
-                        }
-
-                        // Step 4: Archive all files in the root category and its subcategories
-                        string archiveFilesQuery = @"
-                UPDATE files
-                SET isArchived = 1
-                WHERE categoryId IN (" + string.Join(",", categoryIds) + ")";
-
-                        using (MySqlCommand archiveFilesCmd = new MySqlCommand(archiveFilesQuery, conn))
-                        {
-                            archiveFilesCmd.ExecuteNonQuery();
-                        }
-
-                        // Step 5: Delete the root folder and its subfolders from the file system
-                        foreach (string folderPath in folderPaths)
-                        {
-                            if (Directory.Exists(folderPath))
-                            {
-                                try
-                                {
-                                    Directory.Delete(folderPath, true); // Recursively delete the folder
-                                }
-                                catch (Exception ex)
-                                {
-                                    MessageBox.Show($"Error deleting folder '{folderPath}': {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                                }
-                            }
-                        }
-
-                        // Step 6: Notify the user and refresh the UI
-                        MessageBox.Show($"Folder '{categoryName}' and all its files inside have been removed successfully.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        LoadCategories();
+                        Directory.Move(folderPath, archivedFolderPath); // Rename the folder
                     }
+
+                    // Step 4: Update the database for the category and its contents
+                    ArchiveCategoryAndContents(conn, categoryId, archivedFolderPath, archiveSuffix);
+
+                    // Step 5: Notify the user and refresh the UI
+                    MessageBox.Show($"Category '{categoryName}' and its contents have been archived successfully.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    LoadCategories(); // Refresh the category list
                 }
             }
             catch (Exception ex)
             {
-                // Log the exception for debugging purposes
                 MessageBox.Show($"Error removing category: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
+        private void ArchiveCategoryAndContents(MySqlConnection conn, int categoryId, string archivedFolderPath, string archiveSuffix)
+        {
+            try
+            {
+                // Step 1: Archive all subcategories recursively
+                string subcategoriesQuery = "SELECT categoryId, folderPath, categoryName FROM category WHERE parentCategoryId = @ParentCategoryId";
+                List<(int SubcategoryId, string SubcategoryPath, string SubcategoryName)> subcategories = new List<(int, string, string)>();
+
+                using (MySqlCommand subcategoriesCmd = new MySqlCommand(subcategoriesQuery, conn))
+                {
+                    subcategoriesCmd.Parameters.AddWithValue("@ParentCategoryId", categoryId);
+                    using (MySqlDataReader reader = subcategoriesCmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            int subcategoryId = reader.GetInt32(0);
+                            string subcategoryPath = reader.GetString(1);
+                            string subcategoryName = reader.GetString(2);
+                            subcategories.Add((subcategoryId, subcategoryPath, subcategoryName));
+                        }
+                    }
+                }
+
+                foreach (var (subcategoryId, subcategoryPath, subcategoryName) in subcategories)
+                {
+                    // Adjust the subcategory path to reflect the new parent folder path
+                    string archivedSubcategoryPath = Path.Combine(archivedFolderPath, subcategoryName + archiveSuffix);
+                    string archivedSubcategoryName = subcategoryName + archiveSuffix;
+
+                    if (Directory.Exists(subcategoryPath))
+                    {
+                        Directory.Move(subcategoryPath, archivedSubcategoryPath); // Rename the subfolder
+                    }
+
+                    // Recursively archive subcategories
+                    ArchiveCategoryAndContents(conn, subcategoryId, archivedSubcategoryPath, archiveSuffix);
+
+                    // Update the subcategory name and path in the database
+                    string updateSubcategoryQuery = "UPDATE category SET folderPath = @ArchivedFolderPath, categoryName = @ArchivedCategoryName, is_archived = 1 WHERE categoryId = @CategoryId";
+                    using (MySqlCommand updateSubcategoryCmd = new MySqlCommand(updateSubcategoryQuery, conn))
+                    {
+                        updateSubcategoryCmd.Parameters.AddWithValue("@ArchivedFolderPath", archivedSubcategoryPath);
+                        updateSubcategoryCmd.Parameters.AddWithValue("@ArchivedCategoryName", archivedSubcategoryName);
+                        updateSubcategoryCmd.Parameters.AddWithValue("@CategoryId", subcategoryId);
+                        updateSubcategoryCmd.ExecuteNonQuery();
+                    }
+                }
+
+                // Step 2: Archive all files within this category
+                string filesQuery = "SELECT fileId, filePath, fileName FROM files WHERE categoryId = @CategoryId";
+                List<(int FileId, string FilePath, string FileName)> files = new List<(int, string, string)>();
+
+                using (MySqlCommand filesCmd = new MySqlCommand(filesQuery, conn))
+                {
+                    filesCmd.Parameters.AddWithValue("@CategoryId", categoryId);
+                    using (MySqlDataReader reader = filesCmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            int fileId = reader.GetInt32(0);
+                            string filePath = reader.GetString(1);
+                            string fileName = reader.GetString(2);
+                            files.Add((fileId, filePath, fileName));
+                        }
+                    }
+                }
+
+                foreach (var (fileId, filePath, fileName) in files)
+                {
+                    string archivedFilePath = Path.Combine(archivedFolderPath, Path.GetFileNameWithoutExtension(fileName) + archiveSuffix + Path.GetExtension(fileName));
+                    string archivedFileName = Path.GetFileNameWithoutExtension(fileName) + archiveSuffix + Path.GetExtension(fileName);
+
+                    if (File.Exists(filePath))
+                    {
+                        File.Move(filePath, archivedFilePath); // Rename the file
+                    }
+
+                    // Update the file path and file name in the database, and mark as archived
+                    string updateFileQuery = "UPDATE files SET filePath = @ArchivedFilePath, fileName = @ArchivedFileName, isArchived = 1 WHERE fileId = @FileId";
+                    using (MySqlCommand updateFileCmd = new MySqlCommand(updateFileQuery, conn))
+                    {
+                        updateFileCmd.Parameters.AddWithValue("@ArchivedFilePath", archivedFilePath);
+                        updateFileCmd.Parameters.AddWithValue("@ArchivedFileName", archivedFileName);
+                        updateFileCmd.Parameters.AddWithValue("@FileId", fileId);
+                        updateFileCmd.ExecuteNonQuery();
+                    }
+                }
+
+                // Step 3: Update the category name, path, and mark as archived in the database
+                string updateCategoryQuery = "UPDATE category SET folderPath = @ArchivedFolderPath, categoryName = @ArchivedCategoryName, is_archived = 1 WHERE categoryId = @CategoryId";
+                using (MySqlCommand updateCategoryCmd = new MySqlCommand(updateCategoryQuery, conn))
+                {
+                    string archivedCategoryName = Path.GetFileName(archivedFolderPath); // Extract the new folder name
+                    updateCategoryCmd.Parameters.AddWithValue("@ArchivedFolderPath", archivedFolderPath);
+                    updateCategoryCmd.Parameters.AddWithValue("@ArchivedCategoryName", archivedCategoryName);
+                    updateCategoryCmd.Parameters.AddWithValue("@CategoryId", categoryId);
+                    updateCategoryCmd.ExecuteNonQuery();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error archiving category contents: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
 
 
         private async void categories_Load(object sender, EventArgs e)
